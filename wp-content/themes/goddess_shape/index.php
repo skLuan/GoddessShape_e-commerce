@@ -1,2 +1,1 @@
-<?php
-// Silence is golden.
+<h1>Goddess shape theme</h1>
