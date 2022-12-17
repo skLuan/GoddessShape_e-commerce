@@ -1,3 +1,5 @@
-<h1>Hola soy una prueba
+<?php get_header()?>
+<h1 class="">Hola soy una prueba
     
-</h1>
+    </h1>
+    <?php get_footer()?>
