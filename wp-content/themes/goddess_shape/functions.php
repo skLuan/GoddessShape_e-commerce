@@ -7,7 +7,8 @@ function init_template()
     // ---------------------- Register menus ----------------------
     register_nav_menus(
         array(
-            'top_menu' => 'Menú Principal'
+            'top_menu' => 'Menú Principal',
+            'mobile_menu' => 'Mobile sideBar'
         )
     );
 
