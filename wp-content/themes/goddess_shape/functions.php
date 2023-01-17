@@ -13,7 +13,7 @@ function init_template()
     );
 
     // ---------------------- Register Styles ----------------------
-    wp_enqueue_style('tailwind', get_stylesheet_directory_uri() . '/assets/css/twOutput.css', '1.0', 'all');
+    wp_enqueue_style('tailwind', get_stylesheet_directory_uri() . '/assets/css/tailwind.css', '1.0', 'all');
     wp_enqueue_style('styles', get_stylesheet_directory_uri() . '/style.css', 'tailwind', '1.0', 'all');
 
     // ---------------------- Register Scripts ----------------------

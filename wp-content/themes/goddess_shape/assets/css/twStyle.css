@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'champagne_limousines, sans serif';
+    src: url(../fonts/Champagne_Limousines.ttf);
+}
