@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./*.php","./components/*.php", "./assets/js/custom.js", "./woocommerce/**/*.php"],
+  content: [
+    "./*.php",
+    "./components/*.php",
+    "./assets/js/custom.js",
+    "./woocommerce/**/*.php",
+  ],
   theme: {
     screens: {
       sm: "640px",
@@ -24,14 +29,22 @@ module.exports = {
           secondary: "#fceceb",
           terciary: "#d4a49c",
         }),
+        black: {
+          gs: "#231b1b",
+          gsSoft: "rgba(35,27,27,0.6)",
+        },
+        white: {
+          DEFAULT: "#ffffff",
+          notWhite: "#fdf8f8",
+        },
         textColor: {
           primary: "#000000",
           secondary: "#ffffff",
           terciary: "#f79d65",
         },
-        fontFamily: {
-          champagne_limousines: ["Champagne_Limousines", "sans-serif"],
-        },
+      },
+      fontFamily: {
+        champagne_limousines: ["champagne_limousines", "sans-serif"],
       },
       borderRadius: {
         "4xl": "2rem",
