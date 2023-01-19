@@ -1,4 +1,10 @@
+<!-- page container -->
 <?php get_header() ?>
+
+<?php while (have_posts()) {
+    the_post();
+    the_content();
+} ?>
 <!-- hero -->
 <div class="flex flex-col items-center w-full h-132 justify-center mb-16" id="hero">
 
@@ -50,7 +56,6 @@
     </div>
 </div>
 <div class="flex w-full h-8 justify-between px-2 bg-white">
-
     <div class="flex text-sm gs-black">
         <a class="flex" href="#post-quirurgica">Post-quirurgica</a>
     </div>

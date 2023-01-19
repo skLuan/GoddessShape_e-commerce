@@ -547,12 +547,61 @@ video {
   }
 }
 
+#sidebar-Menu li {
+  /* @apply font-light text-xl font-champagne_limousines pb-3; */
+  padding-bottom: 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 300;
+  font-family: 'champagne_limousines', sans-serif;
+}
+
 .fixed {
   position: fixed;
 }
 
+.absolute {
+  position: absolute;
+}
+
+.relative {
+  position: relative;
+}
+
+.top-0 {
+  top: 0px;
+}
+
+.bottom-\[5\%\] {
+  bottom: 5%;
+}
+
+.right-1\/2 {
+  right: 50%;
+}
+
 .bottom-\[10\%\] {
   bottom: 10%;
+}
+
+.-right-1 {
+  right: -0.25rem;
+}
+
+.-top-3 {
+  top: -0.75rem;
+}
+
+.bottom-\[1\%\] {
+  bottom: 1%;
+}
+
+.bottom-\[7\%\] {
+  bottom: 7%;
+}
+
+.bottom-\[6\%\] {
+  bottom: 6%;
 }
 
 .z-0 {
@@ -563,8 +612,65 @@ video {
   z-index: 10;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .mb-16 {
   margin-bottom: 4rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.mt-72 {
+  margin-top: 18rem;
+}
+
+.mt-60 {
+  margin-top: 15rem;
+}
+
+.mt-52 {
+  margin-top: 13rem;
+}
+
+.mt-40 {
+  margin-top: 10rem;
+}
+
+.mb-40 {
+  margin-bottom: 10rem;
+}
+
+.mb-20 {
+  margin-bottom: 5rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+.mb-24 {
+  margin-bottom: 6rem;
+}
+
+.mb-36 {
+  margin-bottom: 9rem;
+}
+
+.mb-52 {
+  margin-bottom: 13rem;
 }
 
 .block {
@@ -603,20 +709,24 @@ video {
   height: 8rem;
 }
 
-.h-1 {
-  height: 0.25rem;
+.h-screen {
+  height: 100vh;
 }
 
-.h-16 {
-  height: 4rem;
+.h-44 {
+  height: 11rem;
+}
+
+.h-5 {
+  height: 1.25rem;
 }
 
 .h-7 {
   height: 1.75rem;
 }
 
-.h-screen {
-  height: 100vh;
+.h-4 {
+  height: 1rem;
 }
 
 .w-full {
@@ -643,8 +753,29 @@ video {
   width: 0.75rem;
 }
 
+.w-4\/6 {
+  width: 66.666667%;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.w-5\/6 {
+  width: 83.333333%;
+}
+
 .w-7 {
   width: 1.75rem;
+}
+
+.w-4 {
+  width: 1rem;
+}
+
+.translate-x-1\/2 {
+  --tw-translate-x: 50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .transform {
@@ -714,6 +845,16 @@ video {
   background-color: rgb(229 229 229 / var(--tw-bg-opacity));
 }
 
+.bg-white-notWhite {
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 248 248 / var(--tw-bg-opacity));
+}
+
+.bg-orange-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(251 146 60 / var(--tw-bg-opacity));
+}
+
 .py-4 {
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -734,6 +875,11 @@ video {
   padding-right: 0.5rem;
 }
 
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
 .pt-16 {
   padding-top: 4rem;
 }
@@ -746,12 +892,24 @@ video {
   padding-right: 1rem;
 }
 
-.pr-3 {
-  padding-right: 0.75rem;
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
 }
 
 .text-center {
   text-align: center;
+}
+
+.font-champagne_limousines {
+  font-family: champagne_limousines, sans-serif;
 }
 
 .text-base {
@@ -769,8 +927,21 @@ video {
   line-height: 1.25rem;
 }
 
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
 .font-semibold {
   font-weight: 600;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-light {
+  font-weight: 300;
 }
 
 .capitalize {
@@ -789,6 +960,15 @@ video {
 .text-gray-400 {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.text-black-gsSoft {
+  color: rgba(35,27,27,0.6);
+}
+
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -817,13 +997,32 @@ video {
   transition-duration: 150ms;
 }
 
-@font-face {
-  font-family: 'champagne_limousines, sans serif';
-
-  src: url(../fonts/Champagne_Limousines.ttf);
+#sidebar-Menu li.current_page_item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  --tw-text-opacity: 1 !important;
+  color: rgb(35 27 27 / var(--tw-text-opacity)) !important;
 }
 
-.active\:bg-red-100:active {
-  --tw-bg-opacity: 1;
-  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+#sidebar-Menu li.current_page_item::after {
+  margin-left: 0.5rem;
+  content: "";
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("../img/sidebar/i-sun-select-sidebar.png");
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+#sidebar-Menu .menu-item-has-children .sub-menu .menu-item {
+  /* @apply font-light text-base pl-4; */
+  padding-left: 1rem;
+  padding-bottom: 0.25rem;
+  font-weight: 300;
 }

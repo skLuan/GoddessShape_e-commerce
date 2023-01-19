@@ -2,7 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'champagne_limousines, sans serif';
-    src: url(../fonts/Champagne_Limousines.ttf);
+
+@layer base {
+}
+
+@layer components {
+  #sidebar-Menu li {
+    /* @apply font-light text-xl font-champagne_limousines pb-3; */
+    @apply font-light text-xl pb-3;
+    font-family: 'champagne_limousines', sans-serif;
+  }
+}
+#sidebar-Menu li.current_page_item {
+  @apply flex flex-row items-center text-xl font-bold !text-black-gs;
+}
+#sidebar-Menu li.current_page_item::after {
+  @apply ml-2;
+  content: "";
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("../img/sidebar/i-sun-select-sidebar.png");
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+#sidebar-Menu .menu-item-has-children .sub-menu .menu-item {
+  /* @apply font-light text-base pl-4; */
+  @apply font-light pl-4 pb-1;
 }

@@ -1,48 +1,43 @@
-    <!-- tabBar -->
-    <div class="flex items-center justify-between w-64 h-16 fixed bottom-[10%] shadow-xl rounded-lg bg-white" id="tab_bar">
-        <div class="flex items-center">
+<!-- tabBar -->
+<div class="flex items-center justify-between w-5/6 px-5 pt-3 pb-2 translate-x-1/2 right-1/2 fixed bottom-[10%] shadow-xl rounded-lg bg-white z-20" id="tab_bar">
+    <div class="flex items-center">
 
-            <div class="h-7 w-7 active:bg-red-100 sidebar" id="sideBar">
-                <svg class="w-7 h-7 bmenu" id="bmenu" href="#sidebar" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13c" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
-                    <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13c" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
-                        <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a38">
-                            <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a38">
-                                <rect width="24" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
-                            </g>
-                        </g>
-                        <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a39">
-                            <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a39">
-                                <path stroke-linejoin="round" rx="0" ry="0" d="M3,8L3,7L20,7L20,8L3,8ZZM20,12L20,13L3,13L3,12L20,12ZZM3,17L20,17L20,18L3,18L3,17ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
-                            </g>
-                            <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a39">
-                                <g class="stroke-shape">
-                                    <path stroke-linejoin="round" rx="0" ry="0" d="M3,8L3,7L20,7L20,8L3,8ZZM20,12L20,13L3,13L3,12L20,12ZZM3,17L20,17L20,18L3,18L3,17ZZ" style="fill: none; stroke-width: 0.2;" />
-                                </g>
-                            </g>
-                        </g>
-                    </g>
-                </svg>
-                <img class="h-7 w-7 hidden toogle" id="toogle" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.PNG" alt="">
-                <script>
-                    let btn = document.querySelector("#sideBar");
-                    let icon = btn.querySelector(".bmenu")
-                    let hdn = btn.querySelector(".toogle")
+        <div class="h-7 w-7 sidebar" id="sideBar">
+            <img class="w-7 h-7 hidden bmenu" id="bmenu" href="#sidebar" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.PNG">
+            <img class="h-7 w-7 toogle" id="toogle" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/i-menu-2.svg" alt="">
+            <script>
+                let btn = document.querySelector("#sideBar");
+                let icon = btn.querySelector(".bmenu")
+                let hdn = btn.querySelector(".toogle")
+                let menu = document.getElementById("sidemenu")
 
-                    btn.onclick = function() {
-                        if (icon.classList.contains("hidden")) {
-                            icon.classList.remove("hidden")
-                            hdn.classList.add("hidden")
 
-                        } else {
-                            icon.classList.add("hidden");
-                            hdn.classList.remove("hidden")
-                        }
+
+                btn.onclick = function() {
+                    if (icon.classList.contains("hidden")) {
+                        icon.classList.remove("hidden")
+                        hdn.classList.add("hidden")
+                        menu.classList.remove("hidden")
+
+
+
+
+
+                    } else {
+                        icon.classList.add("hidden");
+                        hdn.classList.remove("hidden")
+                        menu.classList.add("hidden")
+
                     }
-                </script>
-            </div>
+                }
+            </script>
         </div>
+    </div>
+    <div class="relative">
         <a class="" href="#cart">
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
+            <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400">3
+            </div>
+            <svg class="" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
                 <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13b" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
                     <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a36">
                         <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a36">
@@ -62,74 +57,47 @@
                 </g>
             </svg>
         </a>
-        <a href="#search">
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13a" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
-                <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13a" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
-                    <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a34">
-                        <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a34">
-                            <rect width="23.999999999999886" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
-                        </g>
+    </div>
+    <a href="#search">
+        <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13a" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
+            <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13a" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
+                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a34">
+                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a34">
+                        <rect width="23.999999999999886" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
                     </g>
-                    <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a35">
-                        <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a35">
-                            <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
-                        </g>
-                        <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a35">
-                            <g class="stroke-shape">
-                                <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: none; stroke-width: 0.2;" />
-                            </g>
+                </g>
+                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a35">
+                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a35">
+                        <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
+                    </g>
+                    <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a35">
+                        <g class="stroke-shape">
+                            <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: none; stroke-width: 0.2;" />
                         </g>
                     </g>
                 </g>
-            </svg>
-        </a>
-        <a class="pr-3" href="#user">
-            <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af139" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
-                <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af139" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
-                    <g id="shape-7569143b-d70d-8022-8001-bd2e684af13d">
-                        <g id="fills-7569143b-d70d-8022-8001-bd2e684af13d">
-                            <rect width="24" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
-                        </g>
+            </g>
+        </svg>
+    </a>
+    <a class="" href="#user">
+        <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af139" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
+            <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af139" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
+                <g id="shape-7569143b-d70d-8022-8001-bd2e684af13d">
+                    <g id="fills-7569143b-d70d-8022-8001-bd2e684af13d">
+                        <rect width="24" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
                     </g>
-                    <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a33">
-                        <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a33">
-                            <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
-                        </g>
-                        <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a33">
-                            <g class="stroke-shape">
-                                <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: none; stroke-width: 0.2;" />
-                            </g>
+                </g>
+                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a33">
+                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a33">
+                        <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
+                    </g>
+                    <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a33">
+                        <g class="stroke-shape">
+                            <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: none; stroke-width: 0.2;" />
                         </g>
                     </g>
                 </g>
-            </svg>
-        </a>
-    </div>
-
-    <!-- sidebar -->
-    <div class="w-4sextos h-screen bg-softred">
-        <!-- logo-sidebar -->
-        <div id="silueta-logo">
-
-        </div>
-        <!-- home -->
-        <div id="home" href="#home">
-            <a href="#home"></a>
-        </div>
-        <!-- servicio al cliente -->
-        <div id="Servicio al cliente">
-
-        </div>
-        <!-- blog -->
-        <div id="Blog">
-
-        </div>
-        <!-- guia de prendas -->
-        <div id="Guia de prendas">
-
-        </div>
-        <!-- tienda -->
-        <div id="Tienda">
-
-        </div>
-    </div>
+            </g>
+        </svg>
+    </a>
+</div>
