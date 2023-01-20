@@ -27,6 +27,12 @@
   height: 20px;
   display: block;
 }
+ #tab_bar {
+  @apply bottom-[2%];
+ }
+ .tab_bar_navbar {
+  @apply !bottom-[10%];
+ }
 #sidebar-Menu .menu-item-has-children .sub-menu .menu-item {
   /* @apply font-light text-base pl-4; */
   @apply font-light pl-4 pb-1;

@@ -568,12 +568,12 @@ video {
   position: relative;
 }
 
-.bottom-\[10\%\] {
-  bottom: 10%;
-}
-
 .bottom-\[2\%\] {
   bottom: 2%;
+}
+
+.bottom-\[10\%\] {
+  bottom: 10%;
 }
 
 .top-0 {
@@ -953,6 +953,14 @@ video {
   width: 20px;
   height: 20px;
   display: block;
+}
+
+#tab_bar {
+  bottom: 2%;
+}
+
+.tab_bar_navbar {
+  bottom: 10% !important;
 }
 
 #sidebar-Menu .menu-item-has-children .sub-menu .menu-item {

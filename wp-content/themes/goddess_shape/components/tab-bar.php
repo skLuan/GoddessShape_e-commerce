@@ -1,5 +1,5 @@
 <!-- tabBar -->
-<div class="flex items-center justify-between w-5/6 px-5 pt-3 pb-2 translate-x-1/2 right-1/2 fixed bottom-[10%] shadow-xl rounded-lg bg-white z-20" id="tab_bar">
+<div class="flex items-center justify-between w-5/6 px-5 pt-3 pb-2 translate-x-1/2 right-1/2 fixed shadow-xl rounded-lg bg-white z-20" id="tab_bar">
     <div class="flex items-center">
 
         <div class="h-7 w-7 sidebar" id="sideBar">

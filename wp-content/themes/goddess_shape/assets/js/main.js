@@ -3,7 +3,7 @@ let isNavbarVisible = window.innerHeight < window.outerHeight;
 
 let tabBar = document.getElementById('tab_bar');
 if(isNavbarVisible) {
-    tabBar.classList.replace('bottom-[10%]', 'bottom-[2%]')
+    tabBar.classList.remove("tab_bar_navbar");
 } else {
-    tabBar.classList.replace('bottom-[2%]', 'bottom-[10%]')
+    tabBar.classList.add("tab_bar_navbar");
 }
