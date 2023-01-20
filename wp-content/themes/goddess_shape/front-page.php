@@ -1,37 +1,14 @@
 <!-- page container -->
 <?php get_header() ?>
-
-<?php while (have_posts()) {
-    the_post();
-    the_content();
-} ?>
-<!-- hero -->
-<div class="flex flex-col items-center w-full h-132 justify-center mb-16" id="hero">
-
-    <!-- imagen del carrusel -->
-    <div class="py-4 px-8" id="heroimage">
-        <img class="flex justify-center h-100" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/imagen.png-6.png" alt="">
-    </div>
-
-    <!-- boton del carrusel -->
-    <div class="flex flex-row justify-between items-center w-64  h-12 bg-white" id="carousel-btn">
-
-        <!-- flecha_izquierda -->
-        <img class="w-8 h-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/flecha_izquierda.png-1.png" alt="">
-
-        <!-- puntos del slider -->
-        <div class="flex flex-row justify-between h-3 w-12 bg-blue-700">
-            <div class="rounded-full   bg-red-100">o</div>
-            <div class="rounded-full  bg-red-100">s</div>
-            <div class="rounded-full  bg-red-100">s</div>
-        </div>
-
-        <!-- flecha derecha -->
-        <img class="w-8 h-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/flecha_derecha.png-2.png" alt="">
-    </div>
+<div class="py-5">
+    <?php while (have_posts()) {
+        the_post();
+        the_content();
+    } ?>
+</div>
 
     <!-- ver colección -->
-    <div class="flex flex-col items-center text-base font-champagne_limousines w-36 h-12 bg-white " id="carousel-btn">
+    <div class="flex flex-col mb-5 mx-auto items-center text-base font-champagne_limousines w-36 h-12 bg-white " id="carousel-btn">
         <div class="py-2 font-semibold">
             Ver colección
         </div>
@@ -39,7 +16,6 @@
         <img class=" h-3 w-3 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/flechashome.PNG" alt="flecha">
 
     </div>
-</div>
 <!-- image-container-home -->
 <div class="flex justify-center items-center w-full h-36 bg-neutral-200">
 
