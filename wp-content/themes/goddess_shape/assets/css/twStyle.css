@@ -31,7 +31,7 @@
   @apply bottom-[2%];
  }
  .tab_bar_navbar {
-  @apply !bottom-[10%];
+  @apply !bottom-[9%];
  }
 #sidebar-Menu .menu-item-has-children .sub-menu .menu-item {
   /* @apply font-light text-base pl-4; */
