@@ -21,7 +21,7 @@ function init_template()
 
     // ---------------------- Register Scripts ----------------------
     wp_enqueue_script('iconify', 'https://code.iconify.design/iconify-icon/1.0.0-beta.2/iconify-icon.min.js', '', '1.0', 'all');
-    // wp_enqueue_script('custom', get_stylesheet_directory_uri() . '/assets/js/custom.js', 'slickjs', '1.8.1', 'all');
+    wp_enqueue_script('main', get_stylesheet_directory_uri() . '/assets/js/main.js', 'slickjs', '1.8.1', 'all');
 }
 add_action('after_setup_theme', 'init_template');
 ?>
