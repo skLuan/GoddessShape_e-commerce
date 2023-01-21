@@ -29,6 +29,9 @@ module.exports = {
           secondary: "#fceceb",
           terciary: "#d4a49c",
         }),
+        red: {
+          semi: '#aa8181'
+        },
         black: {
           gs: "#231b1b",
           gsSoft: "rgba(35,27,27,0.6)",

@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="relative">
-        <a class="" href="#cart">
+        <a class="" href="<?= wc_get_cart_url() ?>">
             <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400">3
             </div>
             <svg class="" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">

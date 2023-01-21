@@ -3,11 +3,12 @@
 
         <div class="flex z-0">
             <div class="flex" id="logo">
-
                 <img class="fixed" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/deco-logo-header.png" alt="">
             </div>
             <div class="flex h z-10">
-                <img class="" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg">
+                <a href="<?= home_url() ?>">
+                    <img class="" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg">
+                </a>
             </div>
         </div>
 
