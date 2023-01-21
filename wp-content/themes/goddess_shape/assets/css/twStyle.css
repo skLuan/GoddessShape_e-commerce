@@ -28,7 +28,7 @@
   display: block;
 }
  #tab_bar {
-  @apply bottom-[2%];
+  @apply bottom-[2%] lg:bottom-[unset] right-1/2 translate-x-1/2 lg:translate-x-0 lg:mx-auto lg:top-10 lg:sticky;
  }
  .tab_bar_navbar {
   @apply !bottom-[9%];

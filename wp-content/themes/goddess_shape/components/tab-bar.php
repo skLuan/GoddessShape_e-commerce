@@ -1,36 +1,10 @@
 <!-- tabBar -->
-<div class="flex items-center justify-between w-5/6 px-5 pt-3 pb-2 translate-x-1/2 right-1/2 fixed shadow-xl rounded-lg bg-white z-20" id="tab_bar">
+<div class="flex items-center justify-between w-5/6 px-5 pt-3 pb-2 fixed shadow-xl rounded-lg bg-white z-20" id="tab_bar">
     <div class="flex items-center">
 
         <div class="h-7 w-7 sidebar" id="sideBar">
             <img class="w-7 h-7 hidden bmenu" id="bmenu" href="#sidebar" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.PNG">
             <img class="h-7 w-7 toogle" id="toogle" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/i-menu-2.svg" alt="">
-            <script>
-                let btn = document.querySelector("#sideBar");
-                let icon = btn.querySelector(".bmenu")
-                let hdn = btn.querySelector(".toogle")
-                let menu = document.getElementById("sidemenu")
-
-
-
-                btn.onclick = function() {
-                    if (icon.classList.contains("hidden")) {
-                        icon.classList.remove("hidden")
-                        hdn.classList.add("hidden")
-                        menu.classList.remove("hidden")
-
-
-
-
-
-                    } else {
-                        icon.classList.add("hidden");
-                        hdn.classList.remove("hidden")
-                        menu.classList.add("hidden")
-
-                    }
-                }
-            </script>
         </div>
     </div>
     <div class="relative">
