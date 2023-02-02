@@ -27,7 +27,7 @@ module.exports = {
           ...theme("colors"),
           primary: "#fdf8f8",
           secondary: "#fceceb",
-          terciary: "#d4a49c",
+          tertiary: "#d4a49c",
         }),
         black: {
           gs: "#231b1b",
@@ -40,7 +40,8 @@ module.exports = {
         textColor: {
           primary: "#000000",
           secondary: "#ffffff",
-          terciary: "#f79d65",
+          orange: "#f49c64",
+
         },
       },
       fontFamily: {
@@ -48,6 +49,10 @@ module.exports = {
       },
       borderRadius: {
         "4xl": "2rem",
+      },
+      height: {
+        '120': '30rem',
+        '100': '25rem',
       },
     },
   },
