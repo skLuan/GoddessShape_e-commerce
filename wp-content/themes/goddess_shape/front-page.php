@@ -28,7 +28,7 @@
 </div>
 <!-- boton all HOME -->
 <div class="flex w-full bg-white justify-center text-center pb-4">
-    <div class="flex bg-red-soft justify-center items-center w-1/6  rounded-full">
+    <div class="flex bg-red-semi justify-center items-center w-1/6  rounded-full">
         <a class="text-white" href="#shop">All</a>
     </div>
 </div>
@@ -68,7 +68,7 @@
             </div>
         </div>
         <!-- contenedor info -->
-        <div class="flex flex-col z-30 h-80 px-2 py-2 justify-around mb-4 w-56 bg-white shadow-2xl rounded-lg">
+        <div class="flex flex-col z-30 h-80 px-2 py-2 justify-around mb-4 w-52 bg-white shadow-2xl rounded-lg">
 
             <div class="flex">
                 <div>
@@ -146,8 +146,8 @@
 </div>
 <!-- categorias -->
 <div class="flex flex-col w-full h-120 bg-white">
-    <div class="flex items-center justify-center">
-        <h1 class="flex font-baby_aletha text-2xl pt-16 w-full items-center justify-center ">Categorias</h1>
+    <div class="flex items-center h-20 justify-center">
+        <h1 class="flex font-baby_aletha text-5xl pt-16 pb-20 w-full items-center justify-center ">Categorias</h1>
     </div>
     <div class="flex flex-row h-20 w-full items-center my-4 justify-center">
         <img class="flex w-16 h-16" src="<?= get_stylesheet_directory_uri() ?>/assets/img/category icons/postcirugia@0.75x.png" alt="">
@@ -190,7 +190,7 @@
             </div>
         </div>
         <!-- contenedor info -->
-        <div class="flex flex-col h-80 px-2 py-2 justify-around mb-4 w-56 bg-white shadow-2xl rounded-lg">
+        <div class="flex flex-col h-80 px-2 py-2 justify-around mb-4 w-52 bg-white shadow-2xl rounded-lg">
 
             <div class="flex">
                 <div>
@@ -305,7 +305,7 @@
             <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
         </div>
     </div>
-    <div class="flex flex-row w-full justify-around px-2 py-4">
+    <div class="flex flex-row w-full justify-around px-2 p-4">
         <div class="flex items-center justify-center">
             <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
         </div>
@@ -315,50 +315,56 @@
         </div>
     </div>
     <div class="flex flex-row-reverse w-full items-end">
-        <div class="flex items-center justify-center h-32 w-28 bg-cover" style="background-image: url(/assets/img/Home/sol_sin_centroPNG);">
-            <a class="flex text-orange-400 underline font-semibold" href="#blog">Ver blog</a>
+        <div class="flex items-center justify-center h-32 w-28 bg-cover" style="background-image: url(./wp-content/themes/goddess-shape/assets/img/Home/sol_sin_centro.png)">
+            <a class="flex text-orange-400 underline font-semibold" href="#blog">
+                <img class="flex  w-28 bg-cover" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/ver-blog.png" alt="">
+
+            </a>
         </div>
     </div>
 
 </div>
 <!-- imagen abajo de blog -->
 <div class="flex items-center justify-center w-full h-60 bg-white mb-24">
-    <img class="flex h-56 w-50" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop-now-full.PNG" alt="">
+    <img class="flex h-56 w-50" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop-now-full.png" alt="">
 </div>
 <!-- FAQ -->
-<div class="flex flex-col w-full h-100 bg-white my-4 bg-sun bg-no-repeat" id="faq">
+<div class="flex flex-col w-full h-120 bg-white my-4" id="faq">
+    <div class="z-20">
+
+    
     <div class="flex flex-col text-center bg-white ">
         <h1 class="font-champagne_limousines text-2xl text-red-semi leading-5 w-full font-semibold h-30 mt-6">FAQ</h1>
     </div>
-    <div class="flex flex-col items-center justify-around bg-white mt-6 border-1 border-y-rose-300">
-        <button class="flex text-red-semi question ">This is a question number1?
+    <div class="flex flex-col items-center justify-around bg-white mt-6 border border-y-secondary">
+        <button class="flex text-red-semi font-semibold question ">This is a question number1?
             <img class="flex h-8 w-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/arrow-faq.PNG" alt="">
         </button>
         <div class="hidden font-base font-light text-red-semi ">Respuesta 1</div>
     </div>
-    <div class="flex flex-col items-center justify-around bg-white mt-6 border-1 border-y-rose-300">
-        <button class="flex text-red-semi question ">This is a question number2?
+    <div class="flex flex-col items-center justify-around bg-white mt-6 border border-y-secondary z-10">
+        <button class="flex text-red-semi font-semibold question ">This is a question number2?
 
             <img class="flex h-8 w-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/arrow-faq.PNG" alt="">
         </button>
         <div class="hidden font-base font-light text-red-semi ">Respuesta 1</div>
     </div>
-    <div class="flex flex-col items-center justify-around bg-white mt-6 border-1 border-y-rose-300">
-        <button class="flex text-red-semi question ">This is a question number3?
+    <div class="flex flex-col items-center justify-around bg-white mt-6 border border-y-secondary z-10">
+        <button class="flex text-red-semi font-semibold question ">This is a question number3?
 
             <img class="flex h-8 w-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/arrow-faq.PNG" alt="">
         </button>
         <div class="hidden font-base font-light text-red-semi ">Respuesta 1</div>
     </div>
-    <div class="flex flex-col items-center justify-around bg-white mt-6 border-1 border-y-rose-300">
-        <button class="flex text-red-semi question ">This is a question number4?
+    <div class="flex flex-col items-center justify-around bg-white mt-6 border border-y-secondary z-10">
+        <button class="flex text-red-semi font-semibold question ">This is a question number4?
 
             <img class="flex h-8 w-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/arrow-faq.PNG" alt="">
         </button>
         <div class="hidden font-base font-light text-red-semi ">Respuesta 1</div>
     </div>
-    <div class="flex flex-col items-center justify-around bg-white mt-6 border-2 border-y-rose-300">
-        <button class="flex text-red-semi question ">This is a question number5?
+    <div class="flex flex-col items-center justify-around bg-white mt-6 border border-y-secondary z-20">
+        <button class="flex text-red-semi font-semibold question  ">This is a question number5?
             <img class="flex h-8 w-8" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/arrow-faq.PNG" alt="">
         </button>
         <div class="hidden font-base font-light text-red-semi ">Respuesta 1</div>
@@ -371,5 +377,9 @@
             });
         });
     </script>
+    </div>
+    <div>
+        <img class="relative bottom-40 h-60 w-full" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/medio-sol.png" alt="">
+    </div>
 </div>
 <?php get_footer() ?>

@@ -21,7 +21,7 @@ module.exports = {
     extend: {
       colors: {
         principal: "#CC2D4A",
-        secondary: "#8FA206",
+        secondary: "#fceceb",
         tertiary: "#61AEC9",
         backgroundColor: (theme) => ({
           ...theme("colors"),
@@ -29,6 +29,12 @@ module.exports = {
           secondary: "#fceceb",
           tertiary: "#d4a49c",
         }),
+        gray: {
+          card: "#b1b2b5",
+        },
+        red: {
+          semi: "#d1a19d",
+        },
         black: {
           gs: "#231b1b",
           gsSoft: "rgba(35,27,27,0.6)",
@@ -46,6 +52,7 @@ module.exports = {
       },
       fontFamily: {
         champagne_limousines: ["champagne_limousines", "sans-serif"],
+        baby_aletha: ["Baby_aletha", "sans serif"]
       },
       borderRadius: {
         "4xl": "2rem",
