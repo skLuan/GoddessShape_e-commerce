@@ -22,3 +22,9 @@
       font-style: italic;
       src: url("../fonts/Champagne_Limousines_Bold_italic.ttf") format('truetype');
     }
+    @font-face {
+      font-family: "baby_aletha";
+      src: url("../fonts/Baby\ Aletha.otf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      }

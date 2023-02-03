@@ -2,12 +2,8 @@
     <div class="flex flex-column justify-between items-center border-b-red-100 border h-12 " id="navbar">
 
         <div class="flex z-0">
-            <div class="flex" id="logo">
-
-                <img class="fixed" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/deco-logo-header.png" alt="">
-            </div>
             <div class="flex h z-10">
-                <img class="" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg">
+                <img class="h-9" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/logocondeco.png">
             </div>
         </div>
 
