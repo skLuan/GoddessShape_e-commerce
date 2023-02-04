@@ -22,7 +22,7 @@ module.exports = {
       colors: {
         principal: "#CC2D4A",
         secondary: "#fceceb",
-        tertiary: "#61AEC9",
+        tertiary: "##ffecec",
         backgroundColor: (theme) => ({
           ...theme("colors"),
           primary: "#fdf8f8",

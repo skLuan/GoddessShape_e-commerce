@@ -576,6 +576,10 @@ body, h2 {
   bottom: 10rem;
 }
 
+.bottom-40 {
+  bottom: 10rem;
+}
+
 .top-0 {
   top: 0px;
 }
@@ -636,13 +640,17 @@ body, h2 {
   z-index: 0;
 }
 
+.z-0 {
+  z-index: 0;
+}
+
 .z-50 {
   z-index: 50;
 }
 
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .my-2 {
@@ -744,6 +752,14 @@ body, h2 {
   display: none;
 }
 
+.h-9 {
+  height: 2.25rem;
+}
+
+.h-6 {
+  height: 1.5rem;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -792,10 +808,6 @@ body, h2 {
   height: 15rem;
 }
 
-.h-9 {
-  height: 2.25rem;
-}
-
 .h-100 {
   height: 25rem;
 }
@@ -832,12 +844,12 @@ body, h2 {
   width: 9rem;
 }
 
-.w-3 {
-  width: 0.75rem;
+.w-9 {
+  width: 2.25rem;
 }
 
-.w-full {
-  width: 100%;
+.w-3 {
+  width: 0.75rem;
 }
 
 .w-1\/6 {
@@ -1008,14 +1020,24 @@ body, h2 {
   border-bottom-color: rgb(254 226 226 / var(--tw-border-opacity));
 }
 
-.bg-neutral-200 {
+.bg-secondary {
   --tw-bg-opacity: 1;
-  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
+  background-color: rgb(252 236 235 / var(--tw-bg-opacity));
+}
+
+.bg-gray-card {
+  --tw-bg-opacity: 1;
+  background-color: rgb(177 178 181 / var(--tw-bg-opacity));
 }
 
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-neutral-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity));
 }
 
 .bg-red-semi {
@@ -1032,9 +1054,9 @@ body, h2 {
   background-color: rgb(177 178 181 / var(--tw-bg-opacity));
 }
 
-.bg-orange-300 {
+.bg-green-600 {
   --tw-bg-opacity: 1;
-  background-color: rgb(253 186 116 / var(--tw-bg-opacity));
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
 }
 
 .bg-green-600 {
@@ -1165,14 +1187,19 @@ body, h2 {
   font-family: Baby_aletha, sans serif;
 }
 
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
 .text-sm {
@@ -1182,11 +1209,6 @@ body, h2 {
 
 .text-lg {
   font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.text-xl {
-  font-size: 1.25rem;
   line-height: 1.75rem;
 }
 
@@ -1217,6 +1239,11 @@ body, h2 {
 
 .leading-5 {
   line-height: 1.25rem;
+}
+
+.text-red-semi {
+  --tw-text-opacity: 1;
+  color: rgb(209 161 157 / var(--tw-text-opacity));
 }
 
 .text-white {
