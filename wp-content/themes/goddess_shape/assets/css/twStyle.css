@@ -4,6 +4,9 @@
 
 
 @layer base {
+  body, h2 {
+    @apply font-champagne_limousines;
+  }
 }
 
 @layer components {
