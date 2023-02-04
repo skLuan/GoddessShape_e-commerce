@@ -8,7 +8,8 @@ function init_template()
     register_nav_menus(
         array(
             'top_menu' => 'Menú Principal', // Menu pricipal de desktop
-            'mobile_menu' => 'Mobile sideBar' // Menu hamburguesa de versión mobile
+            'mobile_menu' => 'Mobile sideBar', // Menu hamburguesa de versión mobile
+            'footer_menu' => 'Footer Menu' // Menu del footer
         )
     );
 

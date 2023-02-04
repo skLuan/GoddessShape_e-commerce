@@ -10,12 +10,20 @@
             <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
             <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
         </div>
-        <div class="flex flex-col my-4 mx-2">
+        <div class="flex flex-col my-4 mx-5">
 
-            <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#Shop">Shop</a>
+        <?php
+        wp_nav_menu([
+            'theme_location' => 'footer_menu',
+            'container'      => false,
+            'menu_class'     => 'flex font-champagne_limousines text-red-semi text-xl font-light',
+            'menu_id'        => 'footer-Menu'
+        ])
+        ?>
+            <!-- <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#Shop">Shop</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#Post-surgical">Post-surgical</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#daily-use">Daily</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#complements">Complements</a>
+            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#complements">Complements</a> -->
         </div>
         <div class="flex flex-col my-4 mx-2">
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#cart">Shopping cart</a>
