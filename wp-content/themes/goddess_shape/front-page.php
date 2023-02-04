@@ -91,7 +91,7 @@
                     <div class="flex flex-row justify-around w-full">
                         <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
                         <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
+                        <div class="flex flex-row h-3 w-3 bg-red-semi rounded-full mx-auto my-2"></div>
                         <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div>
                     </div>
                 </div>
@@ -213,7 +213,7 @@
                     <div class="flex flex-row justify-around w-full">
                         <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
                         <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
+                        <div class="flex flex-row h-3 w-3 bg-red-semi rounded-full mx-auto my-2"></div>
                         <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div>
                     </div>
                 </div>
