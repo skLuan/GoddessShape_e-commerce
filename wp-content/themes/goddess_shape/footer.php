@@ -1,4 +1,4 @@
-</div>
+
 <!-- footer -->
 <footer>
     <div class="flex flex-col w-full h-160 bg-secondary ">
