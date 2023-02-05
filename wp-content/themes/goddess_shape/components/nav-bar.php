@@ -1,5 +1,5 @@
     <!-- navbar -->
-    <div class="flex flex-column justify-between items-center border-b-red-100 border h-12 " id="navbar">
+    <div class="flex flex-column justify-between bg-white items-center border-b-red-100 border h-12 " id="navbar">
 
         <div class="flex z-0">
             <div class="flex" id="logo">

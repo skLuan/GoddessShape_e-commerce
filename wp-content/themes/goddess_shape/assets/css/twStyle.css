@@ -16,6 +16,9 @@
     font-family: 'champagne_limousines', sans-serif;
   }
 }
+nav.woocommerce-breadcrumb {
+  @apply bg-white;
+}
   .woocommerce-breadcrumb{
     @apply px-5 flex items-center flex-row border-b border-red-100;
   }

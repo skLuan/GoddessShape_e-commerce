@@ -29,4 +29,9 @@ function init_template()
     wp_enqueue_script('main', get_stylesheet_directory_uri() . '/assets/js/main.js', '', '1.8.1', 'all');
 }
 add_action('after_setup_theme', 'init_template');
+
+remove_action('woocommerce_before_shop_loop','woocommerce_output_all_notices', 10);
+function hooksLoopProducts(){
+}
+
 ?>

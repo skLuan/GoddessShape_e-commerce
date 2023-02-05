@@ -27,111 +27,10 @@
 </div>
 <!---------------------------------------------------------------------------------- -->
 <!--------------------------------------------------------------- nuevos modelos -->
-<section class="flex flex-col text-center">
-    <h1 class="bg-white font-champagne_limousines text-2xl leading-5 w-full font-semibold p-4 pt-16">Nuevos modelos</h1>
-    <div class="flex flex-row w-full p-5 overflow-x-auto">
-        <?php
-        $args = [
-            'limit' => 3,
-            'orderby' => 'date',
-            'order' => 'desc'
-        ];
-        $products = wc_get_products($args);
-        foreach ($products as $product) :
-            $product_url = get_permalink($product->get_id());
-        ?>
-            <!-- card nuevos modelos -->
-            <div class="relative flex flex-col w-56 h-120 bg-transparent rounded-lg mr-5 last:mr-0">
-                <div class="relative flex w-56 h-120 rounded-lg">
-                    <!-- sombra card nuestros productos -->
-                    <div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20 shadow-2xl"></div>
-                    <div class="absolute justify-center h-56 shadow-xl w-52 ">
-                        <div class=" rounded-full shadow-2xl">
-                            <?= $product->get_image('full') ?>
-                        </div>
-                    </div>
-                    <!-- boton add cart -->
-                    <button class="absolute right-5 -bottom-5 h-16 w-16 z-30">
-                        <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
-                    </button>
-                </div>
-                <!-- contenedor info -->
-                <div class="flex flex-col z-20 h-80 px-5 py-2 justify-around w-52 bg-white shadow-2xl rounded-lg">
-
-                    <div class="flex">
-                        <div>
-                            <a href="<?= $product_url ?>">
-                                <h2 class="text-color-secondary font-bold font-champagne_limousines text-lg font-base"><?= $product->get_name() ?></h2>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- tallas y colores -->
-
-                    <div class="mb-2">
-                        <h2 class="font-base font-light text-gray-400">available in:</h2>
-                        <div class="flex h-7 bg-white justify-between text-black-gs text-l font-semibold">
-                            <?php
-                            $at = explode(", ", $product->get_attribute('size'));
-                            // var_dump($at);
-                            foreach ($at as $val) {
-                                echo '<h2>' . $val . '</h2>';
-                            }
-                            ?>
-                        </div>
-                        <div class="flex w-1/2 pt-1 h-7 bg-white ">
-                            <div class="flex flex-row justify-around w-full">
-                                <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
-                                <?php
-                                $at = explode(", ", $product->get_attribute('color'));
-
-                                foreach ($at as $key => $value) :
-                                    if ($key > 0) {
-
-                                        switch ($value) {
-                                            case 'white':
-                                                echo '<div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>';
-                                            case 'black':
-                                                echo '<div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>';
-                                                break;
-                                            default:
-                                                echo "";
-                                                break;
-                                        }
-                                    }
-                                ?>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- precio - card -->
-                    <div class="flex flex-row font-semibold">
-                        <h3 class="flex ml-auto gs-black">$<?= $product->get_price() ?></h3>
-                        <!-- <div class="flex w-1/3 h-7 bg-white ">
-                        <h3 class="flex text-gray-400 line-through">$60.6</h3>
-                    </div> -->
-                    </div>
-                </div>
-            </div>
-        <?php endforeach;
-        ?>
-    </div>
-</section>
+<?= get_template_part('components/loops/new-models') ?>
 <!-------------------------------------------------------------------------------- -->
 <!---------------------------------------------- pay with -->
-<div class="flex py-16 flex-col w-full justify-center items-center font-semibold bg-white relative z-20">
-    <div class="flex items-center justify-center pb-1 w-36 h-12">
-        <img class="flex w-9 h-9" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/pagos_amarillo.png-2.png" alt="">
-        <h1 class="flex font-champagne_limousines text-red-semi text-xl leading-5  ">Pay with</h1>
-    </div>
-    <div class="grid grid-cols-2  my-4 h-30 w-full ">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Klarna_logo-1.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/PayPal_horizontally_Logo_2014-1.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/cash-app-png-2.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/apple-pay-logo-4.png" alt="">
-    </div>
-</div>
+<?= get_template_part('components/payments') ?>
 <!-- textos abajo de pay with-->
 <div class="w-full bg-white-notWhite px-5 py-16">
     <div class="flex flex-row w-full justify-around pb-5">
@@ -156,34 +55,7 @@
 </div>
 <!--------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------- categorias -->
-<section class="flex flex-col w-full h-120 bg-white px-5">
-    <h2 class="text-2xl font-bold pt-16 pb-10 w-full text-center">Categorias</h2>
-    <div class="mx-auto">
-        <?php
-        $product_categories = get_terms(array(
-            'taxonomy'   => 'product_cat',
-            'hide_empty' => false,
-        ));
-
-        // echo '<pre>';
-        // echo print_r($product_categories);
-        // echo '</pre>';
-        foreach ($product_categories as $category) :
-            $category_link = get_term_link($category);
-
-            $term_id = $category->term_id; // ID de la categoría
-            $image_id = get_term_meta($term_id, 'thumbnail_id', true);
-            $image_url = wp_get_attachment_url($image_id);
-            if ($term_id !== 15) :
-        ?>
-                <a class="flex flex-row h-20 w-full items-center my-4 " href="<?= $category_link ?>">
-                    <img class="flex w-16 h-16" src="<?= $image_url ?>" alt="">
-                    <h1 class="font-champagne_limousines px-4  text-xl font-bold text-red-semi"><?= $category->name ?></h1>
-                </a>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
-</section>
+<?= get_template_part('components/categories') ?>
 <!-------------------------------------------------------------------------------- -->
 
 <!--------------------------------------------- Section nuestros productos -->
