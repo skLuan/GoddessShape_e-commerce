@@ -5,36 +5,10 @@
         <div class="h-7 w-7 sidebar" id="sideBar">
             <img class="w-7 h-7 hidden bmenu" id="bmenu" href="#sidebar" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.PNG">
             <img class="h-7 w-7 toogle" id="toogle" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/i-menu-2.svg" alt="">
-            <script>
-                let btn = document.querySelector("#sideBar");
-                let icon = btn.querySelector(".bmenu")
-                let hdn = btn.querySelector(".toogle")
-                let menu = document.getElementById("sidemenu")
-
-
-
-                btn.onclick = function() {
-                    if (icon.classList.contains("hidden")) {
-                        icon.classList.remove("hidden")
-                        hdn.classList.add("hidden")
-                        menu.classList.remove("hidden")
-
-
-
-
-
-                    } else {
-                        icon.classList.add("hidden");
-                        hdn.classList.remove("hidden")
-                        menu.classList.add("hidden")
-
-                    }
-                }
-            </script>
         </div>
     </div>
     <div class="relative">
-        <a class="" href="#cart">
+        <a class="" href="<?= wc_get_cart_url() ?>">
             <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400">3
             </div>
             <svg class="" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">

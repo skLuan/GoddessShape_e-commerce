@@ -23,8 +23,10 @@ function init_template()
 
     // ---------------------- Register Scripts ----------------------
     wp_enqueue_script('jquery');
+    wp_enqueue_script('lodash', 'https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', array(), '4.17.21', true);
     wp_enqueue_script('iconify', 'https://code.iconify.design/iconify-icon/1.0.0-beta.2/iconify-icon.min.js', '', '1.0', 'all');
-    wp_enqueue_script('custom', get_stylesheet_directory_uri() . '/assets/js/mainjquery.js', ['jquery', 'iconify'], '1.8.1', 'all');
+    wp_enqueue_script('custom', get_stylesheet_directory_uri() . '/assets/js/mainjquery.js', ['jquery', 'iconify', 'lodash'], '1.8.1', 'all');
+    wp_enqueue_script('main', get_stylesheet_directory_uri() . '/assets/js/main.js', '', '1.8.1', 'all');
 }
 add_action('after_setup_theme', 'init_template');
 ?>

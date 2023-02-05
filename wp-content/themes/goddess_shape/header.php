@@ -9,11 +9,11 @@
 </head>
 
 <body class="flex flex-col w-full bg-white-notWhite">
-    <div id="page-container" class="absolute w-full">
+    <div id="page-container" class="absolute w-full lg:max-w-screen-lg lg:left-1/2 lg:-translate-x-1/2">
         <header class="flex flex-column justify-center w-full h-12 bg-red-100 items-center">
             <h6 class="flex  ">Lorem Ipsum</h6>
         </header>
-        <?php
+        <?php   
         get_template_part('components/sidebar');
         get_template_part('components/tab-bar');
         get_template_part('components/nav-bar');

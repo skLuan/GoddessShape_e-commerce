@@ -16,10 +16,14 @@
     font-family: 'champagne_limousines', sans-serif;
   }
 }
-#sidebar-Menu li.current_page_item {
+  .woocommerce-breadcrumb{
+    @apply px-5 flex items-center flex-row border-b border-red-100;
+  }
+
+#sidebar-Menu li.current_page_item a {
   @apply flex flex-row items-center text-xl font-bold !text-black-gs;
 }
-#sidebar-Menu li.current_page_item::after {
+#sidebar-Menu li.current_page_item a::after {
   @apply ml-2;
   content: "";
   background-position: center center;
@@ -30,7 +34,19 @@
   height: 20px;
   display: block;
 }
-#sidebar-Menu .menu-item-has-children .sub-menu .menu-item {
-  /* @apply font-light text-base pl-4; */
+#sidebar-Menu li.current_page_item.menu-item-has-children .sub-menu a::after {
+  @apply pl-4 pb-1;
+  content: unset;
+}
+ #tab_bar {
+  @apply bottom-[2%] lg:bottom-[unset] right-1/2 translate-x-1/2 lg:translate-x-0 lg:mx-auto lg:top-10 lg:sticky;
+ }
+ .tab_bar_navbar {
+  @apply !bottom-[9%];
+ }
+#sidebar-Menu .menu-item-has-children .sub-menu {
+  @apply pt-2;
+}
+#sidebar-Menu .menu-item-has-children .sub-menu .menu-item a {
   @apply font-light pl-4 pb-1;
 }

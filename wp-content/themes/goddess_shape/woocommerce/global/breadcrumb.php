@@ -28,19 +28,26 @@ if ( ! empty( $breadcrumb ) ) {
 
 		echo $before;
 
-		if ( ! empty( $crumb[1] ) && sizeof( $breadcrumb ) !== $key + 1 ) {
-			echo '<a href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
-		} else {
+		if ( ! empty( $crumb[1] ) && sizeof( $breadcrumb ) !== $key + 1 ):
+			if($crumb[0] === "Home"){
+				$crumb[0] = "Shop";
+				$crumb[1] = get_permalink(wc_get_page_id('shop'));
+			}
+			echo '<a class="text-xl text-red-semi font-bold mx-1 py-2" href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
+		else:
+			if(!is_product() && !is_shop()):
+			echo '<span class="text-red-semi text-xl mx-1">';
 			echo esc_html( $crumb[0] );
-		}
-
+			echo '</span>';
+			endif;
+		endif;
 		echo $after;
 
 		if ( sizeof( $breadcrumb ) !== $key + 1 ) {
+			$delimiter = '<img class="h-[15px] my-auto" width="15px" height="15px" src="'. get_stylesheet_directory_uri() .'/assets/img/sidebar/i-sun-select-sidebar.png" />';
 			echo $delimiter;
 		}
 	}
-
 	echo $wrap_after;
 
 }
