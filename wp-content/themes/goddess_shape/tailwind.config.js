@@ -22,18 +22,22 @@ module.exports = {
       colors: {
         principal: "#CC2D4A",
         secondary: "#fceceb",
-        tertiary: "##ffecec",
+        tertiary: "#ffecec",
         backgroundColor: (theme) => ({
           ...theme("colors"),
           primary: "#fdf8f8",
           secondary: "#fceceb",
           tertiary: "#d4a49c",
         }),
+        orange: {
+          soft: "#fbf6f4",
+        },
         gray: {
           card: "#b1b2b5",
         },
         red: {
           semi: "#d1a19d",
+          soft: "#aa8181",
         },
         black: {
           gs: "#231b1b",
