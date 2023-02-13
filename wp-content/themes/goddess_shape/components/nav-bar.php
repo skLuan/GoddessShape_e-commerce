@@ -1,11 +1,13 @@
     <!-- navbar -->
-    <div class="flex flex-column justify-between items-center border-b-red-100 border h-12 " id="navbar">
-
+    <div class="flex flex-column justify-between bg-white items-center border-b-red-100 border h-12 " id="navbar">
             <div class="flex z-0">
                 <div class="flex h z-10">
+                <a href="<?= home_url() ?>">
                     <img class="h-9" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/logocondeco.png">
+                    </a>
                 </div>
             </div>
+        
         <div class="hidden lg:flex flex-row w-2/3 text-lg text-red-soft justify-between">
             <div class="w-">
                 <a class="px-4 mx-4 " href="#shop">Shop</a>
