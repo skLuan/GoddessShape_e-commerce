@@ -91,14 +91,26 @@ if (woocommerce_product_loop()) {
 }
 
 ?>
-<!--------------------------------------------------------------- nuevos modelos -->
-<?= get_template_part('components/loops/new-models') ?>
-<!-------------------------------------------------------------------------------- -->
-<!---------------------------------------------- pay with -->
-<?= get_template_part('components/payments') ?>
-<?= get_template_part('components/categories') ?>
+
+<?php if(is_shop()): //______________________ Es la tienda general? ?>
+	<!--------------------------------------------------------------- nuevos modelos -->
+	<?= get_template_part('components/loops/new-models') ?>
+	<!-------------------------------------------------------------------------------- -->
+	<!---------------------------------------------- pay with -->
+	<?= get_template_part('components/payments') ?>
+	<?= get_template_part('components/categories') ?>
+	
+	<?php elseif(is_product_category()): //___________________Es una pagina de categoria? ?>
+		
+		<?= get_template_part('components/payments') ?>
+
+
+<?php endif ?>
 
 <?php
+
+
+
 
 /**
  * Hook: woocommerce_after_main_content.
