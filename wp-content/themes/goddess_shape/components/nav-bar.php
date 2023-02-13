@@ -10,7 +10,7 @@
             <div class="w-">
                 <a class="px-4 mx-4 " href="#shop">Shop</a>
                 <a class="px-4 mx-4 font-extralight" href="#blog">Blog</a>
-                <a class="px-4 mx-4 font-extralight" href="#customer-secondary">customer service</a>
+                <a class="px-4 mx-4 font-extralight" href="#customer-service">customer service</a>
             </div>
             <div class="flex flex-row items-center justify-center w-52" id="">
                 <div class="flex flex-row items-center justify-between">

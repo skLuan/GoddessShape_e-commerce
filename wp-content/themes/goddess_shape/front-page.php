@@ -155,7 +155,7 @@
             <div class="flex flex-row-reverse w-full">
                 <div class="flex bg-sun-2 h-28 w-28 bg-cover mb-9 z-20">
                     <button class="flex h-28 w-28 bg-cover mb-9 z-20">
-                        <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
+                        <img class="" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
 
                     </button>
                 </div>
@@ -433,7 +433,7 @@
         </div>
     </div>
 </div>
-<!-- categorias -->
+<!-- categorias DESKTOP -->
 <div class="hidden lg:flex flex-col w-full h-120 bg-white items-center justify-center">
         <div class="flex items-center h-20 justify-center">
             <h1 class="flex font-champagne_limousines text-3xl text-red-soft font-semibold pt-16 py-20 w-full items-center justify-center ">Categorias</h1>
@@ -454,7 +454,7 @@
     </div>
 </div>
 <!-- ver mas -->
-<a class="hidden lg:flex justify-center items-center pb-40" href="#blog">
+<a class="hidden lg:flex justify-center items-center pb-40" href="#category">
                 <img class="flex  w-28 bg-cover" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/ver-mas.png" alt="">
 </a>
 <!-- imagen abajo de modelos -->
@@ -629,7 +629,7 @@
     </div>
 </div>
 <div class="relative h-60">
-    <img class="absolute inset-0 h-100 w-2/3 items-center m-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol_sin_centro.png" alt="">
+    <img class="absolute inset-0 h-100 w-2/3 items-center m-auto opacity-80" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol_sin_centro.png" alt="">
 </div>
 <!-- FAQ -->
 <div class="flex flex-col w-full h-120 bg-white my-4" id="faq">
@@ -682,7 +682,7 @@
     </script>
     </div>
     <div>
-        <img class="relative lg:hidden bottom-40 h-60 w-full" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/medio-sol.png" alt="">
+        <img class="relative lg:hidden bottom-40 h-60 w-full opacity-75" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/medio-sol.png" alt="">
     </div>
 </div>
 <?php get_footer() ?>
