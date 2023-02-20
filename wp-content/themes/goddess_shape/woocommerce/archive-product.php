@@ -49,17 +49,17 @@ do_action('woocommerce_before_main_content');
 <?php if (is_shop()) : ?>
 	<div class="relative overflow-hidden grid mb-10 z-0">
 		<picture class="absolute opacity-20 -rotate-45">
-			<img src="<?= get_stylesheet_directory_uri( ) ?>/assets/img/home/sol_sin_centro.png" alt="">
+			<img src="<?= get_stylesheet_directory_uri() ?>/assets/img/home/sol_sin_centro.png" alt="">
 		</picture>
 		<picture class=" mx-auto mt-10">
-			<img width="120px" src="<?= get_stylesheet_directory_uri( ) ?>/assets/img/silueta.png" alt="">
+			<img width="120px" src="<?= get_stylesheet_directory_uri() ?>/assets/img/silueta.png" alt="">
 		</picture>
 		<h2 class="text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
 	</div>
 <?php endif; ?>
 
 <?php
-if (woocommerce_product_loop()):
+if (woocommerce_product_loop()) :
 	/**
 	 * Hook: woocommerce_before_shop_loop.
 	 *
@@ -70,11 +70,11 @@ if (woocommerce_product_loop()):
 	echo '<div class="relative flex flex-col px-5 justify-between pb-5 bg-white z-10">';
 	do_action('woocommerce_before_shop_loop');
 	echo '</div>';
-	?>
+?>
 
 
 
-	<?php
+<?php
 	woocommerce_product_loop_start();
 
 	if (wc_get_loop_prop('total')) {
@@ -98,7 +98,7 @@ if (woocommerce_product_loop()):
 	 * @hooked woocommerce_pagination - 10
 	 */
 	do_action('woocommerce_after_shop_loop');
- else:
+else :
 	/**
 	 * Hook: woocommerce_no_products_found.
 	 *
@@ -112,7 +112,7 @@ endif;
 <?php if (is_shop()) : //______________________ Es la tienda general? 
 ?>
 	<!--------------------------------------------------------------- nuevos modelos -->
-	<?= get_template_part('components/loops/loop', 'discount') ?> 
+	<?= get_template_part('components/loops/loop', 'discount') ?>
 	<div class="my-32">
 		<?= get_template_part('components/colections') ?>
 		<?= get_template_part('components/colections') ?>
@@ -121,7 +121,13 @@ endif;
 	<!-------------------------------------------------------------------------------- -->
 	<!---------------------------------------------- pay with -->
 	<?= get_template_part('components/payments') ?>
+
+	<?= get_template_part('components/guide') ?>
+
 	<?= get_template_part('components/categories') ?>
+	<?= get_template_part('components/shop', 'info') ?>
+
+	<?= get_template_part('components/faq') ?>
 
 <?php elseif (is_product_category()) : //___________________Es una pagina de categoria? 
 ?>
