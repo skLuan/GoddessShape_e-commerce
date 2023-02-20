@@ -8,7 +8,7 @@
     <?php wp_head(); ?>
 </head>
 
-<body class="flex flex-col w-full bg-white-notWhite">
+<body class="flex flex-col w-full bg-white">
     <div id="page-container" class="absolute w-full lg:max-w-screen-lg lg:left-1/2 lg:-translate-x-1/2">
         <header class="flex flex-column justify-center w-full h-12 bg-red-100 items-center">
             <h6 class="flex  ">Lorem Ipsum</h6>

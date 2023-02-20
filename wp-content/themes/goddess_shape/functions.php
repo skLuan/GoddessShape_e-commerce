@@ -1,4 +1,6 @@
 <?php
+
+define('IMAGE', get_stylesheet_directory_uri( ).'/assets/img/');
 function init_template()
 {
     add_theme_support('post-thumbnails');

@@ -1,5 +1,5 @@
     <!-- navbar -->
-    <div class="flex flex-column justify-between bg-white items-center border-b-red-100 border h-12 " id="navbar">
+    <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 " id="navbar">
             <div class="flex z-0">
                 <div class="flex h z-10">
                 <a href="<?= home_url() ?>">

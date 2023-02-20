@@ -1,5 +1,5 @@
 <!-- sidebar -->
-<div class="fixed flex-col top-0 z-50 w-4/6 lg:hidden h-screen bg-white shadow-xl" id="sidemenu">
+<div class="fixed hidden flex-col top-0 z-50 w-4/6 lg:hidden h-screen bg-white shadow-xl" id="sidemenu">
     <!-- logo-sidebar -->
     <div class="z-0 h-44" id="silueta-logo">
         <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/sidebar/deco-sidebar-top.png" alt="">

@@ -21,5 +21,9 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <!-- <ul class="products columns-<?php // echo esc_attr( wc_get_loop_prop( 'columns' ) ); 
+if(is_shop()):
 									?>"> -->
+<ul class="flex flex-col w-full p-5">
+<?php else: if(is_home())	?>
 <ul class="flex flex-row w-full p-5 overflow-x-auto">
+<?php endif;	?>
