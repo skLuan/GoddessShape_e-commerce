@@ -11,6 +11,7 @@ wp-content/*
 !wp-content/plugins/
 !wp-content/themes/
 wp-content/themes/goddess_shape/assets/img/
+wp-content/themes/goddess_shape/assets/css/tailwind.css
 
 # ignore these plugins
 wp-content/plugins/hello.php
