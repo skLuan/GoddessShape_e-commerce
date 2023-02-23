@@ -1,19 +1,27 @@
     <!-- navbar -->
     <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 " id="navbar">
-            <div class="flex z-0">
-                <div class="flex h z-10">
+        <div class="flex z-0">
+            <div class="flex h z-10">
                 <a href="<?= home_url() ?>">
                     <img class="h-9" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/logocondeco.png">
-                    </a>
-                </div>
+                </a>
             </div>
-        
+        </div>
+
         <div class="hidden lg:flex flex-row w-2/3 text-lg text-red-soft justify-between">
-            <div class="w-">
-                <a class="px-4 mx-4 " href="#shop">Shop</a>
+            <?php
+            wp_nav_menu([
+                'theme_location' => 'top_menu',
+                'menu_class'     => 'font-extralight flex flex-row justifiy-between',
+                'menu_id'        => 'navbar-Menu',
+                'add_li_class' => 'px-4 mx-4',
+            ])
+            ?>
+            <!-- <div class="w-">
+                <a class="px-4 mx-4 " href="">Shop</a>
                 <a class="px-4 mx-4 font-extralight" href="#blog">Blog</a>
                 <a class="px-4 mx-4 font-extralight" href="#customer-service">customer service</a>
-            </div>
+            </div> -->
             <div class="flex flex-row items-center justify-center w-52" id="">
                 <div class="flex flex-row items-center justify-between">
                     <a class="px-5 justify-between" href="#search">
@@ -37,7 +45,7 @@
                             </g>
                         </svg>
                     </a>
-                    <a class="px-5 justify-between" href="#cart">
+                    <a class="px-5 justify-between" href="<?= get_permalink(wc_get_page_id('cart')) ?>">
                         <svg class="" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
                             <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13b" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
                                 <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a36">
@@ -58,7 +66,7 @@
                             </g>
                         </svg>
                     </a>
-                    <a class="px-5" href="#user">
+                    <a class="px-5" href="<?= wc_get_page_id('myaccount') ?>">
                         <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af139" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
                             <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af139" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
                                 <g id="shape-7569143b-d70d-8022-8001-bd2e684af13d">
@@ -82,11 +90,11 @@
                 </div>
             </div>
 
-        </div>    
-                    <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center" id="language" href="#language">
-                        <img class="hidden lg:flex h-5 w-6 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/usa-flag.PNG" alt="usa flag">
-                        <p class="font-champagne_limousines">Es </p>
-                        <p class="font-champagne_limousines">/</p>
-                        <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
-                    </div>
+        </div>
+        <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center" id="language" href="#language">
+            <img class="hidden lg:flex h-5 w-6 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/usa-flag.PNG" alt="usa flag">
+            <p class="font-champagne_limousines">Es </p>
+            <p class="font-champagne_limousines">/</p>
+            <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
+        </div>
     </div>
