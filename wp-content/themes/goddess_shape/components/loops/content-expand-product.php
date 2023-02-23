@@ -25,35 +25,34 @@ if (empty($product) || !$product->is_visible()) {
 	return;
 }
 ?>
-<li <?php wc_product_class('relative flex flex-col w-56 h-120 bg-transparent rounded-lg mr-5 last:mr-0', $product); ?>>
-	<div class="relative flex w-56 h-120 rounded-lg">
+<li <?php wc_product_class('relative flex flex-col h-120 bg-transparent rounded-lg', $product); ?>>
+	<div class="relative w-full mb-5">
 		<!-- sombra card nuestros productos -->
-		<div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20 shadow-2xl"></div>
-		<div class="absolute justify-center h-56 w-52 ">
-			<div class="rounded-full shadow-2xl">
-				<?= $product->get_image('full') ?>
-			</div>
+		<!-- <div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20 shadow-2xl"></div> -->
+		<div class="justify-center  w-full grid grid-cols-2 gap-3 bg-transparent">
+			<picture class="shadow-gs rounded-lg bg-white-true col-span-1 flex min-h-[220px]">
+				<?= $product->get_image('full', ['class' => 'rounded-lg my-auto']) ?>
+			</picture>
+			<picture class="shadow-gs rounded-lg bg-white-true col-span-1 flex min-h-[202px]">
+				<?= $product->get_image('full', ['class' => 'rounded-lg my-auto']) ?>
+			</picture>
 		</div>
 		<!-- boton add cart -->
-		<button class="absolute right-5 -bottom-5 h-16 w-16 z-30">
+		<button class="absolute right-5 -bottom-10 h-16 w-16 z-30">
 			<img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
 		</button>
 	</div>
 	<!-- contenedor info -->
-	<div class="flex flex-col z-20 h-80 px-5 py-2 justify-around w-52 bg-white shadow-2xl rounded-lg">
+	<div class="flex flex-col z-20 px-5 py-5 w-full bg-white-true shadow-gs rounded-lg">
 
-		<div class="flex">
-			<div>
-				<a href="<?= $product_url ?>">
-					<h2 class="text-color-secondary font-bold font-champagne_limousines text-lg font-base"><?= $product->get_name() ?></h2>
-				</a>
-			</div>
-		</div>
-		<!-- tallas y colores -->
+		<a href="<?= $product_url ?>">
+			<h2 class="text-color-secondary pb-3 font-bold font-champagne_limousines text-lg font-base"><?= $product->get_name() ?></h2>
+		</a>
+		<h2 class="font-base font-normal text-gray-400">available in:</h2>
+		<div class="grid grid-cols-2 gap-5">
 
-		<div class="mb-2">
-			<h2 class="font-base font-light text-gray-400">available in:</h2>
-			<div class="flex h-7 bg-white justify-between text-black-gs text-l font-semibold">
+			<!--  -------------------------------Talla -->
+			<div class="col-span-1 flex h-7 bg-transparent justify-between text-black-gs text-l font-semibold">
 				<?php
 				$at = explode(", ", $product->get_attribute('size'));
 				// var_dump($at);
@@ -62,11 +61,13 @@ if (empty($product) || !$product->is_visible()) {
 				}
 				?>
 			</div>
-			<div class="flex w-1/2 pt-1 h-7 bg-white ">
-				<div class="flex flex-row justify-around w-full">
+
+			<!--  -------------------------------Color -->
+			<div class="col-span-1 w-full flex h-7 bg-white ">
+				<div class="flex flex-row mx-auto">
 					<!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
+								<div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
+								<div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
 					<?php
 					$at = explode(", ", $product->get_attribute('color'));
 
@@ -75,9 +76,9 @@ if (empty($product) || !$product->is_visible()) {
 
 							switch ($value) {
 								case 'white':
-									echo '<div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>';
+									echo '<div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-4 my-2"></div>';
 								case 'black':
-									echo '<div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>';
+									echo '<div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-4 my-2"></div>';
 									break;
 								default:
 									echo "";

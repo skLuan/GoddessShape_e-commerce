@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./*.php",
     "./components/*.php",
+    "./components/**/*.php",
     "./assets/js/main.js",
     "./woocommerce/**/*.php",
   ],
@@ -23,12 +24,6 @@ module.exports = {
         principal: "#CC2D4A",
         secondary: "#fceceb",
         tertiary: "#ffecec",
-        backgroundColor: (theme) => ({
-          ...theme("colors"),
-          primary: "#fdf8f8",
-          secondary: "#fceceb",
-          tertiary: "#d4a49c",
-        }),
         orange: {
           soft: "#fbf6f4",
         },
@@ -44,26 +39,33 @@ module.exports = {
           gsSoft: "rgba(35,27,27,0.6)",
         },
         white: {
-          DEFAULT: "#ffffff",
+          DEFAULT: "#fdfcfc",
+          gs: "#fceceb",
+          true: "#ffffff",
           notWhite: "#fdf8f8",
         },
         textColor: {
-          primary: "#000000",
+          primary: "#0C0C0C",
           secondary: "#ffffff",
           orange: "#f49c64",
-
         },
+      },
+      fontSize: {
+        28: "28px",
       },
       fontFamily: {
         champagne_limousines: ["champagne_limousines", "sans-serif"],
-        baby_aletha: ["Baby_aletha", "sans serif"]
+        baby_aletha: ["Baby_aletha", "sans serif"],
       },
       borderRadius: {
         "4xl": "2rem",
       },
+      boxShadow: {
+        gs: "4px 4px 4px 0px rgba(0, 0, 0, 0.1)",
+      },
       height: {
-        '120': '30rem',
-        '100': '25rem',
+        120: "30rem",
+        100: "25rem",
       },
     },
   },

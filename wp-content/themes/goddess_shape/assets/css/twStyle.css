@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-  body, h2 {
+  body,
+  h2 {
     @apply font-champagne_limousines;
   }
 }
@@ -13,15 +13,16 @@
   #sidebar-Menu li {
     /* @apply font-light text-xl font-champagne_limousines pb-3; */
     @apply font-light text-xl pb-3;
-    font-family: 'champagne_limousines', sans-serif;
+    font-family: "champagne_limousines", sans-serif;
   }
 }
+
 nav.woocommerce-breadcrumb {
-  @apply bg-white;
+  @apply bg-white-true;
 }
-  .woocommerce-breadcrumb{
-    @apply px-5 flex items-center flex-row border-b border-red-100;
-  }
+.woocommerce-breadcrumb {
+  @apply px-5 flex items-center flex-row border-b border-red-100;
+}
 
 #sidebar-Menu li.current_page_item a {
   @apply flex flex-row items-center text-xl font-bold !text-black-gs;
@@ -41,15 +42,26 @@ nav.woocommerce-breadcrumb {
   @apply pl-4 pb-1;
   content: unset;
 }
- #tab_bar {
+#tab_bar {
   @apply bottom-[2%] lg:bottom-[unset] right-1/2 translate-x-1/2 lg:translate-x-0 lg:mx-auto lg:top-10 lg:sticky;
- }
- .tab_bar_navbar {
+}
+.tab_bar_navbar {
   @apply !bottom-[9%];
- }
+}
 #sidebar-Menu .menu-item-has-children .sub-menu {
   @apply pt-2;
 }
 #sidebar-Menu .menu-item-has-children .sub-menu .menu-item a {
   @apply font-light pl-4 pb-1;
+}
+
+/* -------------------------Debajo de shop, sorting elements */
+p.woocommerce-result-count {
+  @apply font-bold text-black-gsSoft pl-2;
+}
+form.woocommerce-ordering select.orderby {
+  @apply bg-white-gs py-1 px-2 text-red-semi text-lg font-bold w-fit;
+}
+form.woocommerce-ordering select.orderby option {
+  @apply bg-white hover:!bg-white-gs text-red-semi py-1 text-base font-normal;
 }
