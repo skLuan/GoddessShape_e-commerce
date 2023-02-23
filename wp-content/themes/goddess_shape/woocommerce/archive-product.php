@@ -47,15 +47,45 @@ do_action('woocommerce_before_main_content');
 </header>
 
 <?php if (is_shop()) : ?>
+	<picture class="w-full">
+		<img src="<?= IMAGE . 'banners/Nuestros_productos.png' ?>" alt="">
+	</picture>
 	<div class="relative overflow-hidden grid mb-10 z-0">
-		<picture class="absolute opacity-20 -rotate-45">
-			<img src="<?= get_stylesheet_directory_uri() ?>/assets/img/home/sol_sin_centro.png" alt="">
+		<picture class="absolute flex opacity-20 lg:top-0">
+			<img class="lg:w-1/3 m-auto -rotate-45" src="<?= get_stylesheet_directory_uri() ?>/assets/img/home/sol_sin_centro.png" alt="">
 		</picture>
 		<picture class=" mx-auto mt-10">
 			<img width="120px" src="<?= get_stylesheet_directory_uri() ?>/assets/img/silueta.png" alt="">
 		</picture>
 		<h2 class="text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
 	</div>
+<?php else : if (is_product_category()) ?>
+
+	<?php
+	$cat = get_queried_object()->slug;
+	$url = IMAGE . 'banners/categories/' . $cat . '.png';
+	switch ($cat):
+		case 'complements': ?>
+			<picture class="w-full">
+				<img src="<?= $url ?>" alt="">
+			</picture>
+			<?php break; ?>
+		<?php
+		case 'daily-use': ?>
+			<picture class="w-full">
+				<img src="<?= $url ?>" alt="">
+
+			</picture>
+			<?php break; ?>
+		<?php
+		case 'post-surgical': ?>
+			<picture class="w-full">
+				<img src="<?= $url ?>" alt="">
+			</picture>
+			<?php break; ?>
+	<?php
+	endswitch; ?>
+
 <?php endif; ?>
 
 <?php
@@ -131,11 +161,19 @@ endif;
 
 <?php elseif (is_product_category()) : //___________________Es una pagina de categoria? 
 ?>
+	<?= get_template_part('components/loops/loop', 'discount') ?>
+	<?= get_template_part('components/colections') ?>
 
+	<?= get_template_part('components/guide') ?>
+	<?= get_template_part('components/loops/new-models') ?>
 	<?= get_template_part('components/payments') ?>
+	<?= get_template_part('components/shop', 'info') ?>
 
 
-<?php endif ?>
+
+
+
+<?php endif; ?>
 
 <?php
 
@@ -148,8 +186,8 @@ endif;
  * @hooked woocommerce_output_content_wrapper_end - 10 (outputs closing divs for the content)
  */
 
-get_footer('shop');
 do_action('woocommerce_after_main_content');
+get_footer('shop');
 
 /**
  * Hook: woocommerce_sidebar.

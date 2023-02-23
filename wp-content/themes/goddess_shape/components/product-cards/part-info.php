@@ -1,6 +1,7 @@
 <?php
 if (isset($args['product'])) {
     $product = $args['product'];
+    $product_url = get_permalink($product->get_id());
 }
 ?>
 <!-- contenedor info -->

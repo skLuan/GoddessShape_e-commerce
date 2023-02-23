@@ -19,3 +19,26 @@
         </div>
     </div>
 </section>
+
+<!-- textos abajo de pay with DESKTOP-->
+<section class="hidden lg:flex flex-row w-full h-100 bg-white-notWhite justify-around">
+    <div class="flex flex-col w-1/3 justify-center px-2 py-4">
+        <div class="flex items-center justify-center">
+            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/tiempos amarillo.png.png" alt="">
+        </div>
+        <div class="flex flex-col w-full">
+            <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Lorem ipsum odor</h1>
+            <h2 class="flex font-champagne_limousines gs-black text-lg font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>
+        </div>
+    </div>
+
+    <div class="flex flex-col w-1/3 justify-center px-2 py-4">
+        <div class="flex items-center justify-center">
+            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/pedido_amarillo.png.png" alt="">
+        </div>
+        <div class="flex flex-col w-full justify-center">
+            <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Shipping</h1>
+            <h2 class="flex font-champagne_limousines gs-black text-lg font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>
+        </div>
+    </div>
+</section>

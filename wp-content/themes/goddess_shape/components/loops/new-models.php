@@ -8,9 +8,7 @@
             'order' => 'desc'
         ];
         $products = wc_get_products($args);
-        foreach ($products as $product) :
-            $product_url = get_permalink($product->get_id());
-        ?>
+        foreach ($products as $product) :  ?>
             <!-- card nuevos modelos -->
             <div class="relative flex lg:w-56 lg:h-120 flex-col min-w-[240px] bg-transparent rounded-lg mr-5 last:mr-0">
                 <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>

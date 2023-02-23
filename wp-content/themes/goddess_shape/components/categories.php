@@ -1,6 +1,6 @@
 <section class="flex flex-col w-full h-120 bg-white px-5">
     <h2 class="text-28 text-red-soft font-bold pt-16 pb-10 w-full text-center">Categorias</h2>
-    <div class="mx-auto">
+    <div class="mx-auto lg:flex justify-around lg:w-full">
         <?php
         $product_categories = get_terms(array(
             'taxonomy'   => 'product_cat',
@@ -18,7 +18,7 @@
             $image_url = wp_get_attachment_url($image_id);
             if ($term_id !== 15) :
         ?>
-                <a class="flex flex-row h-20 w-full items-center my-4 " href="<?= $category_link ?>">
+                <a class="flex relative flex-row lg:flex-col-reverse h-20 w-full items-center my-4 " href="<?= $category_link ?>">
                     <img class="flex w-16 h-16" src="<?= $image_url ?>" alt="">
                     <h1 class="font-champagne_limousines px-4  text-xl font-bold text-red-semi"><?= $category->name ?></h1>
                 </a>

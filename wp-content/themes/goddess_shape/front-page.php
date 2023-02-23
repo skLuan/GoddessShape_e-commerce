@@ -24,13 +24,6 @@
     <?= get_template_part('components/colections') ?>
 </div>
 
-<div class="hidden lg:flex justify-around items-center w-full h-36 mt-16 bg-white-Notwhite">
-
-    <img class="h-36 w-36 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/category-desktop.PNG" alt="">
-    <img class="h-36 w-36 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/category-desktop.PNG" alt="">
-    <img class="h-36 w-36 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/category-desktop.PNG" alt="">
-</div>
-
 <section id="home_our_products" class="bg-white">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent ">
@@ -82,7 +75,6 @@
     $products = wc_get_products($args);
 
     foreach ($products as $product) :
-        $product_url = get_permalink($product->get_id());
     ?>
         <div class="relative flex lg:w-56 lg:h-120 flex-col min-w-[240px] bg-transparent rounded-lg mr-5 last:mr-0">
             <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>
@@ -204,46 +196,11 @@
         </div>
     </div>
 </section>
-<!-- pay with DESKTOP -->
-<div class="hidden lg:flex flex-col w-full justify-around items-center font-semibold h-60">
-    <div class="flex flex-col items-center justify-center w-36  h-12 pb-8 ">
-        <img class="flex w-16 h-16" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/pagos_amarillo.png-2.png" alt="">
-        <h1 class="flex font-champagne_limousines text-red-soft text-2xl leading-5  ">Pay with</h1>
-    </div>
-    <div class="flex flex-row my-4 h-30 w-full ">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/cash-app-png-2.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/PayPal_horizontally_Logo_2014-1.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/apple-pay-logo-4.png" alt="">
-        <img class="my-2 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Klarna_logo-1.png" alt="">
-    </div>
-</div>
 <!-- imagen abajo de blog -->
 <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
     <picture class="flex lg:hidden items-center justify-center w-full h-60 bg-white mb-12">
         <img class="flex h-56 w-50" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop-now-full.png" alt="">
     </picture>
 </a>
-<!-- textos abajo de pay with DESKTOP-->
-<section class="hidden lg:flex flex-row w-full h-100 bg-white-notWhite justify-around">
-    <div class="flex flex-col w-1/3 justify-center px-2 py-4">
-        <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/tiempos amarillo.png.png" alt="">
-        </div>
-        <div class="flex flex-col w-full">
-            <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Lorem ipsum odor</h1>
-            <h2 class="flex font-champagne_limousines gs-black text-lg font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>
-        </div>
-    </div>
-
-    <div class="flex flex-col w-1/3 justify-center px-2 py-4">
-        <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/pedido_amarillo.png.png" alt="">
-        </div>
-        <div class="flex flex-col w-full justify-center">
-            <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Shipping</h1>
-            <h2 class="flex font-champagne_limousines gs-black text-lg font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>
-        </div>
-    </div>
-</section>
 <?= get_template_part('components/faq') ?>
 <?php get_footer() ?>
