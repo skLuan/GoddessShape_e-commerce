@@ -1,9 +1,9 @@
     <!-- navbar -->
     <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 " id="navbar">
         <div class="flex z-0">
-            <div class="flex h z-10">
+            <div class="flex h z-10 pl-2">
                 <a href="<?= home_url() ?>">
-                    <img class="h-9" src="<?= get_stylesheet_directory_uri() ?>/assets/img/header deco/logocondeco.png">
+                    <img class="h-9" src="<?= IMAGE ?>Logo.svg">
                 </a>
             </div>
         </div>
