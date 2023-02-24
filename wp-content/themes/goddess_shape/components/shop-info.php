@@ -5,13 +5,13 @@
             <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-lg font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
         </div>
         <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/tiempos amarillo.png.png" alt="">
+            <img class="flex h-20 w-20" src="<?= IMAGE ?>Home/tiempo_degradado3.png" alt="">
         </div>
     </div>
     <div class="flex lg:hidden flex-row w-full justify-around pt-5">
 
         <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/pedido_amarillo.png.png" alt="">
+            <img class="flex h-20 w-20" src="<?= IMAGE ?>Home/pedido_degradado3.png" alt="">
         </div>
         <div class="flex flex-col w-60">
             <h2 class="flex font-champagne_limousines text-red-semi font-bold text-xl pb-3">Shipping</h2>
@@ -24,7 +24,7 @@
 <section class="hidden lg:flex flex-row w-full h-100 bg-white-notWhite justify-around">
     <div class="flex flex-col w-1/3 justify-center px-2 py-4">
         <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/tiempos amarillo.png.png" alt="">
+            <img class="flex h-20 w-20" src="<?= IMAGE ?>Home/tiempo_degradado3.png" alt="">
         </div>
         <div class="flex flex-col w-full">
             <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Lorem ipsum odor</h1>
@@ -34,7 +34,7 @@
 
     <div class="flex flex-col w-1/3 justify-center px-2 py-4">
         <div class="flex items-center justify-center">
-            <img class="flex h-20 w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/pedido_amarillo.png.png" alt="">
+            <img class="flex h-20 w-20" src="<?= IMAGE ?>Home/pedido_degradado3.png" alt="">
         </div>
         <div class="flex flex-col w-full justify-center">
             <h1 class="flex font-champagne_limousines text-red-soft font-semibold text-xl justify-center items-center">Shipping</h1>
