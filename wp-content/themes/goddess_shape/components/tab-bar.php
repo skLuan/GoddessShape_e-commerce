@@ -3,7 +3,7 @@
     <div class="flex items-center">
 
         <div class="h-7 w-7 sidebar" id="sideBar">
-            <img class="w-7 h-7 hidden bmenu" id="bmenu" href="#sidebar" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.PNG">
+            <img class="w-7 h-7 hidden bmenu" id="bmenu" href="#sidebar" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/toogle.png">
             <img class="h-7 w-7 toogle" id="toogle" src="<?= get_stylesheet_directory_uri() ?>/assets/img/tabBar icons/i-menu-2.svg" alt="">
         </div>
     </div>

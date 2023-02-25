@@ -33,7 +33,7 @@
 
         </div>
         <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center" id="language" href="#language">
-            <img class="hidden lg:flex h-5 w-6 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/usa-flag.PNG" alt="usa flag">
+            <img class="hidden lg:flex h-5 w-6 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/usa-flag.png" alt="usa flag">
             <p class="font-champagne_limousines">Es </p>
             <p class="font-champagne_limousines">/</p>
             <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
