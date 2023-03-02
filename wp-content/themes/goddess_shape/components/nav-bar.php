@@ -12,9 +12,10 @@
             <?php
             wp_nav_menu([
                 'theme_location' => 'top_menu',
-                'menu_class'     => 'font-extralight flex flex-row justifiy-between',
+                'menu_class'     => 'font-extralight flex flex-row justify-between',
                 'menu_id'        => 'navbar-Menu',
                 'add_li_class' => 'px-4 mx-4',
+                
             ])
             ?>
             <!-- <div class="w-">
