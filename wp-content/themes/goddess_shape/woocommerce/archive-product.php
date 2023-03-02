@@ -52,12 +52,9 @@ do_action('woocommerce_before_main_content');
 	</picture>
 	<div class="relative overflow-hidden grid mb-10 z-0">
 		<picture class="absolute flex opacity-20 lg:top-0">
-			<img class="lg:w-1/3 m-auto -rotate-45" src="<?= get_stylesheet_directory_uri() ?>/assets/img/home/sol_sin_centro.png" alt="">
+			<img class="lg:w-1/3 m-auto -rotate-45" src="<?= IMAGE ?>Home/sol_sin_centro.png" alt="">
 		</picture>
-		<picture class=" mx-auto mt-10">
-			<img width="120px" src="<?= get_stylesheet_directory_uri() ?>/assets/img/silueta.png" alt="">
-		</picture>
-		<h2 class="text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
+		<h2 class="pt-32 text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
 	</div>
 <?php else : if (is_product_category()) ?>
 

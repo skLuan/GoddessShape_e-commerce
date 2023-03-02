@@ -6,31 +6,31 @@
         </div>
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary">
             <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block">This is a question number1?</span>
-                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.PNG" alt="">
+                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base font-normal text-lg pt-2 text-black-gs ">Respuesta 1</p>
         </div>
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary z-10">
             <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block">This is a question number2?</span>
-                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.PNG" alt="">
+                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base font-normal text-lg pt-2 text-black-gs ">Respuesta 1</p>
         </div>
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary z-10">
             <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block">This is a question number3?</span>
-                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.PNG" alt="">
+                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base font-normal text-lg pt-2 text-black-gs ">Respuesta 1</p>
         </div>
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary z-10">
             <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block">This is a question number4?</span>
-                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.PNG" alt="">
+                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base font-normal text-lg pt-2 text-black-gs ">Respuesta 1</p>
         </div>
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary z-20">
             <button class="flex text-red-soft font-semibold question"><span class="text-lg my-auto block">This is a question number5?</span>
-                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.PNG" alt="">
+                <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base font-normal text-lg pt-2 text-black-gs ">Respuesta 1</p>
         </div>

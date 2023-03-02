@@ -17,7 +17,7 @@
         PRODUCTOS
     </div>
     <!-- boton que baja a ver colección -->
-    <img class=" h-3 w-3 lg:hidden" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/flechashome.PNG" alt="flecha">
+    <img class=" h-3 w-3 lg:hidden" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/flechashome.png" alt="flecha">
 </div>
 <!-- *---------------- -->
 <div class="block my-24">
@@ -105,7 +105,7 @@
 <!-- imagen abajo de modelos -->
 <div class="flex items-center justify-center w-full h-60 bg-white">
     <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
-        <img class="flex h-36 w-48" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.PNG" alt="">
+        <img class="flex h-36 w-48" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
     </a>
 </div>
 <!--------------------------------------------------------------------------- Guia de prendas -->
@@ -134,7 +134,7 @@
 
     <div class="flex flex-row w-full justify-around px-2 py-4">
         <div class="flex items-center justify-center">
-            <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
+            <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
         </div>
         <div class="flex flex-col w-60">
             <h2 class="flex font-champagne_limousines text-red-soft text-lg font-bold">Lorem ipsum odor</h2>
@@ -143,7 +143,7 @@
     </div>
     <div class="flex flex-row w-full justify-around lg:justify-start px-2 p-4 lg:pl-32">
         <div class="flex items-center justify-center">
-            <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
+            <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
         </div>
         <div class="flex flex-col w-60 pl-2">
             <h2 class="flex font-champagne_limousines text-red-soft text-lg font-bold ">Lorem ipsum odor</h2>
@@ -168,7 +168,7 @@
         <div class="flex flex-col">
             <div class="flex flex-row w-full justify-around lg:justify-start px-2 py-4 lg:pl-32">
                 <div class="flex items-center justify-center">
-                    <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
+                    <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
                 </div>
                 <div class="flex flex-col w-60 pl-2">
                     <h1 class="flex font-champagne_limousines lg:text-red-soft text-lg font-semibold">Lorem ipsum odor</h1>
@@ -177,7 +177,7 @@
             </div>
             <div class="flex flex-row w-full justify-around lg:justify-start px-2 p-4 lg:pl-32">
                 <div class="flex items-center justify-center">
-                    <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
+                    <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
                 </div>
                 <div class="flex flex-col w-60 pl-2">
                     <h1 class="flex font-champagne_limousines lg:text-red-soft text-lg font-semibold ">Lorem ipsum odor</h1>
@@ -191,7 +191,7 @@
                 <h2 class="flex font-champagne_limousines gs-black font-base font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>
             </div>
             <div class="flex items-center justify-center">
-                <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.PNG" alt="">
+                <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
             </div>
         </div>
     </div>

@@ -33,7 +33,7 @@ if ( ! empty( $breadcrumb ) ) {
 				$crumb[0] = "Shop";
 				$crumb[1] = get_permalink(wc_get_page_id('shop'));
 			}
-			echo '<a class="text-xl text-red-semi font-bold mx-1 py-2" href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
+			echo '<a class="text-2xl text-red-soft mx-1 py-2" href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
 		else:
 			if(!is_product() && !is_shop()):
 			echo '<span class="text-red-semi text-xl mx-1">';
