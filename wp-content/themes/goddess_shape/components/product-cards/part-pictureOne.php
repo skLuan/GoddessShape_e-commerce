@@ -5,7 +5,7 @@ if (isset($args['product'])) {
 ?>
 <div class="relative flex rounded-lg pb-5 min-h-[220px] h-full">
     <!-- sombra card nuestros productos -->
-    <!-- <div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20"></div> -->
+    <div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20"></div>
     <picture class="bg-white-true flex shadow-gs h-full rounded-lg">
         <?= $product->get_image('full', ['class' => 'my-auto h-full rounded-lg']) ?>
     </picture>
