@@ -39,17 +39,17 @@ get_header( 'shop' ); ?>
                                     <img width="1200" height="1200" src="http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder.png" class="my-auto h-full rounded-lg" alt="Placeholder" decoding="async" loading="lazy" srcset="http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder.png 1200w, http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder-300x300.png 300w, http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder-1024x1024.png 1024w, http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder-150x150.png 150w, http://localhost/goddess-shape.com/wp-content/uploads/woocommerce-placeholder-768x768.png 768w" sizes="(max-width: 1200px) 100vw, 1200px"/>
                                 </picture>
                                 <!-- carrusel imagenes del producto -->
-                                <div class="flex flex-row w-full items-center justify-between h-20">
-                                    <picture class="flex justify-center h-16 w-20 z-30 rounded-lg shadow-xl border border-orange-400 border-solid">
+                                <div class="flex flex-row w-full items-center justify-between h-20 mt-2">
+                                    <picture class="flex justify-center h-20 w-20 z-30 rounded-lg shadow-xl border border-orange-400 border-solid">
                                         <img src="http://localhost/goddess-shape.com/wp-content/themes/goddess_shape/assets/img/Home/sol-2.png" alt="">
                                     </picture>
-                                    <picture class="flex justify-center h-16 w-20 z-30 rounded-lg shadow-xl">
+                                    <picture class="flex justify-center h-20 w-20 z-30 rounded-lg shadow-xl">
                                         <img src="http://localhost/goddess-shape.com/wp-content/themes/goddess_shape/assets/img/Home/sol-2.png" alt="">
                                     </picture>
-                                    <picture class="flex justify-center h-16 w-20 z-30 rounded-lg shadow-xl">
+                                    <picture class="flex justify-center h-20 w-20 z-30 rounded-lg shadow-xl">
                                         <img src="http://localhost/goddess-shape.com/wp-content/themes/goddess_shape/assets/img/Home/sol-2.png" alt="">
                                     </picture>
-                                    <picture class="flex justify-center h-16 w-20 z-30 rounded-lg shadow-xl">
+                                    <picture class="flex justify-center h-20 w-20 z-30 rounded-lg shadow-xl">
                                         <img src="http://localhost/goddess-shape.com/wp-content/themes/goddess_shape/assets/img/Home/sol-2.png" alt="">
                                     </picture>
 
@@ -58,20 +58,20 @@ get_header( 'shop' ); ?>
                             <!-- contenedor info -->
                             <div class="flex flex-col z-20 px-8 pb-5 w-full h-56 bg-white-true shadow-gs rounded-lg">
                                 <a href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
-                                    <h2 class="text-color-secondary text-left font-bold font-champagne_limousines text-lg font-base pt-3">Faja larga con brasier</h2>
+                                    <h2 class="text-black-gs text-left font-bold font-champagne_limousines text-lg pt-4 ml-2">Faja larga con brasier</h2>
                                 </a>
                                 <!-- precio - card -->
-                                <div class="flex flex-row font-bold items-center justify-around pt-3">
+                                <div class="flex flex-row font-bold items-center justify-between pt-3">
                                         <h3 class="flex text-red-soft line-through opacity-80">$60.6</h3>
                                         <div class="flex flex-row justify-between">
                                             <h3 class="flex text-2xl text-red-soft w-2/6">$41.43</h3>
-                                            <h3 class="flex items-center font-ligth text-red-soft mr-4">US </h3>
+                                            <h3 class="flex items-center font-light text-red-soft mr-4">US </h3>
                                         </div>
                                 </div>
                                 <!-- tallas  -->
-                                <div class=" flex flex-row justify-between ">
-                                    <h2 class="flex font-base text-left font-normal text-gray-400">size</h2>
-                                    <div class="grid grid-cols-3 grid-rows-2 gap-2 w-28 bg-white text-gray-400 text-lg font-semibold font-baby_aletha">
+                                <div class=" flex flex-row justify-between mt-4 ">
+                                    <h2 class="flex text-lg text-left font-normal text-gray-400">size</h2>
+                                    <div class="grid grid-cols-3 grid-rows-2 gap-2 w-28 bg-white text-gray-400 text-lg font-semibold font-champagne_limousines">
                                         <div class="text-center">S</div>
                                         <div class="text-center">M</div>
                                         <div class="text-center">L</div>
@@ -81,16 +81,18 @@ get_header( 'shop' ); ?>
                                     </div>
                                 </div>
                                 <!-- colores -->
-                                    <div class="flex flex-row w-full pt-1 h-7 bg-white justify-between">
+                                    <div class="flex flex-row w-full mt-6 h-7 bg-white justify-between">
                                         <div class="flex flex-row items-center justify-start w-2/3">
                                             <h3 class="text-black-gs px-2">Color</h3>
                                             <h3 class="text-red-soft font-semibold">White</h3>
                                         </div>
-                                        <div class="flex flex-row justify-end w-1/2">
+                                        <div class="flex flex-row justify-center items-center w-1/2">
                                             <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
                                 <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
                                 <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
-                                            <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
+                                            <div class="flex flex-row h-5 w-5 bg-transparent border border-orange-400 rounded-full mx-auto mb-1">
+                                                <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto m-1"></div>
+                                            </div>
                                             <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
                                         </div>
                                     </div>
@@ -98,7 +100,7 @@ get_header( 'shop' ); ?>
         </div>
         <!-- descripcion del producto -->
         <div class="flex flex-col h-60 w-full items-center justify-center">
-            <div class="flex flex-row items-start justify-around w-3/4 h-40">
+            <div class="flex flex-row items-start justify-between w-3/4 h-40">
                 <div>
                     <h3 class="font-semibold text-lg text-orange-400 underline pt-4">What is my fit?</h3>
                 </div>
@@ -111,18 +113,18 @@ get_header( 'shop' ); ?>
             </div>
         </div>
         <!-- contenedor de la descripcion -->
-        <div class="flex flex-col h-100 w-full bg-white-notWhite px-8 justify-center items-center pb-4">
+        <div class="flex flex-col h-120 w-full bg-white-notWhite px-8 pb-4">
             <div class="flex flex-row justify-around items-center p-4 w-full border-y-red-100 border rounded-lg pb-2">
                 <h3 class="font-semibold text-lg text-red-soft">Acabados</h3>
                 <h3 class="font-semibold text-lg text-red-soft">Cuidados</h3>
             </div>
-            <div class="flex flex-col bg-white-true rounded-lg items-center shadow-xl h-full w-10/12 mt-2">
+            <div class="flex flex-col bg-white-true rounded-lg items-center shadow-xl h-full w-full mt-4 px-4">
                 <div class="p-4">
-                    <h3 class="font-normal text-xl text-red-soft">Description</h3>
-                    <p>Faja larga con espalda y sisa cubierta de uso diario y posquirúrgico, cuenta con brasier incorporado que brinda soporte en el busto. De compresión alta.</p>
+                    <h3 class="font-normal text-2xl text-red-soft mb-2">Description</h3>
+                    <p class="text-lg">Faja larga con espalda y sisa cubierta de uso diario y posquirúrgico, cuenta con brasier incorporado que brinda soporte en el busto. De compresión alta.</p>
                 </div>
-                <div class="p-4">
-                    <h3 class="font-normal text-xl text-red-soft">How to wear</h3>
+                <div class="flex flex-col w-full p-4">
+                <h3 class="font-normal text-2xl left-0 text-red-soft mr-20">How to wear</h3>
                     <p></p>
                 </div>
             </div>
@@ -158,7 +160,7 @@ get_header( 'shop' ); ?>
 <!-- last seen -->
     <div class="flex flex-col h-100 text-xl justify-between">
         <h3 class="font-semibold text-black-gs text-center pb-8">Last seen</h3>
-        <div class="flex flex-row w-full h-36 justify-around ">
+        <div class="flex flex-row w-full h-36 justify-around px-4">
             <picture class="flex justify-center shadow-lg w-28 rounded-lg">
                 <img class="rounded-lg shadow-xl w-full" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/body.png" alt="">
             </picture>
@@ -169,11 +171,11 @@ get_header( 'shop' ); ?>
             <!-- contenedor info -->
             <div class="flex flex-col z-20 px-2  pb-5 w-1/2 bg-white-true shadow-gs rounded-lg">
                                 <a href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
-                                    <h2 class="text-color-secondary text-left font-bold font-champagne_limousines h-8 text-base py-2">Faja larga con brasier</h2>
+                                <h2 class="text-color-secondary text-left font-bold font-champagne_limousines h-8 text-base py-2">Faja larga con brasier</h2>
                                 </a>
                                 <!-- tallas  -->
                                 <div class="flex mt-3  justify-center">
-                                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-baby_aletha">
+                                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-champagne_limousines">
                                         <div class=" text-center">S</div>
                                         <div class=" text-center">M</div>
                                         <div class=" text-center">L</div>
@@ -181,7 +183,7 @@ get_header( 'shop' ); ?>
                                 </div>
                                 <!-- colores -->
                                 <div class="flex flex-row w-full pt-1 h-4 bg-transparent justify-center">
-                                    <div class="flex flex-row justify-around w-2/3 bg-white text-black-gs text-lg font-semibold font-baby_aletha">
+                                    <div class="flex flex-row justify-around w-2/3 bg-white text-black-gs text-lg font-semibold font-champagne_limousines">
                                         <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
                                         <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
                                         <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
@@ -189,13 +191,13 @@ get_header( 'shop' ); ?>
                                     
                                 </div>
                                 <!-- precio - card -->
-                                <div class="flex flex-row font-bold items-center justify-around pt-2">
-                                        <h3 class="flex text-base justify-end  text-red-soft w-auto">$41.43 US</h3>
+                                <div class="flex flex-row font-bold items-center justify-end pt-2">
+                                        <h3 class="flex text-base justify-end  text-red-soft w-auto mt-4">$41.43</h3>
                                 </div>
             </div>
                             
         </div>
-        <div class="flex flex-row w-full h-36 justify-around">
+        <div class="flex flex-row w-full h-36 justify-around px-4">
             <picture class="flex justify-center shadow-lg w-28 rounded-lg">
                 <img class="rounded-lg shadow-xl" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/body.png" alt="">
             </picture>
@@ -206,7 +208,7 @@ get_header( 'shop' ); ?>
                                 </a>
                                 <!-- tallas  -->
                                 <div class="flex mt-3  justify-center">
-                                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-baby_aletha">
+                                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-champagne_limousines">
                                         <div class=" text-center">S</div>
                                         <div class=" text-center">M</div>
                                         <div class=" text-center">L</div>
@@ -222,8 +224,8 @@ get_header( 'shop' ); ?>
                                     
                                 </div>
                                 <!-- precio - card -->
-                                <div class="flex flex-row font-bold items-center justify-around pt-2">
-                                        <h3 class="flex text-base text-end w-auto  text-red-soft">$41.43 US</h3>
+                                <div class="flex flex-row font-bold items-center justify-end pt-2">
+                                        <h3 class="flex text-base justify-end  text-red-soft w-auto mt-4">$41.43 </h3>
                                 </div>
             </div>
                             
