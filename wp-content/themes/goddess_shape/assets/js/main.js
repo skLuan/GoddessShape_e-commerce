@@ -1,4 +1,5 @@
 // import { throttle } from "lodash";
+
 window.addEventListener("resize", function () {
   let innerHeight = window.innerHeight;
   let isNavbarVisible = window.innerHeight < window.outerHeight;

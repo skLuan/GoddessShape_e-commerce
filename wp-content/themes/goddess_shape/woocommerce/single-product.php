@@ -35,17 +35,9 @@ do_action('woocommerce_before_main_content');
 <?php while (have_posts()) :
     the_post();
     global $product;
-    // Obtener el precio
-    $price = get_post_meta(get_the_ID(), '_regular_price', true);
-
-    // Obtener el nombre del producto
-    $name = get_the_title();
 
     // Obtener la descripción corta del producto
     $short_description = get_the_excerpt();
-
-    // Obtener la descripción larga del producto
-    $long_description = get_the_content();
 
     $product_id = get_the_ID(); // ID del producto actual
     $gallery = get_post_meta($product_id, '_product_image_gallery', true); // obtiene la galería de imágenes
@@ -57,146 +49,12 @@ do_action('woocommerce_before_main_content');
     }
 ?>
     <!-- card producto-->
-    <div class="block lg:w-56 lg:h-120 flex-col lg:min-w-[240px] bg-transparent rounded-lg mx-4 last:mr-0 items-center justify-center mt-6">
-        <div class="flex flex-col rounded-lg min-h-[220px] h-full">
-            <!-- sombra card nuestros productos -->
-            <!-- <div class="absolute bg-gray-card w-52 h-64 rounded-lg rotate-6 opacity-20"></div> -->
-            <picture class="bg-white-true shadow-gs h-full rounded-lg">
-                <?php
-                echo woocommerce_get_product_thumbnail();
-                ?>
-            </picture>
-            <!-- carrusel imagenes del producto -->
-            <div class="overflow-scroll overflow-y-visible h-24 mt-5">
-                <div class="flex flex-row overflow-visible w-fit">
-                    <?php
-                    foreach ($gallery_array as $image_id) :
-                        $image = wp_get_attachment_image($image_id, 'woocommerce_single');
-                    ?>
-                        <picture class="mx-3 flex justify-center h-20 w-20 z-30 rounded-lg shadow-gs border-solid">
-                            <?= $image ?>
-                        </picture>
-                    <?php
-                    endforeach;
-                    ?>
-                </div>
-            </div>
-        </div>
-        <!-- contenedor info -->
-        <div class="flex flex-col z-40 px-8 pb-5 mt-5 w-full bg-white-true shadow-gs rounded-lg">
-            <a class="" href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
-                <h2 class="text-black-gsSoft text-left font-bold font-champagne_limousines text-2xl pt-4"><?= $name ?></h2>
-            </a>
-            <!-- precio - card -->
-            <div class="flex flex-row font-bold items-center justify-between pt-1">
-                <!-- <h3 class="flex text-red-soft line-through opacity-80">$60.6</h3> -->
-                <div class="ml-auto flex flex-row justify-between items-center">
-                    <h3 class="flex ml-auto text-3xl text-red-soft mr-2"><?= $price ?></h3>
-                    <h3 class="flex items-center font-light text-red-soft my-auto">US </h3>
-                </div>
-            </div>
-            <!-- tallas  -->
-            <div class=" flex flex-row justify-between mt-4 ">
-                <?php
-                if (is_product() && $product->is_type('variable')) :
-                    $variations = $product->get_available_variations();
+    <div class="block lg:w-56 lg:h-120 flex-col lg:min-w-[240px] bg-transparent rounded-lg last:mr-0 items-center justify-center mt-6">
+        <?php
+        get_template_part('components/single-product/pictures', null, ['gallery_array' => $gallery_array]);
+        get_template_part('components/single-product/info', null, ['product' => $product, 'price' => $price]);
+        ?>
 
-                    $colorVariations = [];
-                    $sizeVariations = [];
-                    foreach ($variations as $variation) :
-                        $color = $variation['attributes']['attribute_pa_color'];
-                        $size = $variation['attributes']['attribute_pa_size'];
-                        $colorVariations[] = $color;
-                        $sizeVariations[] = $size;
-                    // $sizeVariations = $variation['attributes']['attribute_pa_size'];
-                    // $sizes = array_unique($sizeVariations);
-
-
-                    // Hacer algo con el precio y el color aquí
-                    endforeach;
-                    $colors = array_unique($colorVariations);
-                    $sizes = array_unique($sizeVariations);
-                // echo var_dump($sizes);
-                // echo '<br>';
-                endif;
-
-                ?>
-                <h2 class="flex text-xl text-left font-normal text-black-gsSoft ml-5">size</h2>
-                <div class="grid grid-cols-3 gap-2 w-28 text-black-gsSoft text-xl font-semibold font-champagne_limousines">
-                    <?php
-                    foreach ($sizes as $size) :
-                        $format;
-                        # code...
-                        switch ($size) {
-                            case 'medium':
-                                $format = 'M';
-                                break;
-                            case 'large':
-                                $format = 'L';
-                                break;
-                            default:
-                                $format = $size;
-                                break;
-                        }
-                    ?>
-                        <div class="text-center "><?= $format ?></div>
-                    <?php
-                    endforeach;
-                    ?>
-
-
-                    <!-- <div class="text-center">M</div>
-                    <div class="text-center">L</div>
-                    <div class="text-center">XL</div>
-                    <div class="text-center">2XL</div>
-                    <div class="bg-orange-400 text-center rounded-lg text-white">3XL</div> -->
-                </div>
-            </div>
-            <!-- colores -->
-            <div class="flex flex-row w-full mt-6 h-7 justify-between">
-                <div class="flex flex-row items-end justify-start">
-                    <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">color:</h2>
-                    <h3 class="text-red-soft text-xl pl-1 font-semibold">Cocoa</h3>
-                </div>
-                <div class="flex flex-row justify-center items-center w-1/2">
-                    <?php
-                    foreach ($colors as $color) :
-                        $bgC;
-                        # code...
-                        switch ($color) {
-                            case 'cocoa':
-                                $bgC = '#be998d';
-                                break;
-                            case 'beige':
-                                $bgC = '#be998d';
-                                break;
-                            case 'moca':
-                                $bgC = '#be998d';
-                                break;
-                            case 'white':
-                                $bgC = '#f9faff';
-                                break;
-                            case 'black':
-                                $bgC = '#231b1b';
-                                break;
-                            default:
-                                $bgC = '#f9faff';
-                                break;
-                        }
-                    ?>
-                        <div class="flex flex-row h-4 w-4 rounded-full mx-auto my-2" style="background-color: <?= $bgC ?>;"></div>
-                    <?php
-                    endforeach;
-                    ?>
-                    <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
-                                    <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
-                                    <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
-                    <!-- <div class="flex flex-row h-5 w-5 bg-transparent border border-orange-400 rounded-full mx-auto mb-1">
-                        <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto m-1"></div>
-                    </div> -->
-                </div>
-            </div>
-        </div>
     </div>
     <!-- descripcion del producto -->
     <div class="flex flex-col h-60 w-full items-center justify-center">
@@ -211,28 +69,10 @@ do_action('woocommerce_before_main_content');
         <div class="flex flex-row items-center justify-center w-1/3">
             <h3 class="flex w-full bg-red-semi rounded-full text-center justify-center text-white font-semibold text-lg">Description</h3>
         </div>
-    </div>
-    <!-- contenedor de la descripcion -->
-    <div class="flex flex-row justify-around items-center p-4 w-full border-y-red-100 border">
-        <h3 class="font-semibold text-lg text-red-soft">Acabados</h3>
-        <h3 class="font-semibold text-lg text-red-soft">Cuidados</h3>
-    </div>
-    <div class="flex flex-col w-full bg-white-notWhite px-5 pb-4">
-        <div class="flex flex-col bg-white-true rounded-lg items-center shadow-gs w-full mt-4">
-            <div class="p-4">
-                <h3 class="font-normal text-2xl text-red-soft mb-2">Description</h3>
-                <p class="text-lg">
-                    <?= $long_description ?>
-                </p>
-            </div>
-            <!-- <div class="flex flex-col w-full p-4">
-                <h3 class="font-normal text-2xl left-0 text-red-soft mr-20">How to wear</h3>
-                <p></p>
-            </div> -->
-        </div>
-    </div>
-
+    </div>    
     <?php // wc_get_template_part('content', 'single-product'); 
+    get_template_part('components/single-product/description', null, []);
+
     ?>
 
 <?php endwhile; // end of the loop. 

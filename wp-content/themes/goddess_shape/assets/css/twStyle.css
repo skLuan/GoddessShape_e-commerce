@@ -17,6 +17,12 @@
   }
 }
 
+@layer utilities {
+}
+.swiper-slide-thumb-active picture {
+  @apply border border-orange-500;
+}
+
 nav.woocommerce-breadcrumb {
   @apply bg-white-true;
 }

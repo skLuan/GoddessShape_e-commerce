@@ -1,6 +1,6 @@
-<section class="flex flex-col text-center">
+<section class="flex flex-col text-center h-fit">
     <h1 class="bg-white font-champagne_limousines text-28 text-red-soft leading-5 w-full font-bold p-4 pt-16">Nuevos modelos</h1>
-    <div class="flex flex-row w-full p-5 overflow-x-auto">
+    <div class="flex flex-row w-full py-5 overflow-x-auto pb-10 pl-5">
         <?php
         $args = [
             'limit' => 3,
