@@ -18,10 +18,12 @@
             $image_url = wp_get_attachment_url($image_id);
             if ($term_id !== 15) :
         ?>
-                <a class="flex relative flex-row lg:flex-col-reverse h-20 w-full items-center my-4 " href="<?= $category_link ?>">
-                    <img class="flex w-16 h-16" src="<?= $image_url ?>" alt="">
-                    <h1 class="font-champagne_limousines px-4  text-xl font-bold text-red-semi"><?= $category->name ?></h1>
-                </a>
+                <div class="mb-10 last:mb-0">
+                    <a class="flex relative flex-row lg:flex-col-reverse w-full items-center my-4 " href="<?= $category_link ?>">
+                        <img class="flex w-20 h-20 lg:w-36 lg:h-36" src="<?= $image_url ?>" alt="">
+                        <h1 class="font-champagne_limousines px-4  text-xl lg:text-2xl lg:mb-5 font-bold text-red-semi"><?= $category->name ?></h1>
+                    </a>
+                </div>
             <?php endif; ?>
         <?php endforeach; ?>
     </div>

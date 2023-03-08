@@ -33,50 +33,50 @@
         </h2>
     </div>
     <!-- boton all HOME -->
-    <div class="flex w-full bg-white-notWhite justify-center text-center pb-4 lg:hidden pt-5">
+    <div class="flex w-full justify-center text-center pb-4 lg:hidden pt-5">
         <div class="flex bg-red-semi justify-center items-center w-1/6  rounded-full">
             <a class="text-white" href="#shop">All</a>
         </div>
     </div>
     <!-- botones nuestros productos HOME -->
-    <div class="flex w-full bg-white-notWhite h-8 justify-between px-2 lg:hidden">
-        <div class="flex text-sm gs-black">
+    <div class="flex w-full h-8 justify-between px-5 lg:hidden">
+        <div class="flex text-lg gs-black">
             <a class="flex" href="#post-quirurgica">Post-quirurgica</a>
         </div>
-        <div class="flex text-sm">
-            <a class="flex text-sm" href="#complementos">Complementos</a>
+        <div class="flex">
+            <a class="flex text-lg" href="#complementos">Complementos</a>
         </div>
         <div class="flex">
-            <a class="flex text-sm" href="#Uso-diario">Uso diario</a>
+            <a class="flex text-lg" href="#Uso-diario">Uso diario</a>
         </div>
     </div>
     <!-- botones nuestros productos HOME DESKTOP -->
-    <div class="hidden lg:flex w-full bg-white-notWhite h-8 justify-center px-2">
-        <div class="flex bg-red-semi justify-center items-center w-1/12  rounded-full mx-6">
+    <div class="hidden lg:flex w-full h-8 justify-center px-5 my-5">
+        <div class="flex bg-red-semi text-xl justify-center items-center w-1/12  rounded-full mx-6">
             <a class="text-white" href="#shop">All</a>
         </div>
-        <div class="flex text-lg text-black-gs font-light mx-6">
+        <div class="flex text-xl text-black-gs font-light mx-6">
             <a class="flex" href="#post-quirurgica">Post-quirurgica</a>
         </div>
-        <div class="flex text-lg text-black-gs font-light mx-6">
-            <a class="flex text-lg" href="#complementos">Complementos</a>
+        <div class="flex text-xl text-black-gs font-light mx-6">
+            <a class="" href="#complementos">Complementos</a>
         </div>
-        <div class="flex text-black-gs font-light mx-6">
-            <a class="flex text-lg" href="#Uso-diario">Uso diario</a>
+        <div class="flex text-xl text-black-gs font-light mx-6">
+            <a class="" href="#Uso-diario">Uso diario</a>
         </div>
     </div>
 </section>
 <!-- cards nuestros productos -->
-<section class="flex flex-row bg-white-notWhite overflow-x-auto w-full mr-2 p-5">
+<section class="flex flex-row bg-white-notWhite overflow-x-auto w-full mr-2 px-5 py-10 h-full">
     <?php
     $args = [
-        'limit' => -1,
+        'limit' => 6,
     ];
     $products = wc_get_products($args);
 
     foreach ($products as $product) :
     ?>
-        <div class="relative flex lg:w-56 lg:h-120 flex-col min-w-[240px] bg-transparent rounded-lg mr-5 last:mr-0">
+        <div class="relative flex lg:w-56 lg:h-fit flex-col min-w-[240px] bg-transparent rounded-lg mr-8 last:mr-0">
             <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>
             <?= get_template_part('components/product-cards/part', 'info', ['product' => $product]) ?>
         </div>
@@ -105,7 +105,7 @@
 <!-- imagen abajo de modelos -->
 <div class="flex items-center justify-center w-full h-60 bg-white">
     <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
-        <img class="flex h-36 w-48" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
+        <img class="flex h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
     </a>
 </div>
 <!--------------------------------------------------------------------------- Guia de prendas -->
@@ -165,7 +165,7 @@
         <h2 class="hidden lg:flex font-champagne_limousines text-28 font-bold leading-5 w-full text-red-soft justify-center h-30">BLOG</h2>
     </div>
     <div class="flex flex-row">
-        <div class="flex flex-col">
+        <div class="flex flex-col lg:ml-auto">
             <div class="flex flex-row w-full justify-around lg:justify-start px-2 py-4 lg:pl-32">
                 <div class="flex items-center justify-center">
                     <img class="flex h-36 w-36" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
@@ -185,7 +185,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-row w-100 justify-around lg:justify-end px-2 py-4 lg:pr-32">
+        <div class="flex lg:ml-36 lg:mr-auto flex-row w-100 justify-around lg:justify-end px-2 py-4 lg:pr-32">
             <div class="flex flex-col w-60 justify-center text-left">
                 <h1 class="flex font-champagne_limousines lg:text-red-soft  text-lg font-semibold">Lorem ipsum odor</h1>
                 <h2 class="flex font-champagne_limousines gs-black font-base font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h2>

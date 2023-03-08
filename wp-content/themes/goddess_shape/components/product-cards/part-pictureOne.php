@@ -11,9 +11,9 @@ if (isset($args['product'])) {
         <picture class="h-[280px] relative flex">
             <?= $product->get_image('full', ['class' => 'm-auto h-full mx-auto relative max-w-none w-auto rounded-lg']) ?>
         </picture>
+        <!-- boton add cart -->
+        <button class="absolute right-2 -bottom-5 h-16 w-16 z-30">
+            <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
+        </button>
     </a>
-    <!-- boton add cart -->
-    <button class="absolute right-2 -bottom-5 h-16 w-16 z-30">
-        <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/sol-2.png" alt="">
-    </button>
 </div>
