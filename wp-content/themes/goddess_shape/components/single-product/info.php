@@ -3,10 +3,14 @@
 $name = get_the_title();
 ?>
 <!-- contenedor info -->
-<div class="flex flex-col z-40 px-5 pb-5 mx-5 bg-white-true shadow-gs rounded-lg">
+<div class="flex flex-col z-40 px-[10%] bg-white-true shadow-gs rounded-lg w-[90%] lg:w-[40%] lg:h-full lg:justify-between lg:px-[5%]">
     <a class="" href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
         <h2 class="text-black-gsSoft text-left font-bold font-champagne_limousines text-2xl pt-4"><?= $name ?></h2>
     </a>
+    <!-- enunciado del producto desktop -->
+    <div class="hidden lg:flex flex-col w-full text-xl text-left">
+            <p class="flex font-champagne_limousines text-black-gs leading-tight  font-base font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
     <!-- precio - card -->
     <div class="flex flex-row font-bold items-center justify-between pt-1">
         <!-- <h3 class="flex text-red-soft line-through opacity-80">$60.6</h3> -->
@@ -16,7 +20,7 @@ $name = get_the_title();
         </div>
     </div>
     <!-- tallas  -->
-    <div class=" flex flex-row justify-between mt-4 ">
+    <div class=" flex flex-row justify-around mt-4 ">
         <?php
         if (is_product() && $args['product']->is_type('variable')) :
             $variations = $args['product']->get_available_variations();
@@ -42,7 +46,7 @@ $name = get_the_title();
 
         ?>
         <h2 class="flex text-xl text-left font-normal text-black-gsSoft ml-5">size</h2>
-        <div class="grid grid-cols-3 gap-2 w-28 text-black-gsSoft text-xl font-semibold font-champagne_limousines">
+        <div class="grid grid-cols-3 gap-2 w-2/3 text-black-gsSoft text-xl font-semibold font-champagne_limousines">
             <?php
             foreach ($sizes as $size) :
                 $format;
@@ -73,7 +77,7 @@ $name = get_the_title();
         </div>
     </div>
     <!-- colores -->
-    <div class="flex flex-row w-full mt-6 h-7 justify-between">
+    <div class="flex flex-row w-full my-6 h-7 justify-between">
         <div class="flex flex-row items-end justify-start">
             <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">color:</h2>
             <h3 class="text-red-soft text-xl pl-1 font-semibold">Cocoa</h3>

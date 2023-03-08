@@ -8,11 +8,11 @@
             </div>
         </div>
 
-        <div class="hidden lg:flex flex-row w-2/3 text-lg text-red-semi justify-between">
+        <div class="hidden lg:flex lg:uppercase flex-row w-2/3 text-lg text-red-semi justify-between">
             <?php
             wp_nav_menu([
                 'theme_location' => 'top_menu',
-                'menu_class'     => 'font-extrabold  flex flex-row justifiy-between',
+                'menu_class'     => 'font-extrabold  flex flex-row justify-between',
                 'menu_id'        => 'navbar-Menu',
                 'add_li_class' => 'px-4 mx-4 text-xl',
             ])
