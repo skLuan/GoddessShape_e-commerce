@@ -57,22 +57,16 @@ do_action('woocommerce_before_main_content');
 
     </div>
     <!-- descripcion del producto -->
-    <div class="flex flex-col h-60 w-full items-center lg:items-end justify-center">
-        <div class="flex flex-row items-start justify-between lg:justify-around w-3/4 lg:w-1/2  h-40">
-            <div>
-                <h3 class="font-semibold text-lg text-orange-400 underline pt-4">What is my fit?</h3>
-            </div>
-            <button class="h-16 lg:h-6 w-1/2 lg:w-1/3 justify-center">
-                <img class="lg:h-16 h-20" src="http://localhost/goddess-shape.com/wp-content/themes/goddess_shape/assets/img/Home/add-cart.png" alt="">
-            </button>
-        </div>
+    <!-- <div class="flex flex-col w-full items-center lg:items-end justify-center">
         <div class="flex flex-row w-full items-center justify-center">
             <div class="flex flex-row items-center h-8 justify-center w-1/3">
                 <h3 class="flex w-full bg-red-semi rounded-full text-center justify-center text-white font-semibold text-lg">Description</h3>
             </div>
         </div>
-    </div>    
+    </div>     -->
     <?php // wc_get_template_part('content', 'single-product'); 
+    do_action('woocommerce_after_single_product_summary');
+
     get_template_part('components/single-product/description', null, []);
 
     ?>
