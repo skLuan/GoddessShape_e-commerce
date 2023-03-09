@@ -50,39 +50,20 @@ do_action('woocommerce_before_main_content');
 	<picture class="w-full">
 		<img src="<?= IMAGE . 'banners/Nuestros_productos.png' ?>" alt="">
 	</picture>
-	<div class="relative overflow-hidden grid mb-10 z-0">
-		<picture class="absolute flex opacity-20 lg:top-0">
-			<img class="lg:w-1/3 m-auto -rotate-45" src="<?= IMAGE ?>Home/sol_sin_centro.png" alt="">
+	<div class="relative overflow-hidden grid z-0">
+		<picture class="absolute lg:left-1/2 lg:-translate-x-1/2 flex opacity-20 lg:top-0">
+			<img class="lg:w-1/2 m-auto -rotate-45" src="<?= IMAGE ?>Home/sol_sin_centro.png" alt="">
 		</picture>
 		<h2 class="pt-32 text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
 	</div>
 <?php else : if (is_product_category()) ?>
-
 	<?php
 	$cat = get_queried_object()->slug;
 	$url = IMAGE . 'banners/categories/' . $cat . '.png';
-	switch ($cat):
-		case 'complements': ?>
-			<picture class="w-full">
-				<img src="<?= $url ?>" alt="">
-			</picture>
-			<?php break; ?>
-		<?php
-		case 'daily-use': ?>
-			<picture class="w-full">
-				<img src="<?= $url ?>" alt="">
-
-			</picture>
-			<?php break; ?>
-		<?php
-		case 'post-surgical': ?>
-			<picture class="w-full">
-				<img src="<?= $url ?>" alt="">
-			</picture>
-			<?php break; ?>
-	<?php
-	endswitch; ?>
-
+	?>
+	<picture class="w-full">
+		<img src="<?= $url ?>" alt="">
+	</picture>
 <?php endif; ?>
 
 <?php
@@ -94,7 +75,7 @@ if (woocommerce_product_loop()) :
 	 * @hooked woocommerce_result_count - 20
 	 * @hooked woocommerce_catalog_ordering - 30
 	 */
-	echo '<div class="relative flex flex-col px-5 justify-between pb-5 bg-white z-10">';
+	echo '<div class="relative flex flex-col px-5 justify-between p-5 bg-white-notWhite z-10">';
 	do_action('woocommerce_before_shop_loop');
 	echo '</div>';
 ?>

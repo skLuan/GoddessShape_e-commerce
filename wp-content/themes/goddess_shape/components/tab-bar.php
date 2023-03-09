@@ -1,3 +1,6 @@
+<?php
+$cart_count = WC()->cart->get_cart_contents_count();
+?>
 <!-- tabBar -->
 <div class="flex lg:hidden items-center justify-between w-5/6 px-5 pt-3 pb-2 translate-x-1/2 right-1/2 fixed bottom-[10%] shadow-xl rounded-lg bg-white-true z-50" id="tab_bar">
     <div class="flex items-center">
@@ -9,8 +12,12 @@
     </div>
     <div class="relative">
         <a class="" href="<?= wc_get_cart_url() ?>">
-            <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400">3
+        <?php
+        if($cart_count > 0):
+        ?>
+            <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400"><?= $cart_count ?>
             </div>
+        <?php endif; ?>
             <svg class="" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13b" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
                 <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13b" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
                     <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a36">

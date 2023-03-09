@@ -25,7 +25,7 @@ if (empty($product) || !$product->is_visible()) {
 	return;
 }
 ?>
-<li <?php wc_product_class('relative flex flex-col h-120 lg:w-[30%] bg-transparent rounded-lg mr-5 last:mr-0', $product); ?>>
+<li <?php wc_product_class('relative flex flex-col lg:w-[30%] bg-transparent rounded-lg lg:mr-5 lg:last:mr-0 mb-10', $product); ?>>
 
 	<?= get_template_part('components/product-cards/part', 'pictureTwo', ['product' => $product]) ?>
 	<?= get_template_part('components/product-cards/part', 'info', ['product' => $product]) ?>

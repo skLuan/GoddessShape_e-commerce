@@ -29,10 +29,10 @@ global $product;
 	// do_action('woocommerce_after_add_to_cart_quantity');
 	?>
 
-	<div class="flex flex-col lg:flex-row justify-between">
+	<div class="flex flex-col lg:flex-row justify-between mb-5 lg:mb-0">
 		<h3 class="font-semibold text-lg text-orange-400 underline py-5 text-center lg:ml-9">What is my fit?</h3>
-		<button type="submit" class="single_add_to_cart_button mx-auto pb-5 lg:pb-0 lg:mx-0 button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">
-			<img class="lg:h-16 h-20" src="<?= IMAGE . '/Home/add-cart.png' ?>" alt="add to cart button">
+		<button type="submit" class="single_add_to_cart_button h-full lg:my-auto text-white-gs font-bold bg-orange-400 mx-auto py-2 px-5 rounded-full lg:mx-0 button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">
+			Add to cart
 		</button>
 
 	</div>
