@@ -1,5 +1,5 @@
     <!-- navbar -->
-    <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 " id="navbar">
+    <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 w-full " id="navbar">
         <div class="flex z-0">
             <div class="flex h z-10 pl-2">
                 <a href="<?= home_url() ?>">
@@ -32,8 +32,7 @@
             </div>
 
         </div>
-        <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center" id="language" href="#language">
-            <img class="hidden lg:flex h-5 w-6 " src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/usa-flag.png" alt="usa flag">
+        <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center mr-5" id="language" href="#language">
             <p class="font-champagne_limousines">Es </p>
             <p class="font-champagne_limousines">/</p>
             <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>

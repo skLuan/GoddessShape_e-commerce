@@ -71,3 +71,16 @@ form.woocommerce-ordering select.orderby {
 form.woocommerce-ordering select.orderby option {
   @apply bg-white hover:!bg-white-gs text-red-semi py-1 text-base font-normal;
 }
+/* .swiper-container {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */

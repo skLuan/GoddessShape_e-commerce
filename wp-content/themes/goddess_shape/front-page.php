@@ -110,7 +110,7 @@
 </div>
 <!--------------------------------------------------------------------------- Guia de prendas -->
 <section id="guia_prendas">
-    <div class="flex flex-col w-full h-136 bg-white justify-between">
+    <div class="flex flex-col w-full bg-white justify-between">
         <div class="flex items-center justify-center w-full mb-10 bg-white">
             <div class="flex flex-col w-80">
                 <h2 class="flex items-center justify-center font-champagne_limousines text-red-soft font-bold text-28 my-4">Guia de prendas</h2>
@@ -121,10 +121,6 @@
     </div>
     <?= get_template_part('components/guide') ?>
 </section>
-
-<picture class="flex w-full h-60 rounded-full item-center justify-center my-20">
-    <img class="flex mx-auto h-60" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/brillando_es.png" alt="">
-</picture>
 <!-- blog -->
 <section class="lg:hidden flex flex-col w-full h-150 bg-white" id="blog">
     <div class="flex flex-col text-center bg-white ">
