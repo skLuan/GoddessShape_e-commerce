@@ -48,6 +48,7 @@ do_action('woocommerce_before_main_content');
 
 <?php if (is_shop()) : ?>
 	<picture class="w-full">
+		<source media="(min-width: 1100px)" srcset="<?= IMAGE . 'banners/retina/our_EN.png' ?>">
 		<img src="<?= IMAGE . 'banners/Nuestros_productos.png' ?>" alt="">
 	</picture>
 	<div class="relative overflow-hidden grid z-0">
@@ -60,8 +61,12 @@ do_action('woocommerce_before_main_content');
 	<?php
 	$cat = get_queried_object()->slug;
 	$url = IMAGE . 'banners/categories/' . $cat . '.png';
+	$urlRetina = IMAGE . 'banners/categories/retina/' . $cat . '_EN.png';
+	$url4k = IMAGE . 'banners/categories/retina/' . $cat . '_EN.png';
 	?>
 	<picture class="w-full">
+		<source media="(min-width: 2500px)" srcset="<?= $url4k ?>">
+		<source media="(min-width: 1100px)" srcset="<?= $urlRetina ?>">
 		<img src="<?= $url ?>" alt="">
 	</picture>
 <?php endif; ?>
