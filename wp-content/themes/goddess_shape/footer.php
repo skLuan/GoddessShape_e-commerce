@@ -17,8 +17,10 @@
             wp_nav_menu([
                 'theme_location' => 'footer_menu',
                 'container'      => false,
-                'menu_class'     => 'flex font-champagne_limousines text-red-semi text-xl font-light',
-                'menu_id'        => 'footer-Menu'
+                'menu_class'     => 'flex flex-col font-champagne_limousines text-red-semi text-xl font-light',
+                'menu_id'        => 'footer-Menu',
+                'add_li_class' => 'arroz',
+                
             ])
             ?>
             <!-- <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#Shop">Shop</a>
@@ -26,7 +28,7 @@
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#daily-use">Daily</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#complements">Complements</a> -->
         </div>
-        <div class="flex flex-col my-4 mx-2">
+        <!-- <div class="flex flex-col my-4 mx-2">
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#cart">Shopping cart</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#my-fit">What is my fit?</a>
         </div>
@@ -39,7 +41,7 @@
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#contact">Contact us</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#faq">FAQ</a>
             <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#shipping">Shipping</a>
-        </div>
+        </div> -->
     </div>
     <!-- footer responsive -->
     <div class="hidden lg:flex flex-col lg:flex-row w-full h-160 lg:h-100 bg-secondary px-4">

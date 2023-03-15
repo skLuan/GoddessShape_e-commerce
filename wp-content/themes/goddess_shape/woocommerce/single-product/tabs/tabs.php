@@ -35,7 +35,7 @@ if ( ! empty( $product_tabs ) ) : ?>
 		<div class="flex flex-row justify-around items-center p-4 w-full border-y-red-100 border">
 			<ul class="flex flex-row justify-around tabs w-full wc-tabs" role="tablist">
 				<?php foreach ( $product_tabs as $key => $product_tab ) : ?>
-					<li class="flex flex-row w-full  font-semibold justify-between text-lg text-red-soft px-2<?php echo esc_attr( $key ); ?>_tab" id="tab-title-<?php echo esc_attr( $key ); ?>" role="tab" aria-controls="tab-<?php echo esc_attr( $key ); ?>">
+					<li class="flex text-center flex-row w-full  font-semibold justify-center text-lg text-red-soft px-2<?php echo esc_attr( $key ); ?>_tab" id="tab-title-<?php echo esc_attr( $key ); ?>" role="tab" aria-controls="tab-<?php echo esc_attr( $key ); ?>">
 						<a class="text-red-soft" href="#tab-<?php echo esc_attr( $key ); ?>">
 							<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
 						</a>
