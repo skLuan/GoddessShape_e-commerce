@@ -25,3 +25,12 @@ if (window.innerWidth > 1000) {
 
 try {
 } catch (error) {}
+
+// var mySwiper = new Swiper('.swiper-container', {
+//   direction: 'horizontal',
+//   autoplay: {
+//     delay: 3000,
+//     disableOnInteraction: false,
+//   },
+//   loop: true,
+// });
