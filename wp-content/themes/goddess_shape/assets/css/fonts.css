@@ -1,0 +1,30 @@
+ @font-face {
+      font-family: "champagne_limousines";
+      font-weight: 400;
+      font-style: normal;
+      src: url("../fonts/Champagne_Limousines.ttf") format('truetype');
+    }
+    @font-face {
+      font-family: "champagne_limousines";
+      font-weight: 700;
+      font-style: normal;
+      src: url("../fonts/Champagne_Limousines_Bold.ttf") format('truetype');
+    }
+    @font-face {
+      font-family: "champagne_limousines";
+      font-weight: 400;
+      font-style: italic;
+      src: url("../fonts/Champagne_Limousines_italic.ttf") format('truetype');
+    }
+    @font-face {
+      font-family: "champagne_limousines";
+      font-weight: 700;
+      font-style: italic;
+      src: url("../fonts/Champagne_Limousines_Bold_italic.ttf") format('truetype');
+    }
+    @font-face {
+      font-family: "baby_aletha";
+      src: url("../fonts/Baby\ Aletha.otf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      }

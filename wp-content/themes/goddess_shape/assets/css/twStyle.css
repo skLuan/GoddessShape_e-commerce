@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body,
+  h2 {
+    @apply font-champagne_limousines;
+  }
+}
+
+@layer components {
+  #sidebar-Menu li {
+    /* @apply font-light text-xl font-champagne_limousines pb-3; */
+    @apply font-light text-xl pb-3;
+    font-family: "champagne_limousines", sans-serif;
+  }
+}
+
+@layer utilities {
+}
+.swiper-slide-thumb-active picture {
+  @apply border border-orange-500;
+}
+
+nav.woocommerce-breadcrumb {
+  @apply bg-white-true border-b border-red-100 flex;
+}
+
+#sidebar-Menu li.current_page_item a {
+  @apply flex flex-row items-center text-xl font-bold !text-black-gs;
+}
+#sidebar-Menu li.current_page_item a::after {
+  @apply ml-2;
+  content: "";
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("../img/sidebar/i-sun-select-sidebar.png");
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+#sidebar-Menu li.current_page_item.menu-item-has-children .sub-menu a::after {
+  @apply pl-4 pb-1;
+  content: unset;
+}
+#tab_bar {
+  @apply bottom-[2%] lg:bottom-[unset] right-1/2 translate-x-1/2 lg:translate-x-0 lg:mx-auto lg:top-10 lg:sticky;
+}
+.tab_bar_navbar {
+  @apply !bottom-[9%];
+}
+#sidebar-Menu .menu-item-has-children .sub-menu {
+  @apply pt-2;
+}
+#sidebar-Menu .menu-item-has-children .sub-menu .menu-item a {
+  @apply font-light pl-4 pb-1;
+}
+
+/* -------------------------Debajo de shop, sorting elements */
+p.woocommerce-result-count {
+  @apply font-bold text-black-gsSoft pl-2;
+}
+form.woocommerce-ordering select.orderby {
+  @apply bg-white-gs py-1 px-2 text-red-semi text-lg font-bold w-fit;
+}
+form.woocommerce-ordering select.orderby option {
+  @apply bg-white hover:!bg-white-gs text-red-semi py-1 text-base font-normal;
+}
+/* .swiper-container {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+} */

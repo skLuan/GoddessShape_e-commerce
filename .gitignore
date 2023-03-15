@@ -1,6 +1,7 @@
 # ignore everything in the root except the "wp-content" directory.
 /*
 !wp-content/
+!db/localData.sql
 !README.md
 
 # ignore everything in the "wp-content" directory, except:
@@ -9,6 +10,8 @@ wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
+wp-content/themes/goddess_shape/assets/img/
+wp-content/themes/goddess_shape/assets/css/tailwind.css
 
 # ignore these plugins
 wp-content/plugins/hello.php
