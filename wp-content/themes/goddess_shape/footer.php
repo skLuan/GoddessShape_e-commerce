@@ -51,7 +51,7 @@
             <div class="flex flex-row items-center justify-around  w-full h-6  bg-white">
                 <p class="flex  font-champagne_limousines text-red-semi font-base font-light">Copyright 2022 - Goddess Shape</p>
             </div>
-        </div>
+        </div> 
     </div>
     <!-- footer responsive -->
     <div class="hidden lg:flex flex-col justify-around w-full h-auto bg-secondary px-4">
