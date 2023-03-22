@@ -71,3 +71,107 @@ form.woocommerce-ordering select.orderby {
 form.woocommerce-ordering select.orderby option {
   @apply bg-white hover:!bg-white-gs text-red-semi py-1 text-base font-normal;
 }
+/* clases del footer para modificar items de el menu de wordpress */
+#menu-item-101 , #menu-item-100 , #menu-item-98{
+  @apply font-semibold text-2xl mb-2;
+}
+.sub-menu {
+  @apply font-normal text-xl;
+}
+.arroz a {
+  font-size: 20px;
+}
+.my-slider2 {
+  overflow: hidden;
+}
+
+.swiper-wrapper2 {
+  display: flex;
+  animation: slide 20s linear infinite;
+}
+
+.swiper-slide2 {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.swiper-slide2 p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes slide {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+.woocommerce-Tabs-panel h2{
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem; 
+  color: #d1a19d;
+  text-align: center;
+}
+.woocommerce-Tabs-panel p{
+  font-weight: 500;
+  font-size: large;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.25rem; 
+  color: #231b1b;
+  text-align: left;
+  margin-left: 10%;
+}
+.woocommerce-Tabs-panel li{
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.25rem; 
+  color: #231b1b;
+  margin-left: 10%;
+}
+#respond span{
+  justify-content: center;
+  align-items: center;
+}
+.comment-form-rating {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+}
+.comment-form-rating label{
+  font-size: 1.25rem; 
+}
+#comment {
+  border: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  border-color: #d1a19d;
+}
+#reply-title {
+  font-size: 1.25rem; 
+  margin-left: 10%;
+}
+.stars span a:active{
+  border: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: #d1a19d;
+}
+.woocommerce-product-attributes {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-items: center;
+}
+table tbody tr{
+  width: 50%;
+}
+
+

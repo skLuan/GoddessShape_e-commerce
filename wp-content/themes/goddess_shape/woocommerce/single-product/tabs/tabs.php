@@ -31,12 +31,12 @@ $product_tabs = apply_filters( 'woocommerce_product_tabs', array() );
 if ( ! empty( $product_tabs ) ) : ?>
 
 <!-- contenedor de la descripcion -->
-<div class="woocommerce-tabs wc-tabs-wrapper shadow-gs rounded-lg">
+<div class="woocommerce-tabs wc-tabs-wrapper shadow-gs rounded-lg" id="description-single-product">
 		<div class="flex flex-row justify-around items-center p-4 w-full border-y-red-100 border">
 			<ul class="flex flex-row justify-around tabs w-full wc-tabs" role="tablist">
 				<?php foreach ( $product_tabs as $key => $product_tab ) : ?>
-					<li class="flex flex-row w-full  font-semibold justify-between text-lg text-red-soft px-2<?php echo esc_attr( $key ); ?>_tab" id="tab-title-<?php echo esc_attr( $key ); ?>" role="tab" aria-controls="tab-<?php echo esc_attr( $key ); ?>">
-						<a class="text-red-soft" href="#tab-<?php echo esc_attr( $key ); ?>">
+					<li class="flex text-center flex-row w-full  font-semibold justify-center text-lg text-red-soft px-2<?php echo esc_attr( $key ); ?>_tab" id="tab-title-<?php echo esc_attr( $key ); ?>" role="tab" aria-controls="tab-<?php echo esc_attr( $key ); ?>">
+						<a class="text-red-soft lg:text-2xl" href="#tab-<?php echo esc_attr( $key ); ?>">
 							<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
 						</a>
 					</li>
@@ -44,8 +44,8 @@ if ( ! empty( $product_tabs ) ) : ?>
 			</ul>
 		</div>
 		<?php foreach ( $product_tabs as $key => $product_tab ) : ?>
-		<div class="flex flex-col w-full bg-white-true  items-center rounded-lg px-5 pb-4">
-			<div class="woocommerce-Tabs-panel woocommerce-Tabs-panel--<?php echo esc_attr( $key ); ?> panel entry-content wc-tab" id="tab-<?php echo esc_attr( $key ); ?>" role="tabpanel" aria-labelledby="tab-title-<?php echo esc_attr( $key ); ?>">
+		<div class="flex flex-col w-full bg-white-true  items-center rounded-lg px-5 pb-4" id="info-container">
+			<div class="w-[90%] items-center woocommerce-Tabs-panel woocommerce-Tabs-panel--<?php echo esc_attr( $key ); ?> panel entry-content wc-tab" id="tab-<?php echo esc_attr( $key ); ?>" role="tabpanel" aria-labelledby="tab-title-<?php echo esc_attr( $key ); ?>">
 				<?php
 				if ( isset( $product_tab['callback'] ) ) {
 					call_user_func( $product_tab['callback'], $key, $product_tab );
@@ -56,6 +56,6 @@ if ( ! empty( $product_tabs ) ) : ?>
 				<?php endforeach; ?>
 				
 				<?php do_action( 'woocommerce_product_after_tabs' ); ?>
-	</div>
+</div>
 
 <?php endif; ?>
