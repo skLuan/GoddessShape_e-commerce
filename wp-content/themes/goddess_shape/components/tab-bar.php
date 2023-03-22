@@ -33,25 +33,29 @@
         </a>
     </div>
     <a href="#search">
-        <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13a" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
-            <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13a" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
-                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a34">
-                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a34">
-                        <rect width="23.999999999999886" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
-                    </g>
-                </g>
-                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a35">
-                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a35">
-                        <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
-                    </g>
-                    <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a35">
-                        <g class="stroke-shape">
-                            <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: none; stroke-width: 0.2;" />
+        <div class="relative flex items-center justify-center">
+            <button id="search" class="flex items-center justify-center search-btn rounded-full text-gray-700 focus:outline-none">
+                <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13a" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
+                    <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13a" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
+                        <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a34">
+                            <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a34">
+                                <rect width="23.999999999999886" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
+                            </g>
+                        </g>
+                        <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a35">
+                            <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a35">
+                                <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
+                            </g>
+                            <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a35">
+                                <g class="stroke-shape">
+                                    <path stroke-linejoin="round" rx="0" ry="0" d="M9.5,4C13.09,4,16,6.91,16,10.5C16,12.117,15.409,13.596,14.432,14.734L20.076,20.378L19.369,21.085L13.724,15.44C12.588,16.413,11.113,17,9.5,17C5.91,17,3,14.09,3,10.5C3,6.91,5.91,4,9.5,4ZZM9.5,5C6.462,5,4,7.462,4,10.5C4,13.538,6.462,16,9.5,16C12.538,16,15,13.538,15,10.5C15,7.462,12.538,5,9.5,5ZZ" style="fill: none; stroke-width: 0.2;" />
+                                </g>
+                            </g>
                         </g>
                     </g>
-                </g>
-            </g>
-        </svg>
+                </svg>
+            </button>
+        </div>
     </a>
     <a class="" href="#user">
         <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af139" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">

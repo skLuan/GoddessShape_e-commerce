@@ -8,7 +8,7 @@
     <?php wp_head(); ?>
 </head>
 
-<body class="flex flex-col w-screen bg-white">
+<body class="flex flex-col w-screen parallax bg-white">
     <div id="page-container" class="absolute w-full lg:left-1/2 lg:-translate-x-1/2">
         <header class="flex flex-column justify-center w-full h-12 bg-red-100 items-center">
             <div class="swiper-container my-slider2">
@@ -27,8 +27,8 @@
         </header>
         <?php   
         get_template_part('components/sidebar');
-        get_template_part('components/tab-bar');
         get_template_part('components/nav-bar');
+        get_template_part('components/tab-bar');
         
         ?>
         <?php wp_body_open() ?>
