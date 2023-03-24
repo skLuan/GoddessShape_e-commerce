@@ -47,7 +47,14 @@ document.addEventListener("click", function (e) {
     }
   }
 });
+const searchButtons = document.querySelectorAll(".search-btn");
+const searchBar = document.getElementById("search-bar");
 
+searchButtons.forEach(function(searchButton) {
+  searchButton.addEventListener("click", function() {
+    searchBar.classList.toggle("hidden");
+  });
+});
 // function checkNavbar() {
 //   let tabBar = document.getElementById("tab_bar");
 //   let isNavbarVisible = window.innerHeight < window.outerHeight;
