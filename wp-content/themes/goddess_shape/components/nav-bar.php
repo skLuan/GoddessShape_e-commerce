@@ -1,7 +1,6 @@
     <!-- navbar -->
     <nav class="flex bg-white-true items-center border-b-red-100 border py-4 sticky top-0 z-50 w-full " id="navbar">
         <div class="lg:max-w-screen-xl h-full items-center w-full justify-between flex mx-auto">
-
             <div class="flex z-0">
                 <div class="flex h z-10 pl-2">
                     <a href="<?= home_url() ?>">
@@ -21,9 +20,9 @@
                 ?>
                 <div class="flex flex-row items-center justify-center w-52" id="">
                     <div class="flex flex-row items-center justify-between">
-                        <a class="px-5 justify-between flex" href="#search">
-                            <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="material-symbols:search-rounded"></iconify-icon>
-                        </a>
+                    <button class="px-5 justify-between flex search-btn" href="#search" id="search">
+                        <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="material-symbols:search-rounded"></iconify-icon>
+                    </button>
                         <a class="px-5 justify-between flex" href="<?= get_permalink(wc_get_page_id('cart')) ?>">
                             <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="material-symbols:shopping-cart-outline-rounded"></iconify-icon>
                         </a>
