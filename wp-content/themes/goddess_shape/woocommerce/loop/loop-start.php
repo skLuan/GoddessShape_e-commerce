@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 <!-- <ul class="products columns-<?php // echo esc_attr( wc_get_loop_prop( 'columns' ) ); 
 if(is_shop() || is_product_category()):
 ?>"> -->
-<ul class="flex flex-col w-full p-5 lg:flex-row lg:flex-wrap lg:justify-center	">
+<ul class="flex flex-col w-full p-5 lg:flex-row lg:flex-wrap lg:justify-center	bg-white-gs">
 <?php elseif(is_home()):	?>
 <ul class="flex flex-row w-full p-5 overflow-x-auto">
 <?php endif;	?>

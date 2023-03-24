@@ -4,7 +4,7 @@ if (isset($args['product'])) {
     $product_url = get_permalink($product->get_id());
 }
 ?>
-<div class="relative flex rounded-lg pb-5">
+<div class="relative flex rounded-lg pb-3">
     <!-- sombra card nuestros productos -->
     <div class="absolute bg-gray-card w-60 h-72 rounded-lg rotate-6 opacity-20 z-10"></div>
     <a class="bg-white-true z-30 shadow-gs rounded-lg items-center overflow-hidden" href="<?= $product_url ?>">
