@@ -1,7 +1,7 @@
 <div class="flex flex-col lg:flex-row rounded-lg min-h-[220px] h-full w-full lg:w-[50%] ml-auto z-20">
     <!-- sombra card nuestros productos -->
-    <div class="swiper-single-product pb-5 overflow-x-hidden px-5 lg:w-[80%]">
-        <div class="swiper-wrapper ">
+    <div class="swiper-single-product overflow-y-hidden pb-5 overflow-x-hidden px-5 lg:w-[80%]">
+        <div class="swiper-wrapper max-h-[336px]">
             <div class="swiper-slide bg-white-true shadow-gs rounded-lg">
                 <picture class="h-full w-full mx-auto flex">
                     <?php

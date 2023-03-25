@@ -23,8 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! empty( $breadcrumb ) ) {
 
 	echo $wrap_before;
-
-	foreach ( $breadcrumb as $key => $crumb ) {
+	echo '<div class="px-5 flex items-center flex-row max-w-screen-xl mx-auto w-full">';
+	foreach ( $breadcrumb as $key => $crumb ):
 
 		echo $before;
 
@@ -47,7 +47,8 @@ if ( ! empty( $breadcrumb ) ) {
 			$delimiter = '<img class="h-[15px] my-auto" width="15px" height="15px" src="'. get_stylesheet_directory_uri() .'/assets/img/sidebar/i-sun-select-sidebar.png" />';
 			echo $delimiter;
 		}
-	}
+	endforeach;
+	echo "</div>";
 	echo $wrap_after;
 
 }

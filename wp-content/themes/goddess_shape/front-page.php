@@ -6,24 +6,6 @@
         the_content();
     } ?>
 </div>
-
-<!-- ver colección -->
-
-<div class="flex flex-col mb-5 mx-auto items-center text-base font-champagne_limousines w-36 h-12  " id="carousel-btn">
-    <a href="#home_our_products" class="py-2 font-semibold lg:hidden ">
-        Ver productos
-    </a>
-    <div class="hidden lg:flex py-2 font-semibold text-2xl text-red-soft">
-        PRODUCTOS
-    </div>
-    <!-- boton que baja a ver colección -->
-    <img class=" h-3 w-3 lg:hidden" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/flechashome.png" alt="flecha">
-</div>
-<!-- *---------------- -->
-<div class="block my-24">
-    <?= get_template_part('components/colections') ?>
-</div>
-
 <section id="home_our_products" class="bg-white">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent ">
@@ -82,13 +64,18 @@
         </div>
     <?php endforeach;  ?>
 </section>
-<!----------------------------------------------- Colecciones-->
-<div class="my-32 block">
+<!-- *---------------- -->
+<div class="block my-24">
     <?= get_template_part('components/colections') ?>
 </div>
 <!---------------------------------------------------------------------------------- -->
 <!--------------------------------------------------------------- nuevos modelos -->
 <?= get_template_part('components/loops/new-models') ?>
+
+<!----------------------------------------------- Colecciones-->
+<div class="my-32 block">
+    <?= get_template_part('components/deco', 'colombian') ?>
+</div>
 <!-------------------------------------------------------------------------------- -->
 <!---------------------------------------------- pay with -->
 <?= get_template_part('components/payments') ?>
@@ -102,12 +89,6 @@
 <?= get_template_part('components/categories') ?>
 <!-------------------------------------------------------------------------------- -->
 
-<!-- imagen abajo de modelos -->
-<div class="flex items-center justify-center w-full h-60 bg-white">
-    <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
-        <img class="flex h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
-    </a>
-</div>
 <!--------------------------------------------------------------------------- Guia de prendas -->
 <section id="guia_prendas">
     <div class="flex flex-col w-full bg-white justify-between">
@@ -192,11 +173,10 @@
         </div>
     </div>
 </section>
-<!-- imagen abajo de blog -->
-<a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
-    <picture class="flex lg:hidden items-center justify-center w-full h-60 bg-white mb-12">
-        <img class="flex h-56 w-50" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop-now-full.png" alt="">
-    </picture>
-</a>
+<div class="flex items-center justify-center w-full h-60 bg-white">
+    <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
+        <img class="flex h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
+    </a>
+</div>
 <?= get_template_part('components/faq') ?>
 <?php get_footer() ?>

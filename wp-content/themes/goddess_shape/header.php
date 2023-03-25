@@ -14,7 +14,7 @@
             <div class="swiper-container my-slider2">
                 <div class="swiper-wrapper2">
                     <div class="swiper-slide2">
-                        <p class="whitespace-nowrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="whitespace-nowrap">Free shipping on orders $99+</p>
                     </div>
                     <!-- <div class="swiper-slide2">
                         <p>Contenido del carrusel 2</p>
@@ -25,10 +25,9 @@
                 </div>
             </div>
         </header>
-        <?php   
+        <?php
         get_template_part('components/sidebar');
         get_template_part('components/nav-bar');
         get_template_part('components/tab-bar');
-        
         ?>
         <?php wp_body_open() ?>

@@ -80,7 +80,7 @@ do_action('woocommerce_before_main_content');
     <h2 class="font-champagne_limousines text-28 text-red-soft pt-4 leading-5 w-full font-bold items-center ">Quizas te interese
     </h2>
 </div>
-<!-- last seen -->
+<!-- quisas te interece -->
 <section class="flex flex-row bg-white-true overflow-x-auto w-full mr-2 p-5">
     <?php
     $args = [
@@ -90,7 +90,7 @@ do_action('woocommerce_before_main_content');
 
     foreach ($products as $product) :
     ?>
-        <div class="relative flex lg:w-56 lg:h-120 flex-col min-w-[240px] bg-transparent rounded-lg mr-5 last:mr-0">
+        <div class="relative flex lg:w-56 flex-col min-w-[240px] bg-transparent rounded-lg mr-10 last:mr-0">
             <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>
             <?= get_template_part('components/product-cards/part', 'info', ['product' => $product]) ?>
         </div>
@@ -114,11 +114,11 @@ do_action('woocommerce_before_main_content');
             </picture>
             <!-- simbolo de descuento -->
             <picture class="absolute left-[35%] lg:left-[40%]">
-                <img class="bg-transparent h-12 w-12 z-40 mr-5 mt-12" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/descuento.png" alt="">
+                <img class="bg-transparent h-12 w-12 z-40 mr-5 mt-12" src="<?= IMAGE . '/discount-icon.svg' ?>" alt="">
             </picture>
             <!-- contenedor info -->
             <div class="flex flex-col z-20 px-2  pb-5 w-1/2 bg-white-true shadow-gs rounded-lg">
-                <a href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
+                <a href="">
                     <h2 class="text-color-secondary text-left font-bold font-champagne_limousines h-8 text-base py-2">Faja larga con brasier</h2>
                 </a>
                 <!-- tallas  -->

@@ -8,13 +8,13 @@ if (isset($args['product'])) {
 <div class="flex flex-col z-20 p-5 w-full h-full bg-white-true shadow-gs rounded-lg">
 
     <a href="<?= $product_url ?>">
-        <h2 class=" text-black-gs uppercase text-left font-bold font-champagne_limousines text-[17px] leading-tight"><?= $product->get_name() ?></h2>
+        <h2 class="pt-3 text-black-gs uppercase text-left font-bold font-champagne_limousines text-[17px] leading-tight"><?= $product->get_name() ?></h2>
     </a>
     <!-- tallas y colores -->
 
     <div class="mt-3">
         <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">available in:</h2>
-        <div class="flex h-7 bg-white text-black-gsSoft text-lg font-semibold">
+        <div class="flex h-7 text-black-gsSoft text-lg font-semibold">
             <?php
             $at = explode(", ", $product->get_attribute('size'));
             // var_dump($at);
@@ -23,7 +23,7 @@ if (isset($args['product'])) {
             }
             ?>
         </div>
-        <div class="flex w-1/2 pt-1 h-7 bg-white ">
+        <div class="flex w-1/2 pt-1 h-7">
             <div class="flex flex-row justify-around w-full">
                 <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
                             <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
