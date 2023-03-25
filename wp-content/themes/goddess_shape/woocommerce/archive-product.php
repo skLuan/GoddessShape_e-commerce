@@ -48,21 +48,15 @@ do_action('woocommerce_before_main_content');
 
 <?php if (is_shop()) : ?>
 	<picture class="w-full">
-		<source media="(min-width: 1100px)" srcset="<?= IMAGE . 'banners/retina/our_EN.png' ?>">
+		<source media="(min-width: 1100px)" srcset="<?= IMAGE . 'banners/4k/our_EN.png' ?>">
 		<img src="<?= IMAGE . 'banners/Nuestros_productos.png' ?>" alt="">
 	</picture>
-	<div class="relative overflow-hidden grid z-0">
-		<picture class="absolute lg:left-1/2 lg:-translate-x-1/2 flex opacity-20 lg:top-0">
-			<img class="lg:w-1/2 m-auto -rotate-45" src="<?= IMAGE ?>Home/sol_sin_centro.png" alt="">
-		</picture>
-		<h2 class="pt-32 text-center font-champagne_limousines text-red-soft font-bold text-28">Nuestros productos</h2>
-	</div>
 <?php else : if (is_product_category()) ?>
 	<?php
 	$cat = get_queried_object()->slug;
 	$url = IMAGE . 'banners/categories/' . $cat . '.png';
-	$urlRetina = IMAGE . 'banners/categories/retina/' . $cat . '_EN.png';
-	$url4k = IMAGE . 'banners/categories/retina/' . $cat . '_EN.png';
+	$urlRetina = IMAGE . 'banners/categories/4k/' . $cat . '_EN.png';
+	$url4k = IMAGE . 'banners/categories/4k/' . $cat . '_EN.png';
 	?>
 	<picture class="w-full">
 		<source media="(min-width: 2500px)" srcset="<?= $url4k ?>">

@@ -24,7 +24,7 @@
 }
 
 nav.woocommerce-breadcrumb {
-  @apply bg-white-true border-b border-red-100 flex;
+  @apply bg-white-true border-b border-red-100 flex sticky top-[70px] z-[60];
 }
 
 #sidebar-Menu li.current_page_item a {
