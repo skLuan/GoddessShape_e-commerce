@@ -1,5 +1,5 @@
     <!-- navbar -->
-    <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 w-full " id="navbar">
+    <div class="flex flex-column justify-between bg-white-true items-center border-b-red-100 border h-12 w-full mb-5 " id="navbar">
         <div class="flex z-0">
             <div class="flex h z-10 pl-2">
                 <a href="<?= home_url() ?>">
@@ -19,9 +19,14 @@
             ?>
             <div class="flex flex-row items-center justify-center w-52" id="">
                 <div class="flex flex-row items-center justify-between">
+                    <form id="search-bar" action="<?php echo home_url('/'); ?>" method="get">
+                        <input type="text" placeholder="Buscar" class="relative mt-1 text-center w-[30%] h-8 border rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-soft border-red-semi focus:border-transparent hidden" >
+                        <?php echo do_shortcode('[fibosearch]'); ?>
+                    </form>
                     <button class="px-5 justify-between flex search-btn" href="#search" id="search">
                         <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="material-symbols:search-rounded"></iconify-icon>
                     </button>
+
                     <a class="px-5 justify-between flex" href="<?= get_permalink(wc_get_page_id('cart')) ?>">
                         <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="material-symbols:shopping-cart-outline-rounded"></iconify-icon>
                     </a>
@@ -37,6 +42,5 @@
             <p class="font-champagne_limousines">/</p>
             <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
         </div>
-        <input id="search-bar" type="text" placeholder="Buscar" class="relative mt-2 text-center w-[30%] h-8 border rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-soft border-red-semi focus:border-transparent hidden">
 
     </div>

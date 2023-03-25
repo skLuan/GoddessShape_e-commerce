@@ -1,6 +1,6 @@
 <!-- page container -->
 <?php get_header() ?>
-<div class="py-5">
+<div class="py-5 mt-16">
     <?php while (have_posts()) {
         the_post();
         the_content();
