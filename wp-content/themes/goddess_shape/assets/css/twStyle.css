@@ -172,10 +172,11 @@ table tbody tr{
 }
 
 .parallax {
+  background-image: url("../img/Home/silueta.png");
+  background-size: 38%;
+  background-position: left;
   background-attachment: fixed;
-  background-image: url('../img/Home/silueta.png');
-  background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 95%;
+  height: 100vh;
+
 }

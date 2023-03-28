@@ -1,8 +1,8 @@
 <section class="flex flex-col text-center relative">
-    <h1 class="bg-white font-champagne_limousines text-[28px] text-red-soft leading-5 w-full font-bold p-4 pt-16 ">En descuento</h1>
+    <h1 class="bg-white font-champagne_limousines text-[28px] text-red-soft leading-5 w-full font-bold p-10 pt-10 ">Discounts</h1>
     <img class="mx-auto mb-5" width="44px" src="<?= get_stylesheet_directory_uri() ?>/assets/img/discount-icon.svg" alt="">
 
-    <div class="flex flex-row w-full p-5 overflow-x-auto bg-white-notWhite z-10">
+    <div class="flex flex-row w-full p-5  justify-center overflow-x-auto bg-white-notWhite z-10">
         <?php
         $today = date('Y-m-d');
         $args = [

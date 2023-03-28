@@ -1,6 +1,6 @@
 <!-- page container -->
 <?php get_header() ?>
-<div class="py-5 mt-16">
+<div class="py-5">
     <?php while (have_posts()) {
         the_post();
         the_content();
@@ -9,9 +9,9 @@
 <section id="home_our_products" class="bg-white">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent ">
-        <h2 class="lg:hidden font-champagne_limousines text-28 text-red-soft pb-3 leading-5 w-full font-bold">Nuestros Productos
+        <h2 class="lg:hidden font-champagne_limousines text-28 text-red-soft pb-3 leading-5 w-full font-bold">Our Products
         </h2>
-        <h2 class="hidden lg:flex justify-center font-champagne_limousines text-2xl pt-16 leading-5 w-full font-bold text-red-soft">Nuestros Productos
+        <h2 class="hidden lg:flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products
         </h2>
     </div>
     <!-- boton all HOME -->
@@ -21,15 +21,15 @@
         </div>
     </div>
     <!-- botones nuestros productos HOME -->
-    <div class="flex w-full h-8 justify-between px-5 lg:hidden">
+    <div class="flex w-full h-8 justify-between mb-4 px-5 lg:hidden">
         <div class="flex text-lg gs-black">
-            <a class="flex" href="#post-quirurgica">Post-quirurgica</a>
+            <a class="flex" href="#post-quirurgica">Post-surgical</a>
         </div>
         <div class="flex">
-            <a class="flex text-lg" href="#complementos">Complementos</a>
+            <a class="flex text-lg" href="#complementos">Complements</a>
         </div>
         <div class="flex">
-            <a class="flex text-lg" href="#Uso-diario">Uso diario</a>
+            <a class="flex text-lg" href="#Uso-diario">Daily-use</a>
         </div>
     </div>
     <!-- botones nuestros productos HOME DESKTOP -->
@@ -38,26 +38,26 @@
             <a class="text-white" href="#shop">All</a>
         </div>
         <div class="flex text-xl text-black-gs font-light mx-6">
-            <a class="flex" href="#post-quirurgica">Post-quirurgica</a>
+            <a class="flex" href="#post-quirurgica">Post-surgical</a>
         </div>
         <div class="flex text-xl text-black-gs font-light mx-6">
-            <a class="" href="#complementos">Complementos</a>
+            <a class="" href="#complementos">Complements</a>
         </div>
         <div class="flex text-xl text-black-gs font-light mx-6">
-            <a class="" href="#Uso-diario">Uso diario</a>
+            <a class="" href="#Uso-diario">Daily-use</a>
         </div>
     </div>
 </section>
 <!-- cards nuestros productos -->
-<section class="flex flex-row bg-white-notWhite overflow-x-auto w-full mr-2 px-5 py-10 h-full">
+<section class="flex flex-row bg-white-notWhite overflow-x-auto justify-center w-full mr-2 px-5 py-8 h-full">
     <?php
     $args = [
         'limit' => 6,
     ];
     $products = wc_get_products($args);
-
+    
     foreach ($products as $product) :
-    ?>
+        ?>
         <div class="relative flex lg:w-56 lg:h-fit flex-col min-w-[240px] bg-transparent rounded-lg mr-8 last:mr-0">
             <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>
             <?= get_template_part('components/product-cards/part', 'info', ['product' => $product]) ?>
@@ -77,11 +77,17 @@
     <?= get_template_part('components/deco', 'colombian') ?>
 </div>
 <!-------------------------------------------------------------------------------- -->
-<!---------------------------------------------- pay with -->
-<?= get_template_part('components/payments') ?>
 
 <!-- textos abajo de pay with-->
-<?= get_template_part('components/shop', 'info') ?>
+<section class="flex flex-col justify-between md:grid grid-cols-2 grid-rows-2 gap-1 w-full bg-white-notWhite px-5 py-16">
+        <?= get_template_part('components/shop', 'info') ?>
+        <!----------------------- pay with --------------------------------------->
+        <?= get_template_part('components/payments') ?>
+        <!-- delivery--------------------------------------------------- -->
+        <?= get_template_part('components/delivery') ?>
+        <!--------------------------------------------------------------------------- Guia de prendas -->
+        <?= get_template_part('components/guide') ?>
+</section>
 
 
 <!--------------------------------------------------------------------------------------------------->
@@ -89,26 +95,13 @@
 <?= get_template_part('components/categories') ?>
 <!-------------------------------------------------------------------------------- -->
 
-<!--------------------------------------------------------------------------- Guia de prendas -->
-<section id="guia_prendas">
-    <div class="flex flex-col w-full bg-white justify-between">
-        <div class="flex items-center justify-center w-full mb-10 bg-white">
-            <div class="flex flex-col w-80">
-                <h2 class="flex items-center justify-center font-champagne_limousines text-red-soft font-bold text-28 my-4">Guia de prendas</h2>
-                <p class="flex text-center justify-center leading-tight font-champagne_limousines gs-black text-lg font-light">Todas nuestras prendas tienen el mejor acabado y comodidad para tu día a día</p>
-                <a class="flex flex-row-reverse text-orange-400 underline font-semibold mt-2 ml-auto" href="#clothing-guide">Saber más</a>
-            </div>
-        </div>
-    </div>
-    <?= get_template_part('components/guide') ?>
-</section>
 <!-- blog -->
 <section class="lg:hidden flex flex-col w-full h-150 bg-white" id="blog">
     <div class="flex flex-col text-center bg-white ">
-        <h2 class="font-champagne_limousines text-28 text-red-soft w-full font-bold h-30">Blog</h2>
-
+        <h2 class="font-champagne_limousines text-28 text-red-soft w-full font-bold p-8 h-30">Blog</h2>
+        
     </div>
-
+    
     <div class="flex flex-row w-full justify-around px-2 py-4">
         <div class="flex items-center justify-center">
             <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">
@@ -138,8 +131,7 @@
 <!-- blog Desktop -->
 <section class="hidden lg:flex flex-col w-full h-150 bg-white pb-32" id="blog">
     <div class="flex flex-col text-center bg-white ">
-        <h2 class="lg:hidden font-champagne_limousines text-28 w-full font-bold text-red-soft">Blog</h2>
-        <h2 class="hidden lg:flex font-champagne_limousines text-28 font-bold leading-5 w-full text-red-soft justify-center h-30">BLOG</h2>
+        <h2 class="hidden lg:flex font-champagne_limousines p-8 text-28 font-bold leading-5 w-full text-red-soft justify-center h-30">BLOG</h2>
     </div>
     <div class="flex flex-row">
         <div class="flex flex-col lg:ml-auto">
