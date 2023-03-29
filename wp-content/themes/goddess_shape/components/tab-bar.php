@@ -39,8 +39,7 @@ $cart_count = WC()->cart->get_cart_contents_count();
             </svg>
         </a>
     </div>
-    <a href="#search">
-        <div class="relative flex items-center justify-center">
+    <div class="relative flex items-center justify-center">
             <button id="search" class="flex items-center justify-center search-btn rounded-full text-gray-700 focus:outline-none">
                 <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af13a" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
                     <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af13a" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
@@ -61,28 +60,9 @@ $cart_count = WC()->cart->get_cart_contents_count();
                         </g>
                     </g>
                 </svg>
-            </button>
-        </div>
-    </a>
-    <a class="" href="#user">
-        <svg xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xmlns="http://www.w3.org/2000/svg" height="24" id="screenshot-7569143b-d70d-8022-8001-bd2e684af139" viewBox="0 0 24 24" style="-webkit-print-color-adjust: exact;" fill="none" version="1.1">
-            <g xmlns:xlink="http://www.w3.org/1999/xlink" width="24" xml:space="preserve" height="24" id="shape-7569143b-d70d-8022-8001-bd2e684af139" baseProfile="full" style="fill: rgb(0, 0, 0);" ry="0" rx="0" version="1.1" enable-background="new 0 0 24.00 24.00">
-                <g id="shape-7569143b-d70d-8022-8001-bd2e684af13d">
-                    <g id="fills-7569143b-d70d-8022-8001-bd2e684af13d">
-                        <rect width="24" height="24" x="0" transform="matrix(1,0,0,1,0,0)" style="fill: none;" ry="0" fill="none" rx="0" y="0" />
-                    </g>
-                </g>
-                <g id="shape-7569143b-d70d-8022-8001-bd2e684b2a33">
-                    <g id="fills-7569143b-d70d-8022-8001-bd2e684b2a33">
-                        <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: rgb(35, 27, 27); fill-opacity: 1;" />
-                    </g>
-                    <g id="strokes-7569143b-d70d-8022-8001-bd2e684b2a33">
-                        <g class="stroke-shape">
-                            <path stroke-linejoin="round" rx="0" ry="0" d="M11.5,14C15.642,14,19,15.567,19,17.5L19,20L4,20L4,17.5C4,15.567,7.358,14,11.5,14ZZM18,17.5C18,16.119,15.09,15,11.5,15C7.91,15,5,16.119,5,17.5L5,19L18,19L18,17.5ZZM11.5,5C13.433,5,15,6.567,15,8.5C15,10.433,13.433,12,11.5,12C9.567,12,8,10.433,8,8.5C8,6.567,9.567,5,11.5,5ZZM11.5,6C10.119,6,9,7.119,9,8.5C9,9.881,10.119,11,11.5,11C12.881,11,14,9.881,14,8.5C14,7.119,12.881,6,11.5,6ZZ" style="fill: none; stroke-width: 0.2;" />
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </svg>
+        </button>
+    </div>
+    <a class="" href="https://api.whatsapp.com/send?phone=+573148009355&text=Hola%20Quisiera%20hacer%20un%20pedido">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="green" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.24 8.23c-1.48 0-2.93-.39-4.19-1.15l-.3-.17l-3.12.82l.83-3.04l-.2-.32a8.188 8.188 0 0 1-1.26-4.38c.01-4.54 3.7-8.24 8.25-8.24M8.53 7.33c-.16 0-.43.06-.66.31c-.22.25-.87.86-.87 2.07c0 1.22.89 2.39 1 2.56c.14.17 1.76 2.67 4.25 3.73c.59.27 1.05.42 1.41.53c.59.19 1.13.16 1.56.1c.48-.07 1.46-.6 1.67-1.18c.21-.58.21-1.07.15-1.18c-.07-.1-.23-.16-.48-.27c-.25-.14-1.47-.74-1.69-.82c-.23-.08-.37-.12-.56.12c-.16.25-.64.81-.78.97c-.15.17-.29.19-.53.07c-.26-.13-1.06-.39-2-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.12-.24-.01-.39.11-.5c.11-.11.27-.29.37-.44c.13-.14.17-.25.25-.41c.08-.17.04-.31-.02-.43c-.06-.11-.56-1.35-.77-1.84c-.2-.48-.4-.42-.56-.43c-.14 0-.3-.01-.47-.01Z"/></svg>
     </a>
 </div>

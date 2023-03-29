@@ -1,5 +1,5 @@
 <section class="flex flex-col w-full h-120 bg-white px-5">
-    <h2 class="text-28 text-red-soft font-bold pt-16 pb-10 w-full text-center">Categorias</h2>
+    <h2 class="text-28 text-red-soft font-bold pt-16 pb-10 w-full text-center">Categories</h2>
     <div class="mx-auto lg:flex justify-around lg:w-full">
         <?php
         $product_categories = get_terms(array(
