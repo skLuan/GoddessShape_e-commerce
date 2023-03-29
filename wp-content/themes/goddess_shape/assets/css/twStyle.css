@@ -172,7 +172,7 @@ table tbody tr{
 }
 
 .parallax {
-  background-image: url("../img/Home/silueta.png");
+  background-image: url("../img/silueta.svg");
   background-size: 38%;
   background-position: left;
   background-attachment: fixed;

@@ -1,4 +1,8 @@
-<div class=" flex flex-col w-full items-center justify-start py-2">
+<?php
+$classes = '';
+if (isset($args['class'])) $classes = $args['class'];
+?>
+<div class=" flex flex-col w-full items-center justify-start py-2 <?= esc_attr($classes); ?>">
     <div class="flex items-center justify-center">
         <img class="flex h-20 w-20 lg:h-28 lg:w-28" src="<?= IMAGE ?>Home/tiempo_degradado3.png" alt="">
     </div>
@@ -10,4 +14,3 @@
         <h3 class=" font-champagne_limousines text-black-gs leading-5 lg:text-lg text-base font-light">Please keep in mind that the estimated shipping times are not guaranteed and may be subject to unforeseen delays. Don't hesitate to contact us if you have any questions about your delivery!</h3>
     </div>
 </div>
-
