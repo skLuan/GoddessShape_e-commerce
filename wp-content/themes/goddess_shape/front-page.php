@@ -80,13 +80,13 @@
 
 <!-- textos abajo de pay with-->
 <section class="flex flex-col justify-between md:grid grid-cols-2 grid-rows-2 gap-1 w-full bg-white-notWhite px-5 py-16">
-        <?= get_template_part('components/shop', 'info') ?>
+        <?= get_template_part('components/customerGuide/shop', 'info', null, ['class' => 'atunes !bg-red']) ?>
         <!----------------------- pay with --------------------------------------->
-        <?= get_template_part('components/payments') ?>
+        <?= get_template_part( 'components/customerGuide/payments', null, ['class' => 'atunes !bg-red']) ?>
         <!-- delivery--------------------------------------------------- -->
-        <?= get_template_part('components/delivery') ?>
+        <?= get_template_part('components/customerGuide/delivery', null, ['class' => 'atunes !bg-red']) ?>
         <!--------------------------------------------------------------------------- Guia de prendas -->
-        <?= get_template_part('components/guide') ?>
+        <?= get_template_part('components/customerGuide/guide') ?>
 </section>
 
 
