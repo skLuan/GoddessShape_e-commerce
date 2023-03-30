@@ -171,12 +171,18 @@ table tbody tr{
   width: 50%;
 }
 
-.parallax {
-  background-image: url("../img/Home/silueta.png");
-  background-size: 38%;
-  background-position: left;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  height: 100vh;
 
+@media (min-width: 768px) {
+  .parallax {
+    background-image: url("../img/Home/silueta.png");
+    background-size: 38%;
+    background-position: left;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+}
+
+#coupon_code {
+  width: 100px;
+  background: transparent;
 }
