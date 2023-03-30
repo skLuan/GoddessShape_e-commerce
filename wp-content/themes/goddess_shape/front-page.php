@@ -1,6 +1,6 @@
 <!-- page container -->
 <?php get_header() ?>
-<div class="py-5">
+<div class="py-7 mt-24">
     <?php while (have_posts()) {
         the_post();
         the_content();
@@ -49,7 +49,7 @@
     </div>
 </section>
 <!-- cards nuestros productos -->
-<section class="flex flex-row bg-white-notWhite overflow-x-auto justify-center w-full mr-2 px-5 py-8 h-full">
+<section class="flex flex-row bg-white-notWhite overflow-x-auto md:justify-center w-full mr-2 px-5 py-8 h-full">
     <?php
     $args = [
         'limit' => 6,
