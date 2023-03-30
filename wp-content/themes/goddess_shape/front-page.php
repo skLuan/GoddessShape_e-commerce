@@ -1,17 +1,17 @@
 <!-- page container -->
 <?php get_header() ?>
-<div class="py-7 mt-24">
+
     <?php while (have_posts()) {
         the_post();
         the_content();
     } ?>
-</div>
+
 <section id="home_our_products" class="bg-white">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent ">
-        <h2 class="lg:hidden font-champagne_limousines text-28 text-red-soft pb-3 leading-5 w-full font-bold">Our Products
-        </h2>
-        <h2 class="hidden lg:flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products
+        <!-- <h2 class="lg:hidden font-champagne_limousines text-28 text-red-soft pb-3 leading-5 w-full font-bold">Our Products
+        </h2> -->
+        <h2 class="flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products
         </h2>
     </div>
     <!-- boton all HOME -->

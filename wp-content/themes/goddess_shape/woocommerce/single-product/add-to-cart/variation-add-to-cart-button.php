@@ -27,10 +27,16 @@ global $product;
 	// );
 
 	// do_action('woocommerce_after_add_to_cart_quantity');
+
+	// Obtener la URL actual de la página del carrito
+	$cart_url = wc_get_cart_url();
+
+	// Agregar el parámetro 'added-to-cart' a la URL del carrito
+	$cart_url = add_query_arg('added-to-cart', $product->get_id(), $cart_url);
 	?>
 
 	<div class="flex flex-col lg:flex-row justify-between mb-5 lg:mb-0">
-		<h3 class="font-semibold text-lg text-orange-400 underline py-5 text-center lg:ml-9">What is my fit?</h3>
+		<a href="" class="font-semibold text-lg text-orange-400 underline py-5 text-center lg:ml-9">What is my fit?</a>
 		<button type="submit" class="single_add_to_cart_button h-full lg:my-auto text-white-gs font-bold bg-orange-400 mx-auto py-2 px-5 rounded-full lg:mx-0 button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">
 			Add to cart
 		</button>
