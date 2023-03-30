@@ -55,6 +55,27 @@ searchButtons.forEach(function(searchButton) {
     searchBar.classList.toggle("hidden");
   });
 });
+
+function hoverEffectColor() {
+  colors = document.querySelectorAll(".color-card");
+  colors.forEach(color => {
+    // console.log(textColor);
+    color.addEventListener('mouseover', (e) => {
+      textColor = color.firstElementChild;
+      console.log(textColor);
+      textColor.classList.replace("hidden", 'flex');
+    })
+    color.addEventListener('mouseleave', (e) => {
+      textColor = color.firstElementChild;
+      textColor.classList.replace("flex", 'hidden');
+    })
+  });
+}
+try {
+  hoverEffectColor()
+} catch (error) {
+  
+}
 // function checkNavbar() {
 //   let tabBar = document.getElementById("tab_bar");
 //   let isNavbarVisible = window.innerHeight < window.outerHeight;

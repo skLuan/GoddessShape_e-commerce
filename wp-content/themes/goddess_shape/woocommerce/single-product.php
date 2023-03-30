@@ -30,6 +30,7 @@ get_header('shop'); ?>
  * @hooked woocommerce_breadcrumb - 20
  */
 do_action('woocommerce_before_main_content');
+do_action('woocommerce_before_single_product');
 ?>
 
 <?php while (have_posts()) :

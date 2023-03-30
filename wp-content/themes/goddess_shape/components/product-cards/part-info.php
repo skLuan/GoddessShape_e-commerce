@@ -14,48 +14,40 @@ if (isset($args['product'])) {
 
     <div class="mt-3">
         <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">available in:</h2>
-        <div class="flex h-7 text-black-gsSoft text-lg font-semibold">
+        <div class="flex justify-around h-7 text-black-gsSoft text-lg font-semibold">
             <?php
             $at = explode(", ", $product->get_attribute('size'));
             // var_dump($at);
             foreach ($at as $val) {
-                echo '<h2 class="mx-3">' . $val . '</h2>';
+                echo '<h2 class="">' . $val . '</h2>';
             }
             ?>
         </div>
-        <div class="flex w-1/2 pt-1 h-7">
+        <div class="flex pt-1 h-7">
             <div class="flex flex-row justify-around w-full">
                 <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
                             <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
                             <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
                 <?php
-                $at = explode(", ", $product->get_attribute('color'));
+
+                $color = $product->get_attribute('color');
+                $at = explode(", ", $color);
+
+                // $description = $term->description;
 
                 foreach ($at as $key => $value) :
-                    switch (strtolower($value)) {
-                        case 'cocoa':
-                            $bgC = '#be998d';
-                            break;
-                        case 'beige':
-                            $bgC = '#be998d';
-                            break;
-                        case 'moca':
-                            $bgC = '#be998d';
-                            break;
-                        case 'white':
-                            $bgC = '#f9faff';
-                            break;
-                        case 'black':
-                            $bgC = '#231b1b';
-                            break;
-                        default:
-                            $bgC = '#f9faff';
-                            break;
-                    }
-                    if ($key > 0) :
-                        endif;
-                ?>      
-                        <div class="flex flex-row h-4 w-4 rounded-full mx-auto my-2" style="background-color: <?= $bgC ?>;"></div>
+                    $v = strtolower($value);
+                    $term = get_term_by('slug', $v, 'pa_color');
+                    $bgC = $term->description
+
+                ?>
+                    <div class="color-card h-4 w-4 relative rounded-full my-2" style="background-color: <?= $bgC ?>;">
+                        <div class="hidden absolute w-24 px-2 -left-11 -top-8 bg-white rounded-full shadow">
+                            <span class="mx-auto">
+                                <?= $value ?>
+                        </div>
+                        </span>
+                    </div>
                 <?php
                 endforeach; ?>
             </div>

@@ -2,7 +2,7 @@
 $classes = '';
 if(isset($args['class'])) $classes = $args['class'];
 ?>
-<div id="guide" class="pt-20 lg:pt-0 <?= esc_attr($classes); ?>">
+<div id="guide" class="pt-20 md:pt-0 <?= esc_attr($classes); ?>">
     <div class="flex flex-col h-auto w-full justify-start py-2">
         <div class="flex items-center justify-center w-full">
             <div class="flex items-center flex-col w-[90%] lg:w-[60%]">
