@@ -50,6 +50,8 @@ document.addEventListener("click", function (e) {
 const searchButtons = document.querySelectorAll(".search-btn");
 const searchBar = document.getElementById("search-bar");
 
+
+
 searchButtons.forEach(function(searchButton) {
   searchButton.addEventListener("click", function() {
     searchBar.classList.toggle("hidden");
@@ -76,18 +78,3 @@ try {
 } catch (error) {
   
 }
-// function checkNavbar() {
-//   let tabBar = document.getElementById("tab_bar");
-//   let isNavbarVisible = window.innerHeight < window.outerHeight;
-//   // aquí puedes aplicar la regla css para posicionar la barra de navegación
-//   console.log(window.innerHeight);
-//   //   console.log('outter ->');
-//   //   console.log(window.outerHeight);
-//   if (isNavbarVisible) {
-//     tabBar.classList.remove("tab_bar_navbar");
-//   } else {
-//     tabBar.classList.add("tab_bar_navbar");
-//   }
-//   requestAnimationFrame(checkNavbar);
-// }
-// window.addEventListener("scroll", window.lodash.throttle(checkNavbar, 100));
