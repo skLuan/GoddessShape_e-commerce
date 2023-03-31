@@ -58,6 +58,16 @@ searchButtons.forEach(function(searchButton) {
   });
 });
 
+window.onload = function() {
+  setInterval(function() {
+    var aviso = document.getElementById("aviso");
+    aviso.style.display = "block";
+    setTimeout(function() {
+      aviso.style.display = "none";
+    }, 6000);
+  }, 10000);
+}
+
 //   let tabBar = document.getElementById("tab_bar");
 //   let isNavbarVisible = window.innerHeight < window.outerHeight;
 //   // aquí puedes aplicar la regla css para posicionar la barra de navegación

@@ -117,14 +117,26 @@ form.woocommerce-ordering select.orderby option {
   font-weight: 500;
   font-size: large;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-size: 1.25rem; 
   color: #231b1b;
   text-align: left;
-  margin-left: 10%;
+  justify-content: space-around;
+}
+.woocommerce-product-attributes-item__value {
+  @apply md:w-[30%] font-semibold;
+}
+.woocommerce-product-attributes-item__label {
+  @apply md:w-[10%];
+}
+#tab-additional_information {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .woocommerce-Tabs-panel li{
-  font-weight: 500;
+  font-weight: 550;
   display: flex;
   flex-direction: column;
   font-size: 1.25rem; 
@@ -149,10 +161,15 @@ form.woocommerce-ordering select.orderby option {
   border-width: 1px;
   border-radius: 10px;
   border-color: #d1a19d;
+  width: 40%;
+  margin-bottom: 5px;
 }
 #reply-title {
   font-size: 1.25rem; 
-  margin-left: 10%;
+  margin-left: 35%;
+}
+.form-submit {
+  @apply flex bg-red-semi justify-center items-center w-1/6  rounded-full ml-[45%];
 }
 .stars span a:active{
   border: solid;
@@ -162,15 +179,8 @@ form.woocommerce-ordering select.orderby option {
 }
 .woocommerce-product-attributes {
   margin: auto;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  justify-items: center;
 }
-table tbody tr{
-  width: 50%;
-}
-
 
 @media (min-width: 768px) {
   .parallax {
@@ -185,4 +195,72 @@ table tbody tr{
 #coupon_code {
   width: 100px;
   background: transparent;
+}
+.aviso {
+  display: none;
+  position: absolute;
+  left: 70%;
+  width: 18%;
+  background-color: #f8d7da;
+  color: black;
+  margin: 10px;
+  padding-top: 10px;
+  text-align: center;
+  align-items: center;
+  border-radius: 80%;
+}
+#menu-item-110 {
+  @apply md:px-0 md:mx-2;
+}
+.checkout {
+  padding: 10px;
+}
+.col2-set {
+  float: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+.col-1 {
+  width: 80%;
+  margin-top: 17px;
+}
+.woocommerce-billing-fields {
+  width: 90%;
+  margin: auto;
+}
+.woocommerce-billing-fields h3 {
+  @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
+}
+.woocommerce-billing-fields__field-wrapper {
+  @apply shadow-gs rounded-xl;
+}
+.woocommerce-billing-fields label {
+  @apply text-lg;
+}
+.woocommerce-billing-fields input {
+  border: 1px solid;
+  border-color: #f8d7da;
+  border-radius: 6px;
+  height: 30px;
+}
+div.col-2 {
+  @apply  rounded-2xl w-[100%]  mt-6 text-center text-xl lg:text-2xl;
+}
+.input-text {
+  border: 1px solid;
+  border-color: #f8d7da;
+  border-radius: 6px;
+  height: 30px;
+  padding: 5px;
+}
+.col-2 h3 {
+  @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
+}
+.woocommerce-additional-fields {
+  width: 100%;
+  @apply shadow-gs rounded-xl text-red-soft text-center text-xl py-4;
+
 }

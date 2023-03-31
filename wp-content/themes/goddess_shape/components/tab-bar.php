@@ -13,7 +13,7 @@ $cart_count = WC()->cart->get_cart_contents_count();
     <div class="relative">
         <a class="" href="<?= wc_get_cart_url() ?>">
         <?php
-        if($cart_count > 0):
+        if($cart_count > 0): 
         ?>
             <div class="flex text-sm text-white mt-1 rounded-full absolute -right-1 -top-3 h-4 w-4 justify-center items-center bg-orange-400"><?= $cart_count ?>
             </div>
