@@ -24,7 +24,7 @@
 }
 
 nav.woocommerce-breadcrumb {
-  @apply bg-white-true border-b border-red-100 flex sticky top-[70px] z-[60];
+  @apply bg-white-true border-b border-red-100 flex sticky top-[70px] z-[49] shadow-gs;
 }
 
 #sidebar-Menu li.current_page_item a {
@@ -174,7 +174,7 @@ table tbody tr{
 
 @media (min-width: 768px) {
   .parallax {
-    background-image: url("../img/Home/silueta.png");
+    background-image: url("../img/silueta.svg");
     background-size: 38%;
     background-position: left;
     background-attachment: fixed;

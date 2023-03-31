@@ -54,6 +54,7 @@ const searchBar = document.getElementById("search-bar");
 
 searchButtons.forEach(function(searchButton) {
   searchButton.addEventListener("click", function() {
+    console.log('sisaaa');
     searchBar.classList.toggle("hidden");
   });
 });

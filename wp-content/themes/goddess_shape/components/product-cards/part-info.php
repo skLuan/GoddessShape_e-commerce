@@ -25,11 +25,7 @@ if (isset($args['product'])) {
         </div>
         <div class="flex pt-1 h-7">
             <div class="flex flex-row justify-around w-full">
-                <!-- <div class="flex flex-row h-3 w-3 bg-orange-300 rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-red-soft rounded-full mx-auto my-2"></div>
-                            <div class="flex flex-row h-3 w-3 bg-green-600 rounded-full mx-auto my-2"></div> -->
                 <?php
-
                 $color = $product->get_attribute('color');
                 $at = explode(", ", $color);
 
@@ -45,8 +41,8 @@ if (isset($args['product'])) {
                         <div class="hidden absolute w-24 px-2 -left-11 -top-8 bg-white rounded-full shadow">
                             <span class="mx-auto">
                                 <?= $value ?>
+                            </span>
                         </div>
-                        </span>
                     </div>
                 <?php
                 endforeach; ?>
