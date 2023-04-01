@@ -24,7 +24,7 @@
 }
 
 nav.woocommerce-breadcrumb {
-  @apply bg-white-true border-b border-red-100 flex sticky top-[70px] z-[60];
+  @apply bg-white-true border-b border-red-100 flex sticky top-[70px] z-[49] shadow-gs;
 }
 
 #sidebar-Menu li.current_page_item a {
@@ -182,46 +182,32 @@ form.woocommerce-ordering select.orderby option {
   width: 100%;
 }
 
-@media (min-width: 768px) {
-  .parallax {
-    background-image: url("../img/Home/silueta.png");
-    background-size: 38%;
-    background-position: left;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-  }
-}
-
 #coupon_code {
   width: 100px;
   background: transparent;
 }
+
 .aviso {
   display: none;
-  position: absolute;
-  left: 70%;
+  position: fixed;
+  top: 74%;
+  left: 55%;
   width: 18%;
+  height: auto;
   background-color: #f8d7da;
   color: black;
   margin: 10px;
-  padding-top: 10px;
   text-align: center;
   align-items: center;
   border-radius: 80%;
 }
+
+
 #menu-item-110 {
   @apply md:px-0 md:mx-2;
 }
 .checkout {
   padding: 10px;
-}
-.col2-set {
-  float: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
 }
 .col-1 {
   width: 80%;
@@ -236,6 +222,7 @@ form.woocommerce-ordering select.orderby option {
 }
 .woocommerce-billing-fields__field-wrapper {
   @apply shadow-gs rounded-xl;
+  padding: 10px 15px;
 }
 .woocommerce-billing-fields label {
   @apply text-lg;
@@ -246,9 +233,11 @@ form.woocommerce-ordering select.orderby option {
   border-radius: 6px;
   height: 30px;
 }
-div.col-2 {
-  @apply  rounded-2xl w-[100%]  mt-6 text-center text-xl lg:text-2xl;
+.col-2 {
+  width: 80%;
+  margin-top: 17px;
 }
+
 .input-text {
   border: 1px solid;
   border-color: #f8d7da;
@@ -260,7 +249,41 @@ div.col-2 {
   @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
 }
 .woocommerce-additional-fields {
-  width: 100%;
+  width: 90%;
+  margin: auto;
+
   @apply shadow-gs rounded-xl text-red-soft text-center text-xl py-4;
 
+}
+@media (min-width: 768px){
+  
+  .aviso {
+    display: none;
+    position: absolute;
+    left: 70%;
+    width: 18%;
+    padding-top: 10px;
+    background-color: #f8d7da;
+    color: black;
+    margin: 10px;
+    text-align: center;
+    align-items: center;
+    border-radius: 80%;
+  }
+  .checkout {
+    position: relative;
+  }
+    .parallax {
+    background-image: url("../img/silueta.svg");
+    background-size: 38%;
+    background-position: left;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  #order_review {
+    position: absolute;
+    width: 50%;
+    right: 2%;
+    top: 300px;
+  }
 }

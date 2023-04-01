@@ -54,6 +54,7 @@ const searchBar = document.getElementById("search-bar");
 
 searchButtons.forEach(function(searchButton) {
   searchButton.addEventListener("click", function() {
+    console.log('sisaaa');
     searchBar.classList.toggle("hidden");
   });
 });
@@ -68,17 +69,23 @@ window.onload = function() {
   }, 10000);
 }
 
-//   let tabBar = document.getElementById("tab_bar");
-//   let isNavbarVisible = window.innerHeight < window.outerHeight;
-//   // aquí puedes aplicar la regla css para posicionar la barra de navegación
-//   console.log(window.innerHeight);
-//   //   console.log('outter ->');
-//   //   console.log(window.outerHeight);
-//   if (isNavbarVisible) {
-//     tabBar.classList.remove("tab_bar_navbar");
-//   } else {
-//     tabBar.classList.add("tab_bar_navbar");
-//   }
-//   requestAnimationFrame(checkNavbar);
-// }
-// window.addEventListener("scroll", window.lodash.throttle(checkNavbar, 100));
+function hoverEffectColor() {
+  colors = document.querySelectorAll(".color-card");
+  colors.forEach(color => {
+    // console.log(textColor);
+    color.addEventListener('mouseover', (e) => {
+      textColor = color.firstElementChild;
+      console.log(textColor);
+      textColor.classList.replace("hidden", 'flex');
+    })
+    color.addEventListener('mouseleave', (e) => {
+      textColor = color.firstElementChild;
+      textColor.classList.replace("flex", 'hidden');
+    })
+  });
+}
+try {
+  hoverEffectColor()
+} catch (error) {
+  
+}

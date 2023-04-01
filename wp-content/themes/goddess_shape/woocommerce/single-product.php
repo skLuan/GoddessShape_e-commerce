@@ -30,6 +30,7 @@ get_header('shop'); ?>
  * @hooked woocommerce_breadcrumb - 20
  */
 do_action('woocommerce_before_main_content');
+do_action('woocommerce_before_single_product');
 ?>
 
 <?php while (have_posts()) :
@@ -103,83 +104,6 @@ do_action('woocommerce_before_main_content');
 <!-------------------------------------------------------------------------------- -->
 <!---------------------------------------------- pay with -->
 <?= get_template_part('components/payments') ?>
-
-<!-- last seen -->
-<div class="flex flex-row h-100 text-xl justify-center pb-2 mb-2 w-full">
-    <div class="flex flex-col justify-between w-[90%] md:w-[60%] lg:w-[60%] ">
-        <h3 class="font-semibold text-black-gs text-center lg:text-2xl pb-8 lg:mb-8 lg:text-red-soft">Last seen</h3>
-        <div class="flex flex-row w-full h-36 justify-around px-4">
-            <picture class="flex justify-center shadow-gs w-28 rounded-lg">
-                <img class="rounded-lg shadow-xl w-full" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/body.png" alt="">
-            </picture>
-            <!-- simbolo de descuento -->
-            <picture class="absolute left-[35%] lg:left-[40%]">
-                <img class="bg-transparent h-12 w-12 z-40 mr-5 mt-12" src="<?= IMAGE . '/discount-icon.svg' ?>" alt="">
-            </picture>
-            <!-- contenedor info -->
-            <div class="flex flex-col z-20 px-2  pb-5 w-1/2 bg-white-true shadow-gs rounded-lg">
-                <a href="">
-                    <h2 class="text-color-secondary text-left font-bold font-champagne_limousines h-8 text-base py-2">Faja larga con brasier</h2>
-                </a>
-                <!-- tallas  -->
-                <div class="flex mt-3  justify-center">
-                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-champagne_limousines">
-                        <div class=" text-center">S</div>
-                        <div class=" text-center">M</div>
-                        <div class=" text-center">L</div>
-                    </div>
-                </div>
-                <!-- colores -->
-                <div class="flex flex-row w-full pt-1 h-4 bg-transparent justify-center">
-                    <div class="flex flex-row justify-around w-2/3 bg-white text-black-gs text-lg font-semibold font-champagne_limousines">
-                        <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
-                    </div>
-
-                </div>
-                <!-- precio - card -->
-                <div class="flex flex-row font-bold items-center justify-end pt-2">
-                    <h3 class="flex text-base justify-end  text-red-soft w-auto mt-4">$41.43</h3>
-                </div>
-            </div>
-
-        </div>
-        <div class="flex flex-row w-full h-36 justify-around px-4">
-            <picture class="flex justify-center shadow-gs w-28 rounded-lg">
-                <img class="rounded-lg shadow-xl" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/body.png" alt="">
-            </picture>
-            <!-- contenedor info -->
-            <div class="flex flex-col z-20 px-2 pb-5 w-1/2 bg-white-true shadow-gs rounded-lg">
-                <a href="http://localhost/goddess-shape.com/product/faja-larga-con-brasier/">
-                    <h2 class="text-color-secondary text-left font-bold font-champagne_limousines h-8 text-base py-2">Faja larga con brasier</h2>
-                </a>
-                <!-- tallas  -->
-                <div class="flex mt-3  justify-center">
-                    <div class="flex flex-row justify-around w-2/3 bg-transparent text-black-gs text-lg font-semibold font-champagne_limousines">
-                        <div class=" text-center">S</div>
-                        <div class=" text-center">M</div>
-                        <div class=" text-center">L</div>
-                    </div>
-                </div>
-                <!-- colores -->
-                <div class="flex flex-row w-full pt-1 h-4 bg-transparent justify-center">
-                    <div class="flex flex-row justify-around w-2/3 bg-white text-black-gs text-lg font-semibold font-baby_aletha">
-                        <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-black-gs rounded-full mx-auto my-2"></div>
-                        <div class="flex flex-row h-3 w-3 bg-white border border-black-gs rounded-full mx-auto my-2"></div>
-                    </div>
-
-                </div>
-                <!-- precio - card -->
-                <div class="flex flex-row font-bold items-center justify-end pt-2">
-                    <h3 class="flex text-base justify-end  text-red-soft w-auto mt-4">$41.43 </h3>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 <?php
 /**
  * woocommerce_after_main_content hook.

@@ -1,17 +1,14 @@
 <!-- page container -->
 <?php get_header() ?>
-<div class="py-7 mt-24">
-    <?php while (have_posts()) {
-        the_post();
-        the_content();
-    } ?>
-</div>
+<?php while (have_posts()) {
+    the_post();
+    the_content();
+} ?>
+
 <section id="home_our_products" class="bg-white">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent ">
-        <h2 class="lg:hidden font-champagne_limousines text-28 text-red-soft pb-3 leading-5 w-full font-bold">Our Products
-        </h2>
-        <h2 class="hidden lg:flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products
+        <h2 class="flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products
         </h2>
     </div>
     <!-- boton all HOME -->
@@ -55,9 +52,9 @@
         'limit' => 6,
     ];
     $products = wc_get_products($args);
-    
+
     foreach ($products as $product) :
-        ?>
+    ?>
         <div class="relative flex lg:w-56 lg:h-fit flex-col min-w-[240px] bg-transparent rounded-lg mr-8 last:mr-0">
             <?= get_template_part('components/product-cards/part', 'pictureOne', ['product' => $product]) ?>
             <?= get_template_part('components/product-cards/part', 'info', ['product' => $product]) ?>
@@ -80,13 +77,13 @@
 
 <!-- textos abajo de pay with-->
 <section class="flex flex-col justify-between md:grid grid-cols-2 grid-rows-2 gap-1 w-full bg-white-notWhite px-5 py-16">
-        <?= get_template_part('components/customerGuide/shop', 'info', null, ['class' => 'atunes !bg-red']) ?>
-        <!----------------------- pay with --------------------------------------->
-        <?= get_template_part( 'components/customerGuide/payments', null, ['class' => 'atunes !bg-red']) ?>
-        <!-- delivery--------------------------------------------------- -->
-        <?= get_template_part('components/customerGuide/delivery', null, ['class' => 'atunes !bg-red']) ?>
-        <!--------------------------------------------------------------------------- Guia de prendas -->
-        <?= get_template_part('components/customerGuide/guide') ?>
+    <?= get_template_part('components/customerGuide/shop', 'info', null, ['class' => 'atunes !bg-red']) ?>
+    <!----------------------- pay with --------------------------------------->
+    <?= get_template_part('components/customerGuide/payments', null, ['class' => 'atunes !bg-red']) ?>
+    <!-- delivery--------------------------------------------------- -->
+    <?= get_template_part('components/customerGuide/delivery', null, ['class' => 'atunes !bg-red']) ?>
+    <!--------------------------------------------------------------------------- Guia de prendas -->
+    <?= get_template_part('components/customerGuide/guide') ?>
 </section>
 
 
@@ -99,9 +96,9 @@
 <section class="lg:hidden flex flex-col w-full h-150 bg-white" id="blog">
     <div class="flex flex-col text-center bg-white ">
         <h2 class="font-champagne_limousines text-28 text-red-soft w-full font-bold p-8 h-30">Blog</h2>
-        
+
     </div>
-    
+
     <div class="flex flex-row w-full justify-around px-2 py-4">
         <div class="flex items-center justify-center">
             <img class="flex h-full w-20" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/fondo-gris.png" alt="">

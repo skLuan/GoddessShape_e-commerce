@@ -2,7 +2,7 @@
 $classes = '';
 if (isset($args['class'])) $classes = $args['class'];
 ?>
-<div class="flex py-20 lg:py-0 flex-col w-full justify-start items-center font-semibold bg-transparent relative z-20 <?= esc_attr($classes); ?>">
+<div class="flex py-20 md:py-0 flex-col w-full justify-start items-center font-semibold bg-transparent relative z-20 <?= esc_attr($classes); ?>">
     <div class="flex flex-col w-[90%] lg:w-[60%] items-center py-2">
         <div class="flex flex-col items-center">
             <img class="flex h-16 lg:h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/pagos.png" alt="">

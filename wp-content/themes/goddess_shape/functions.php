@@ -37,7 +37,9 @@ add_action('after_setup_theme', 'init_template');
 add_action('gs_cart_buton', 'woocommerce_template_single_add_to_cart');
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
 
-remove_action('woocommerce_before_shop_loop','woocommerce_output_all_notices', 10);
+if (is_product_category()) {
+    remove_action('woocommerce_before_shop_loop','woocommerce_output_all_notices', 10);
+}
 
 
 
