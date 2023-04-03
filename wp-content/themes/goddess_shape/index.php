@@ -7,8 +7,13 @@
         <div class="flex flex-col ">
         <?php while (have_posts()) {
             the_post();
-            the_content();} 
+            ?>
+            <p>arroz chino</p>
+            <?php
+            the_content();
+        } 
             ?>
         </div>    
     </div>
+
 <?php get_footer() ?>
