@@ -59,6 +59,16 @@ searchButtons.forEach(function(searchButton) {
   });
 });
 
+window.onload = function() {
+  setInterval(function() {
+    var aviso = document.getElementById("aviso");
+    aviso.style.display = "block";
+    setTimeout(function() {
+      aviso.style.display = "none";
+    }, 6000);
+  }, 10000);
+}
+
 function hoverEffectColor() {
   colors = document.querySelectorAll(".color-card");
   colors.forEach(color => {

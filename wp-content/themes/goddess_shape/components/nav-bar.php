@@ -13,13 +13,13 @@ if (!is_home()) $navShadow = '';
                 </a>
             </div>
         </div>
-        <div class="hidden lg:flex lg:uppercase flex-row w-2/3 text-lg text-red-semi justify-between items-center">
+        <div class="hidden md:flex md:uppercase flex-row md:w-4/5 lg:w-2/3 text-lg text-red-semi lg:justify-between md:justify-around items-center">
             <?php
             wp_nav_menu([
                 'theme_location' => 'top_menu',
                 'menu_class'     => 'font-extrabold  flex flex-row justify-between',
                 'menu_id'        => 'navbar-Menu',
-                'add_li_class' => 'px-4 mx-4 text-xl',
+                'add_li_class' => 'lg:px-2 mx-4 md:text-lg lg:text-xl',
             ])
             ?>
             <div class="flex flex-row items-center justify-center w-52" id="">
@@ -43,13 +43,13 @@ if (!is_home()) $navShadow = '';
                         <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="mdi:whatsapp" style="color: green;"></iconify-icon>
                     </a>
                 </div>
+                
             </div>
-
+            <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center mr-5" id="language" href="#language">
+                <p class="font-champagne_limousines">Es </p>
+                <p class="font-champagne_limousines">/</p>
+                <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
+            </div>
         </div>
-        <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center mr-5" id="language" href="#language">
-            <p class="font-champagne_limousines">Es </p>
-            <p class="font-champagne_limousines">/</p>
-            <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
-        </div>
-    </div>
-</nav>
+        <div class="sticky hidden justify-center items-center lg:w-[12%] aviso" id="aviso">Do you need help? Write us to assist you!</div>
+    </nav>
