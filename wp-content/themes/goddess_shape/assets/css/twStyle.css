@@ -125,13 +125,9 @@ form.woocommerce-ordering select.orderby option {
 }
 #tab-additional_information p {
   font-weight: 500;
-  font-size: large;
-  display: flex;
-  flex-direction: row;
   font-size: 1.25rem;
   color: #231b1b;
   text-align: left;
-  justify-content: space-around;
 }
 
 #tab-additional_information {

@@ -8,7 +8,6 @@
         <?php while (have_posts()) {
             the_post();
             ?>
-            <p>arroz chino</p>
             <?php
             the_content();
         } 
