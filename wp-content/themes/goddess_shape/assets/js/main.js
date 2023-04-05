@@ -37,7 +37,6 @@ document.addEventListener("click", function (e) {
     count++;
     console.log(count);
     if (count > 1 && e.target != menu && !menu.contains(e.target)) {
-      console.log("entre y no se porque");
       icon.classList.add("hidden");
       hdn.classList.remove("hidden");
       menu.classList.add("hidden");
@@ -50,38 +49,37 @@ document.addEventListener("click", function (e) {
 const searchButtons = document.querySelectorAll(".search-btn");
 const searchBar = document.getElementById("search-bar");
 
-
-
-searchButtons.forEach(function(searchButton) {
-  searchButton.addEventListener("click", function() {
-    console.log('sisaaa');
+searchButtons.forEach(function (searchButton) {
+  searchButton.addEventListener("click", function () {
     searchBar.classList.toggle("hidden");
   });
 });
 
-window.onload = function() {
-  setInterval(function() {
+
+window.addEventListener("load", (e) => {
+  setInterval(() => {
     var aviso = document.getElementById("aviso");
-    aviso.style.display = "block";
-    setTimeout(function() {
-      aviso.style.display = "none";
-    }, 6000);
-  }, 10000);
-}
+    if (aviso.classList.contains("opacity-0")) {
+      aviso.classList.replace("opacity-0", "opacity-100");
+    } else {
+      aviso.classList.replace("opacity-100", "opacity-0");
+    }
+  }, 6000);
+});
 
 function hoverEffectColor() {
   colors = document.querySelectorAll(".color-card");
-  colors.forEach(color => {
+  colors.forEach((color) => {
     // console.log(textColor);
-    color.addEventListener('mouseover', (e) => {
+    color.addEventListener("mouseover", (e) => {
       textColor = color.firstElementChild;
       console.log(textColor);
-      textColor.classList.replace("hidden", 'flex');
-    })
-    color.addEventListener('mouseleave', (e) => {
+      textColor.classList.replace("hidden", "flex");
+    });
+    color.addEventListener("mouseleave", (e) => {
       textColor = color.firstElementChild;
-      textColor.classList.replace("flex", 'hidden');
-    })
+      textColor.classList.replace("flex", "hidden");
+    });
   });
 }
 try {

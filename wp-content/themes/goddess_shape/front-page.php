@@ -3,7 +3,10 @@
 <?php while (have_posts()) {
     the_post();
     the_content();
-} ?>
+}
+$blog_permalink = get_permalink(get_option('page_for_posts'));
+
+?>
 
 <section id="home_our_products" class="bg-white buttons-container">
     <!-- titulo nuestros productos -->
@@ -121,12 +124,10 @@
             <p class="flex font-champagne_limousines text-black-gs leading-tight  font-base font-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
         </div>
     </div>
-    <div class="flex flex-row-reverse w-full items-end lg:hidden">
-        <div class="flex items-center justify-center h-32 w-28 bg-cover" style="background-image: url(./wp-content/themes/goddess-shape/assets/img/Home/sol_sin_centro.png)">
-            <a class="flex text-orange-400 underline font-semibold" href="#blog">
-                <img class="flex  w-28 bg-cover" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/ver-blog.png" alt="">
-            </a>
-        </div>
+    <div class="flex flex-row-reverse w-full items-end px-5">
+        <a class="flex text-orange-400 text-[22px] underline font-bold" href="<?= $blog_permalink ?>">
+            See blog
+        </a>
     </div>
 </section>
 <!-- blog Desktop -->

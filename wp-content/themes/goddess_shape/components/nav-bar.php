@@ -5,7 +5,7 @@ if (!is_home()) $navShadow = '';
 ?>
 <!-- navbar -->
 <nav class="flex bg-white-true items-center border-b-red-100 border py-4 sticky top-0 z-50 w-full justify-center <?= $navShadow ?>" id="navbar">
-    <div class="lg:max-w-screen-xl h-full items-center w-full justify-between flex mx-auto">
+    <div class="relative lg:max-w-screen-xl h-full items-center w-full justify-between flex mx-auto">
         <div class="flex z-0">
             <div class="flex h z-10 pl-2">
                 <a href="<?= home_url() ?>">
@@ -51,5 +51,5 @@ if (!is_home()) $navShadow = '';
                 <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
             </div>
         </div>
-        <div class="sticky hidden justify-center items-center lg:w-[12%] aviso" id="aviso">Do you need help? Write us to assist you!</div>
+        <div class="aviso transition opacity-0" id="aviso">Do you need help? <br> Write us to assist you!</div>
     </nav>

@@ -1,5 +1,5 @@
 <section class="flex flex-col text-center relative">
-    <h1 class="font-champagne_limousines text-[28px] text-red-soft leading-5 w-full font-bold p-10 pt-10 ">Discounts</h1>
+    <h1 class="font-champagne_limousines text-[28px] text-red-soft leading-5 w-full font-bold p-10 pt-10 ">You’ll love it too</h1>
     <img class="mx-auto mb-5" width="44px" src="<?= get_stylesheet_directory_uri() ?>/assets/img/discount-icon.svg" alt="">
 
     <div class="flex flex-row w-full p-5 md:justify-center overflow-x-auto bg-white-notWhite z-10">
