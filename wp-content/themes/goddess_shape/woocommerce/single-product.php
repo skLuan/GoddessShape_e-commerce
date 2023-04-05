@@ -78,7 +78,7 @@ do_action('woocommerce_before_single_product');
 
 <!-- carrusel abajo de descripcion del producto -->
 <div class="flex flex-col text-center bg-transparent h-20 justify-center ">
-    <h2 class="font-champagne_limousines text-28 text-red-soft pt-4 leading-5 w-full font-bold items-center ">Quizas te interese
+    <h2 class="font-champagne_limousines text-28 text-red-soft pt-4 leading-5 w-full font-bold items-center ">You’ll love it too
     </h2>
 </div>
 <!-- quisas te interece -->

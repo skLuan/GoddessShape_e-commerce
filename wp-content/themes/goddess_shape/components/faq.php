@@ -43,7 +43,4 @@
             });
         </script>
     </div>
-    <picture class="absolute bottom-0">
-        <img class="w-full" src="<?= IMAGE . "fondo-faq.png" ?>" alt="">
-    </picture>
 </section>
