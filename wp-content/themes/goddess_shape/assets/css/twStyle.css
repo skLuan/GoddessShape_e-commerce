@@ -125,13 +125,9 @@ form.woocommerce-ordering select.orderby option {
 }
 #tab-additional_information p {
   font-weight: 500;
-  font-size: large;
-  display: flex;
-  flex-direction: row;
   font-size: 1.25rem;
   color: #231b1b;
   text-align: left;
-  justify-content: space-around;
 }
 
 #tab-additional_information {
@@ -275,3 +271,21 @@ form.woocommerce-ordering select.orderby option {
     top: 300px;
   }
 }
+
+#blog-page {
+  padding: 10px;
+  margin-top: 5px;
+  align-content: center;
+  justify-content: center;
+  margin: auto;
+}
+#blog-page  h2 {
+    @apply text-center text-xl md:text-2xl font-semibold py-4 text-red-soft ;
+  }
+#blog-page  p {
+  @apply text-center md:mx-[15%] text-lg md:text-xl font-normal md:font-medium py-4 text-black-gs ;
+}
+#blog-page  img {
+  @apply rounded-xl shadow-gs ;
+}
+

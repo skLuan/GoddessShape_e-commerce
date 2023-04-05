@@ -39,11 +39,11 @@ if (!is_home()) $navShadow = '';
                         <iconify-icon class="flex items-center justify-center text-2xl  text-black-gsSoft" icon="material-symbols:shopping-cart-outline-rounded">
                         </iconify-icon>
                     </a>
-                    <a class="px-5 flex" href="https://api.whatsapp.com/send?phone=+573148009355&text=Hola%20Quisiera%20hacer%20un%20pedido">
+                    <a class="px-5 flex" href="https://api.whatsapp.com/send?phone=+19048882310&text=Hola%20Quisiera%20hacer%20un%20pedido">
                         <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="mdi:whatsapp" style="color: green;"></iconify-icon>
                     </a>
                 </div>
-                
+
             </div>
             <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center mr-5" id="language" href="#language">
                 <p class="font-champagne_limousines">Es </p>
@@ -52,4 +52,4 @@ if (!is_home()) $navShadow = '';
             </div>
         </div>
         <div class="aviso transition opacity-0" id="aviso">Do you need help? <br> Write us to assist you!</div>
-    </nav>
+</nav>

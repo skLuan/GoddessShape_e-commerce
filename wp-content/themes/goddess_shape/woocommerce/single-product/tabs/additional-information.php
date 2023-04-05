@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Additional Information tab
  *
@@ -15,16 +16,41 @@
  * @version 3.0.0
  */
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 global $product;
 
-$heading = apply_filters( 'woocommerce_product_additional_information_heading', __( 'Additional information', 'woocommerce' ) );
+$heading = apply_filters('woocommerce_product_additional_information_heading', __('Additional information', 'woocommerce'));
 
 ?>
 
-<?php if ( $heading ) : ?>
-	<h2><?php echo esc_html( $heading ); ?></h2>
+<?php if ($heading) : ?>
+	<h2><?php echo esc_html($heading); ?></h2>
 <?php endif; ?>
-
-<?php do_action( 'woocommerce_product_additional_information', $product ); ?>
+<?php do_action('woocommerce_product_additional_information', $product); ?>
+<div class="w-full text-black-gs ml-56">
+	<p><h3>WASHING INSTRUCTIONS</h3></p>
+	<ul class="list-disc list-inside text-xl">
+		<li>
+			Hand wash, keeping the badge closed.
+		</li>
+		<li>
+			Wash in cold water.
+		</li>
+		<li>
+			Do not use bleach.
+		</li>
+		<li>
+			Do not twist.
+		</li>
+		<li>
+			Do not dry at high temperatures.
+		</li>
+		<li>
+			Do not iron or tumble dry.
+		</li>
+		<li>
+			Wash them separately.
+		</li>
+	</ul>
+</div>

@@ -18,6 +18,7 @@
 
 defined('ABSPATH') || exit;
 
+
 do_action('woocommerce_before_cart'); ?>
 
 <form class="woocommerce-cart-form" action="<?php echo esc_url(wc_get_cart_url()); ?>" method="post">
@@ -63,30 +64,28 @@ do_action('woocommerce_before_cart'); ?>
 							?>
 						</td>
 
-						<td class="product-thumbnail">
+						<td class="product-thumbnail !block before:hidden">
 							<?php
-							$thumbnail = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key);
+							$thumbnail = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image('thumbnail'), $cart_item, $cart_item_key);
 
 							if (!$product_permalink) :
 							?>
-							<picture class="max-w-[150px]">
-								<?= $thumbnail; // PHPCS: XSS ok. ?>
-							</picture>
+								<picture class="max-w-[100px]">
+									<?= $thumbnail; // PHPCS: XSS ok. 
+									?>
+								</picture>
 							<?php else :
-								printf('<a href="%s">%s</a>', esc_url($product_permalink), $thumbnail); // PHPCS: XSS ok.
+								printf('<a href="%s">%s</a>', esc_url($product_permalink), $thumbnail); // PHPCS: XSS ok.	
 							endif;
 							?>
 						</td>
 
-						<td class="product-name  font-bold text-xl text-red-soft before:hidden  !flex flex-row bg-white-true">
-							<picture class="lg:hidden">
-								<?= $thumbnail;	?>
-							</picture>
+						<td class="product-name !text-left font-bold text-xl text-red-soft before:hidden bg-white-true">
 							<?php
 							if (!$product_permalink) {
 								echo wp_kses_post(apply_filters('woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key) . '&nbsp;');
 							} else {
-								echo wp_kses_post(apply_filters('woocommerce_cart_item_name', sprintf('<a class="leading-tight pl-2 !text-left font-bold text-red-soft" href="%s">%s</a>', esc_url($product_permalink), $_product->get_name()), $cart_item, $cart_item_key));
+								echo wp_kses_post(apply_filters('woocommerce_cart_item_name', sprintf('<a class="leading-tight pl-2 my-auto font-bold text-red-soft" href="%s">%s</a>', esc_url($product_permalink), $_product->get_name()), $cart_item, $cart_item_key));
 							}
 
 							do_action('woocommerce_after_cart_item_name', $cart_item, $cart_item_key);

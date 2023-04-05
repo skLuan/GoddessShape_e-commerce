@@ -122,7 +122,7 @@ endif;
 	<?= get_template_part('components/loops/loop', 'discount') ?>
 	<div class="my-32">
 		<?= get_template_part('components/colections') ?>
-		<?= get_template_part('components/colections') ?>
+		<?= get_template_part('components/deco', 'colombian') ?>
 	</div>
 	<?= get_template_part('components/loops/new-models') ?>
 	<!-------------------------------------------------------------------------------- -->
