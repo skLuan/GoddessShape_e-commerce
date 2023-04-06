@@ -55,7 +55,6 @@ searchButtons.forEach(function (searchButton) {
   });
 });
 
-
 window.addEventListener("load", (e) => {
   setInterval(() => {
     var aviso = document.getElementById("aviso");
@@ -83,20 +82,18 @@ function hoverEffectColor() {
   });
 }
 try {
-  hoverEffectColor()
-} catch (error) {
-  
-}
+  hoverEffectColor();
+} catch (error) {}
 
-const buttons = document.querySelectorAll('.button-filter');
+const buttons = document.querySelectorAll(".button-filter");
 
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        const category = button.dataset.category;
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('category', category);
-        window.location.href = currentUrl.href;
-    });
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const category = button.dataset.category;
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set("category", category);
+    window.location.href = currentUrl.href;
+  });
 });
 
 const filterButtons = document.querySelectorAll(".button-filter");
@@ -118,7 +115,18 @@ filterButtons.forEach((button) => {
   });
 });
 
+//--------------------- FAQ
+try {
+  const questions = document.querySelectorAll(".question");
+  questions.forEach((question) => {
+    question.addEventListener("click", (event) => {
+      question.nextElementSibling.classList.toggle("hidden");
+    });
+  });
+} catch (error) {}
 
 // Show all products on page load
-filterProducts('all');
-document.querySelector('.button-filter[data-category="all"]').classList.add('active');
+filterProducts("all");
+document
+  .querySelector('.button-filter[data-category="all"]')
+  .classList.add("active");

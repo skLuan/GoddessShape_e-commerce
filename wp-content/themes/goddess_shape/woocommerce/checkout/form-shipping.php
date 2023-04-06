@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<div class="woocommerce-shipping-fields">
+<div class="woocommerce-shipping-fields bg-white-true">
 	<?php if ( true === WC()->cart->needs_shipping_address() ) : ?>
 
 		<h3 id="ship-to-different-address">

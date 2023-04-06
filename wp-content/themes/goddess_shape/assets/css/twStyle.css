@@ -145,6 +145,15 @@ form.woocommerce-ordering select.orderby option {
 }
 /* -----------------------------------CIERRE SINGLE_PRODUCT */
 
+/* -------------------------------- CART CONTAINER */
+#cartContainer .woocommerce, #checkContainer .woocommerce {
+  @apply w-full;
+}
+#checkContainer .woocommerce .woocommerce-order section.woocommerce-order-details table {
+@apply bg-white-true;
+}
+/* -------------------------------- CIERRE CART CONTAINER */
+
 .woocommerce-product-attributes-item__value {
   @apply md:w-[30%] font-semibold;
 }
@@ -248,10 +257,7 @@ form.woocommerce-ordering select.orderby option {
   @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
 }
 .woocommerce-additional-fields {
-  width: 90%;
-  margin: auto;
-
-  @apply shadow-gs rounded-xl text-red-soft text-center text-xl py-4;
+  @apply shadow-gs rounded-xl text-red-soft text-center text-xl py-4 px-10;
 }
 @media (min-width: 768px) {
   .checkout {
@@ -265,10 +271,7 @@ form.woocommerce-ordering select.orderby option {
     background-repeat: no-repeat;
   }
   #order_review {
-    position: absolute;
-    width: 50%;
-    right: 2%;
-    top: 300px;
+
   }
 }
 
