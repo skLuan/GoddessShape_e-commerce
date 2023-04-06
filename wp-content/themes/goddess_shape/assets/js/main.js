@@ -55,7 +55,6 @@ searchButtons.forEach(function (searchButton) {
   });
 });
 
-
 window.addEventListener("load", (e) => {
   setInterval(() => {
     var aviso = document.getElementById("aviso");
@@ -85,3 +84,49 @@ function hoverEffectColor() {
 try {
   hoverEffectColor();
 } catch (error) {}
+
+const buttons = document.querySelectorAll(".button-filter");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const category = button.dataset.category;
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set("category", category);
+    window.location.href = currentUrl.href;
+  });
+});
+
+const filterButtons = document.querySelectorAll(".button-filter");
+
+// Agregar un controlador de eventos para cada botón
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    // Remover la clase "active" de todos los botones
+    filterButtons.forEach((button) => button.classList.remove("active"));
+
+    // Agregar la clase "active" al botón que se hizo clic
+    button.classList.add("active");
+
+    // Obtener el valor del atributo "data-category" del botón que se hizo clic
+    const filterValue = button.getAttribute("data-category");
+
+    // Mostrar u ocultar los productos según el filtro seleccionado
+    filterProducts(filterValue);
+  });
+});
+
+//--------------------- FAQ
+try {
+  const questions = document.querySelectorAll(".question");
+  questions.forEach((question) => {
+    question.addEventListener("click", (event) => {
+      question.nextElementSibling.classList.toggle("hidden");
+    });
+  });
+} catch (error) {}
+
+// Show all products on page load
+filterProducts("all");
+document
+  .querySelector('.button-filter[data-category="all"]')
+  .classList.add("active");

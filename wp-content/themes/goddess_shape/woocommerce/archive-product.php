@@ -49,7 +49,7 @@ do_action('woocommerce_before_main_content');
 <?php if (is_shop()) : ?>
 	<picture class="w-full">
 		<source media="(min-width: 1100px)" srcset="<?= IMAGE . 'banners/4k/our_EN.png' ?>">
-		<img src="<?= IMAGE . 'banners/Nuestros_productos.png' ?>" alt="">
+		<img src="<?= IMAGE . 'banners/mobile/our_EN.png' ?>" alt="">
 	</picture>
 <?php else : if (is_product_category()) ?>
 	<?php
@@ -122,7 +122,7 @@ endif;
 	<?= get_template_part('components/loops/loop', 'discount') ?>
 	<div class="my-32">
 		<?= get_template_part('components/colections') ?>
-		<?= get_template_part('components/colections') ?>
+		<?= get_template_part('components/deco', 'colombian') ?>
 	</div>
 	<?= get_template_part('components/loops/new-models') ?>
 	<!-------------------------------------------------------------------------------- -->
