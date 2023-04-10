@@ -102,7 +102,7 @@ $blog_permalink = get_permalink(get_option('page_for_posts'));
 <!------------------------------------------------------------------------- Blog -->
 <?= get_template_part('components/loops/loop', 'blog') ?>
 
-<div class="flex items-center justify-center w-full h-60 bg-white">
+<div class="flex items-center justify-center w-full">
     <a href="<?= get_permalink(wc_get_page_id('shop')) ?>">
         <img class="flex h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/Home/shop_now.png" alt="">
     </a>

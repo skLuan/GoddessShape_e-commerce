@@ -1,5 +1,5 @@
 <section class="flex flex-col text-center h-fit py-2">
-    <h1 class="bg-white font-champagne_limousines text-28 text-red-soft leading-5 w-full font-bold p-8 ">New Arrivals</h1>
+    <h1 class="font-champagne_limousines text-28 text-red-soft leading-5 w-full font-bold p-8 ">New Arrivals</h1>
     <div class="flex flex-row w-full py-5 overflow-x-auto  md:justify-center pb-10 pl-5">
         <?php
         $args = [
