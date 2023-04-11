@@ -31,6 +31,7 @@ function init_template()
     wp_enqueue_script('swiper', 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js', '', '1.0', 'all');
     wp_enqueue_script('custom', get_stylesheet_directory_uri() . '/assets/js/mainjquery.js', ['jquery', 'iconify', 'lodash', 'swiper'], '1.8.1', 'all');
     wp_enqueue_script('main', get_stylesheet_directory_uri() . '/assets/js/main.js', ['iconify', 'lodash', 'swiper'], '1.8.1', 'all');
+    wp_enqueue_script('HomeProducts', get_stylesheet_directory_uri() . '/assets/js/containersHomeProducts.js', ['main'], '1.8.1', 'all');
     wp_enqueue_script('swipers', get_stylesheet_directory_uri() . '/assets/js/swipers.js', ['main'], '1.8.1', 'all');
 }
 add_action('after_setup_theme', 'init_template');

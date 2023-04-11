@@ -109,6 +109,10 @@ form.woocommerce-ordering select.orderby option {
   }
 }
 
+.active-products-buton {
+@apply bg-red-semi !text-white rounded-full lg:w-1/12 px-5 justify-center items-center;
+}
+
 /* ---------------------------------------- SINGLE_PRODUCT */
 .woocommerce-Tabs-panel h2 {
   margin-top: 10px;
