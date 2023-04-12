@@ -94,3 +94,15 @@ try {
     });
   });
 } catch (error) {}
+
+// -------------------- Single-whatsMyfit
+ try {
+  let buttonFit = document.getElementById("butonFit");
+  let containerFit = document.getElementById("fitContainer");
+  
+  buttonFit.addEventListener('click', () => {
+    containerFit.classList.toggle('hidden');
+  });
+ } catch (error) {
+  
+ }

@@ -158,6 +158,22 @@ form.woocommerce-ordering select.orderby option {
 }
 /* -------------------------------- CIERRE CART CONTAINER */
 
+
+/* -------------------------------- CHECKOUT CONTAINER */
+  .woocommerce-billing-fields__field-wrapper p {
+    @apply text-xl font-bold text-black-gs;
+  }
+  .woocommerce-billing-fields__field-wrapper label {
+    @apply text-red-soft !text-xl;
+  }
+
+  .woocommerce-additional-fields__field-wrapper {
+    @apply text-xl font-bold;
+  }
+/* -------------------------------- CIERRE CHECKOUT CONTAINER */
+
+
+
 .woocommerce-product-attributes-item__value {
   @apply md:w-[30%] font-semibold;
 }
@@ -230,7 +246,7 @@ form.woocommerce-ordering select.orderby option {
   margin: auto;
 }
 .woocommerce-billing-fields h3 {
-  @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
+   @apply text-red-soft text-center text-xl lg:text-3xl font-semibold py-4;
 }
 .woocommerce-billing-fields__field-wrapper {
   @apply shadow-gs rounded-xl;
@@ -258,7 +274,7 @@ form.woocommerce-ordering select.orderby option {
   padding: 5px;
 }
 .col-2 h3 {
-  @apply text-red-soft text-center text-xl lg:text-2xl font-semibold py-4;
+  @apply text-red-soft text-center text-xl lg:text-3xl font-semibold py-4;
 }
 .woocommerce-additional-fields {
   @apply shadow-gs rounded-xl text-red-soft text-center text-xl py-4 px-10;

@@ -5,7 +5,7 @@ $name = get_the_title();
 $short_description = $product->get_short_description();
 ?>
 <!-- contenedor info -->
-<div class="flex flex-col z-40 px-5 bg-white-true shadow-gs rounded-lg w-[90%] lg:w-[40%] lg:h-full lg:mr-auto lg:mb-5 lg:justify-evenly">
+<div class="flex flex-col relative z-40 px-5 bg-white-true shadow-gs rounded-lg w-[90%] lg:w-[40%] lg:h-full lg:mr-auto lg:mb-5 lg:justify-evenly">
     <h2 class="text-red-soft text-left font-bold font-champagne_limousines text-2xl lg:text-3xl lg:pt-0 pt-4"><?= $name ?></h2>
     <!-- enunciado del producto desktop -->
     <div class="hidden lg:flex flex-col w-full text-xl text-left">

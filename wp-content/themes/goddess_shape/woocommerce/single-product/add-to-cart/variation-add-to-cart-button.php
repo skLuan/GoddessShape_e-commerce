@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 
 global $product;
 ?>
-<div class="woocommerce-variation-add-to-cart variations_button">
+<div class="woocommerce-variation-add-to-cart variations_button text-xl">
 	<?php do_action('woocommerce_before_add_to_cart_button'); ?>
 
 	<?php
@@ -36,13 +36,15 @@ global $product;
 	?>
 
 	<div class="flex flex-col lg:flex-row justify-between mb-5 lg:mb-0">
-		<a href="" class="font-semibold text-lg text-orange-400 underline py-5 text-center lg:ml-9">What is my fit?</a>
+		<h2 id="butonFit" class="cursor-pointer font-semibold text-xl text-orange-400 underline py-5 text-center lg:ml-9">What is my fit?</h2>
 		<button type="submit" class="single_add_to_cart_button h-full lg:my-auto text-white-gs font-bold bg-orange-400 mx-auto py-2 px-5 rounded-full lg:mx-0 button alt<?php echo esc_attr(wc_wp_theme_get_element_class_name('button') ? ' ' . wc_wp_theme_get_element_class_name('button') : ''); ?>">
 			Add to cart
 		</button>
 
 	</div>
-
+	<picture id="fitContainer" class="absolute w-screen lg:top-44 -left-5 lg:left-40 lg:w-5/12">
+		<img class="shadow-gs rounded-lg w-full" src="<?= IMAGE ?>/guia_de_prendas_1.png" alt="">
+	</picture>
 
 	<?php do_action('woocommerce_after_add_to_cart_button'); ?>
 
