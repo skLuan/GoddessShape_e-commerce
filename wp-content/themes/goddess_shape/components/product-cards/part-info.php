@@ -13,7 +13,7 @@ if (isset($args['product'])) {
     <!-- tallas y colores -->
 
     <div class="mt-3">
-        <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">available in:</h2>
+        <h2 class="text-xl text-left font-normal text-black-gsSoft ml-5">Available in:</h2>
         <div class="flex justify-around h-7 text-black-gsSoft text-lg font-semibold">
             <?php
             $at = explode(", ", $product->get_attribute('size'));

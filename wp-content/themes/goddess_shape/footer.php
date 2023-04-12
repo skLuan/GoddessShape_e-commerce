@@ -6,9 +6,18 @@
                 <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
             </div>
             <div class="flex flex-row w-36 mx-2">
-                <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
-                <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
-                <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
+                <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hola%20Quisiera%20hacer%20un%20pedido" class="flex flex-row rounded-full mx-auto my-2">
+                    <iconify-icon class="w-full text-2xl text-red-soft" icon="fa:whatsapp"></iconify-icon>
+                </a>
+                <a href="https://instagram.com/shop.goddessshape?igshid=YmMyMTA2M2Y=" class="flex flex-row rounded-full mx-auto my-2">
+                    <iconify-icon class="w-full text-2xl text-red-soft" icon="bi:instagram"></iconify-icon>
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=100089873754564" class="flex flex-row rounded-full mx-auto my-2">
+                    <iconify-icon class="w-full text-2xl text-red-soft" icon="bi:facebook"></iconify-icon>
+                </a>
+                <a href="https://www.tiktok.com/@goddessshape?is_from_webapp=1&sender_device=pc" class="flex flex-row rounded-full mx-auto my-2">
+                    <iconify-icon class="w-full text-2xl text-red-soft" icon="ion:logo-tiktok"></iconify-icon>
+                </a>
             </div>
         </div>
         <div class="flex flex-col my-4 mx-5">
@@ -61,9 +70,18 @@
                     <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
                 </div>
                 <div class="flex flex-row w-36 mx-2">
-                    <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
-                    <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
-                    <div class="flex flex-row h-9 w-9 bg-gray-card rounded-full mx-auto my-2"></div>
+                    <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hola%20Quisiera%20hacer%20un%20pedido" class="flex flex-row rounded-full mx-auto my-2">
+                        <iconify-icon class="w-full text-2xl text-red-soft" icon="fa:whatsapp"></iconify-icon>
+                    </a>
+                    <a href="https://instagram.com/shop.goddessshape?igshid=YmMyMTA2M2Y=" class="flex flex-row rounded-full mx-auto my-2">
+                        <iconify-icon class="w-full text-2xl text-red-soft" icon="bi:instagram"></iconify-icon>
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=100089873754564" class="flex flex-row rounded-full mx-auto my-2">
+                        <iconify-icon class="w-full text-2xl text-red-soft" icon="bi:facebook"></iconify-icon>
+                    </a>
+                    <a href="https://www.tiktok.com/@goddessshape?is_from_webapp=1&sender_device=pc" class="flex flex-row rounded-full mx-auto my-2">
+                        <iconify-icon class="w-full text-2xl text-red-soft" icon="ion:logo-tiktok"></iconify-icon>
+                    </a>
                 </div>
             </div>
             <div class="flex flex-row my-4 mx-2 px-8 w-[70%]  items-center">
