@@ -24,7 +24,7 @@ defined('ABSPATH') || exit;
 do_action('woocommerce_email_header', $email_heading, $email); ?>
 
 <picture>
-	<img width="50px" src="https://goddess-shape.com/<?= IMAGE ?>Logo.svg" alt="">
+	<img width="50px" src="https://goddess-shape.com/test/wp-content/themes/goddess_shape/assets/img/Logo.svg" alt="">
 </picture>
 <?php /* translators: %s: Customer first name */ ?>
 <p><?php printf(esc_html__('Hi %s,', 'woocommerce'), esc_html($order->get_billing_first_name())); ?></p>
