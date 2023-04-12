@@ -39,7 +39,7 @@ if (!is_home()) $navShadow = '';
                         <iconify-icon class="flex items-center justify-center text-2xl  text-black-gsSoft" icon="material-symbols:shopping-cart-outline-rounded">
                         </iconify-icon>
                     </a>
-                    <a class="px-5 flex" href="https://api.whatsapp.com/send?phone=+19048882310&text=Hola%20Quisiera%20hacer%20un%20pedido">
+                    <a class="px-5 flex" href="https://api.whatsapp.com/send?phone=+14075080242&text=Hello Goddess Shape%2C i'll like to make a order">
                         <iconify-icon class="text-2xl m-auto text-black-gsSoft" icon="mdi:whatsapp" style="color: green;"></iconify-icon>
                     </a>
                 </div>
