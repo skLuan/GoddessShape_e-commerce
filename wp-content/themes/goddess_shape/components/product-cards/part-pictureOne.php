@@ -9,7 +9,7 @@ if (isset($args['product'])) {
     <div class="absolute bg-gray-card w-60 h-72 rounded-lg rotate-6 opacity-20 z-10"></div>
     <a class="bg-white-true z-30 shadow-gs rounded-lg items-center overflow-hidden" href="<?= $product_url ?>">
         <picture class="h-[280px] relative flex">
-            <?= $product->get_image('full', ['class' => 'm-auto h-full mx-auto relative max-w-none w-auto rounded-lg']) ?>
+            <?= $product->get_image('full', ['class' => 'm-auto h-full mx-auto right-5 relative max-w-none w-auto rounded-lg']) ?>
         </picture>
         <!-- boton add cart -->
         <button class="absolute right-2 -bottom-5 h-16 w-16 z-30">

@@ -42,7 +42,7 @@ global $product;
 		</button>
 
 	</div>
-	<picture id="fitContainer" class="absolute w-screen lg:top-44 -left-5 lg:left-40 lg:w-5/12">
+	<picture id="fitContainer" class="hidden absolute w-screen lg:w-full lg:top-20 -left-5 lg:-left-full">
 		<img class="shadow-gs rounded-lg w-full" src="<?= IMAGE ?>/guia_de_prendas_1.png" alt="">
 	</picture>
 

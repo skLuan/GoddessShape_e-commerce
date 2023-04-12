@@ -1,6 +1,11 @@
 <?php get_header();
+$post_id = get_the_ID();
+$class = 'lg:max-w-screen-xl mx-auto';
+if ($post_id === 106){
+    $class = 'lg:max-w-screen-xl';
+}
 ?>
-<div class="lg:max-w-screen-xl mx-auto">
+<div class="<?= $class ?>">
     <?php while (have_posts()) :
         the_post();
     ?>  
