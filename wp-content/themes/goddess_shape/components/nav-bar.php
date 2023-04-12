@@ -1,7 +1,7 @@
 <?php
 $cart_count = WC()->cart->get_cart_contents_count();
 $navShadow = 'shadow-gs';
-if (!is_home()) $navShadow = '';
+if (is_shop() || is_product() || is_product_category()) {$navShadow = '';}
 ?>
 <!-- navbar -->
 <nav class="flex bg-white-true items-center border-b-red-100 border py-4 sticky top-0 z-50 w-full justify-center <?= $navShadow ?>" id="navbar">

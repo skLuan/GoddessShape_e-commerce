@@ -32,7 +32,7 @@ $product_tabs = apply_filters('woocommerce_product_tabs', array());
 if (!empty($product_tabs)) : ?>
 
 	<!-- contenedor de la descripcion -->
-	<div class="woocommerce-tabs wc-tabs-wrapper shadow-gs rounded-lg" id="description-single-product">
+	<div class="woocommerce-tabs wc-tabs-wrapper" id="description-single-product">
 		<div class="flex flex-row justify-around items-center p-4 w-full border-y-red-100 border">
 			<ul class="flex flex-row justify-around tabs w-full wc-tabs" role="tablist">
 				<?php foreach ($product_tabs as $key => $product_tab) : ?>
@@ -45,8 +45,8 @@ if (!empty($product_tabs)) : ?>
 			</ul>
 		</div>
 		<?php foreach ($product_tabs as $key => $product_tab) : ?>
-			<div class="px-5 flex justify-center" id="">
-				<div class="bg-white lg:w-4/5 xl:max-w-screen-xl rounded-lg pb-10 items-center woocommerce-Tabs-panel woocommerce-Tabs-panel--<?php echo esc_attr($key); ?> panel entry-content wc-tab" id="tab-<?php echo esc_attr($key); ?>" role="tabpanel" aria-labelledby="tab-title-<?php echo esc_attr($key); ?>">
+			<div class="flex justify-center" id="">
+				<div class="lg:w-4/5 lg:px-5 xl:max-w-screen-xl shadow-gs bg-white rounded-lg pb-10 items-center woocommerce-Tabs-panel woocommerce-Tabs-panel--<?php echo esc_attr($key); ?> panel entry-content wc-tab" id="tab-<?php echo esc_attr($key); ?>" role="tabpanel" aria-labelledby="tab-title-<?php echo esc_attr($key); ?>">
 					<?php
 					if (isset($product_tab['callback'])) {
 						call_user_func($product_tab['callback'], $key, $product_tab);

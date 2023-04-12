@@ -147,6 +147,26 @@ form.woocommerce-ordering select.orderby option {
 #tab-description p {
   @apply text-xl;
 }
+
+/*  --------------- Reviews */
+#comments P {
+  @apply text-xl;
+}
+#respond form#commentform {
+  @apply flex flex-col items-center;
+}
+#respond form#commentform .comment-form-rating p.stars{
+  @apply text-xl text-orange-400 font-bold;
+}
+#respond form#commentform .comment-form-comment{
+@apply flex flex-col text-xl;
+}
+#respond form#commentform .comment-form-comment textarea{
+@apply w-full;
+}
+#respond form#commentform .form-submit {
+  @apply flex bg-red-soft font-bold text-white-true justify-center items-center w-1/6  rounded-full ml-0;
+}
 /* -----------------------------------CIERRE SINGLE_PRODUCT */
 
 /* -------------------------------- CART CONTAINER */
@@ -286,7 +306,7 @@ form.woocommerce-ordering select.orderby option {
   .parallax {
     background-image: url("../img/silueta.svg");
     background-size: 38%;
-    background-position: left;
+    background-position: -21%;
     background-attachment: fixed;
     background-repeat: no-repeat;
   }

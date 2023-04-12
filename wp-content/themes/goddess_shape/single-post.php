@@ -21,6 +21,8 @@ if ($post_id === 106) {
     <?php
     endwhile; ?>
 </div>
+<?php comments_template(); ?>
+
 <?php
 $args = ['title' => 'You may also like'];
 get_template_part('components/loops/loop', 'blog', $args);

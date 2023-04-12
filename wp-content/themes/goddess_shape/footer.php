@@ -64,7 +64,7 @@
     </div>
     <!-- footer responsive -->
     <div class="hidden lg:flex flex-col justify-around w-full h-auto bg-secondary px-4">
-        <div class="flex flex-row h-64">
+        <div class="max-w-screen-xl w-full mx-auto flex flex-row h-64">
             <div class="flex flex-col w-auto">
                 <div class="flex my-4 " id="logo">
                     <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
