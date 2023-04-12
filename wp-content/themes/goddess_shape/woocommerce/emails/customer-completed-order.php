@@ -25,6 +25,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Customer first name */ ?>
+<picture>
+	<img width="50px" src="<?= IMAGE ?>/Logo.svg" alt="">
+</picture>
 <p><?php printf( esc_html__( 'Hi %s,', 'woocommerce' ), esc_html( $order->get_billing_first_name() ) ); ?></p>
 <p><?php esc_html_e( 'We have finished processing your order.', 'woocommerce' ); ?></p>
 <?php
