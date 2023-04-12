@@ -70,7 +70,7 @@
                     <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
                 </div>
                 <div class="flex flex-row w-36 mx-2">
-                    <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hola%20Quisiera%20hacer%20un%20pedido" class="flex flex-row rounded-full mx-auto my-2">
+                    <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hello Goddess Shape%2C i'll like to make a order" class="flex flex-row rounded-full mx-auto my-2">
                         <iconify-icon class="w-full text-2xl text-red-soft" icon="fa:whatsapp"></iconify-icon>
                     </a>
                     <a href="https://instagram.com/shop.goddessshape?igshid=YmMyMTA2M2Y=" class="flex flex-row rounded-full mx-auto my-2">
