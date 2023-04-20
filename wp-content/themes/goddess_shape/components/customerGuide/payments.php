@@ -11,10 +11,10 @@ if (isset($args['class'])) $classes = $args['class'];
         <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light items-center">Say goodbye to payment headaches!</h3>
         <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light py-4">Our online store accepts a variety of payment methods, so you can purchase your favorite shapewear worry-free. Shop with confidence.</h3>
         <div class="grid grid-cols-2 lg:ml-0 my-4 h-30 w-full ">
-            <img class="my-2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Klarna_logo-1.png" alt="">
-            <img class="my-2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/PayPal_horizontally_Logo_2014-1.png" alt="">
-            <img class="my-2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/cash-app-png-2.png" alt="">
-            <img class="my-2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/apple-pay-logo-4.png" alt="">
+            <img class="my-3 w-4/6 lg:w-1/2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Klarna_logo-1.png" alt="">
+            <img class="my-3 w-4/6 lg:w-1/2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/logo-Paypal.png" alt="">
+            <img class="my-3 w-5/6 lg:w-2/3 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/cash-app-png-2.png" alt="">
+            <img class="my-3 w-3/6 lg:w-1/3 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Apple_Pay_logo.svg" alt="">
         </div>
     </div>
 </div>

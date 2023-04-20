@@ -72,13 +72,10 @@ form.woocommerce-ordering select.orderby option {
 #menu-item-101,
 #menu-item-100,
 #menu-item-98 {
-  @apply font-semibold text-2xl mb-2;
+  @apply font-semibold mb-2;
 }
-.sub-menu {
-  @apply font-normal text-xl;
-}
-.arroz a {
-  font-size: 20px;
+#footer_menu_container .sub-menu {
+  @apply font-light;
 }
 .my-slider2 {
   overflow: hidden;

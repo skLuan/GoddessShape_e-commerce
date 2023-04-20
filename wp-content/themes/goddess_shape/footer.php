@@ -5,6 +5,7 @@
             <div class="flex my-4" id="logo">
                 <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
             </div>
+            <!-- redes sociales -->
             <div class="flex flex-row w-36 mx-2">
                 <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hola%20Quisiera%20hacer%20un%20pedido" class="flex flex-row rounded-full mx-auto my-2">
                     <iconify-icon class="w-full text-2xl text-red-soft" icon="fa:whatsapp"></iconify-icon>
@@ -20,55 +21,43 @@
                 </a>
             </div>
         </div>
-        <div class="flex flex-col my-4 mx-5">
+        <div id="footer_menu_container" class="flex flex-col my-4 mx-5">
 
             <?php
+            $post = get_page_by_path('goddess-policy');
+            // Obtener el permalink del post
+            $permalink = get_permalink($post->ID);
+
             wp_nav_menu([
                 'theme_location' => 'footer_menu',
                 'container'      => false,
                 'menu_class'     => 'flex flex-col font-champagne_limousines text-red-semi text-xl font-light',
                 'menu_id'        => 'footer-Menu',
-                'add_li_class' => 'arroz'
+                'add_li_class' => 'text-2xl'
             ])
             ?>
-            <!-- <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#Shop">Shop</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#Post-surgical">Post-surgical</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#daily-use">Daily</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#complements">Complements</a> -->
         </div>
-        <!-- <div class="flex flex-col my-4 mx-2">
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#cart">Shopping cart</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#my-fit">What is my fit?</a>
-        </div>
-        <div class="flex flex-col my-4 mx-2">
-            <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#blog">Blog</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#my-fit">Guia de prendas</a>
-        </div>
-        <div class="flex flex-col my-4 mx-2">
-            <a class="flex font-champagne_limousines text-red-semi text-2xl font-semibold " href="#customer-service">Customer service</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#contact">Contact us</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#faq">FAQ</a>
-            <a class="flex font-champagne_limousines text-red-semi text-xl font-light" href="#shipping">Shipping</a>
-        </div> -->
-        <div class="flex flex-col bottom-0">
-            <div class="flex flex-row items-center justify-center w-full h-6 border border-secondary bg-white">
-                <a class="flex font-champagne_limousines text-red-semi font-base font-light underline pr-8" href="#terms">Terms</a>
-                <p class="flex items-center justify-center font-champagne_limousines text-red-semi font-base font-light ">l</p>
-                <a class="flex font-champagne_limousines text-red-semi font-base font-light ml-8" href="#privacy">Privacy.</a>
+
+        <div class="flex flex-col bottom-0 pb-20">
+            <div class="flex flex-row items-center justify-center w-full h-10 border border-secondary bg-white">
+                <a class="flex font-champagne_limousines text-red-semi font-lg font-light underline pr-8" href="<?= $permalink ?>">Terms</a>
+                <p class="flex items-center justify-center font-champagne_limousines text-red-semi font-lg font-light ">l</p>
+                <a class="flex font-champagne_limousines text-red-semi font-lg font-light ml-8" href="#privacy">Privacy.</a>
 
             </div>
-            <div class="flex flex-row items-center justify-around  w-full h-6  bg-white">
-                <p class="flex  font-champagne_limousines text-red-semi font-base font-light">Copyright 2022 - Goddess Shape</p>
+            <div class="flex flex-row items-center justify-around  w-full h-8 bg-white">
+                <p class="flex  font-champagne_limousines text-red-semi font-lg font-light">Copyright 2022 - Goddess Shape</p>
             </div>
         </div>
     </div>
-    <!-- footer responsive -->
-    <div class="hidden lg:flex flex-col justify-around w-full h-auto bg-secondary px-4">
+    <!-- footer desktop -->
+    <div class="hidden lg:flex flex-col justify-around w-full h-auto bg-secondary">
         <div class="max-w-screen-xl w-full mx-auto flex flex-row h-64">
-            <div class="flex flex-col w-auto">
+            <div class="flex flex-col w-auto px-5">
                 <div class="flex my-4 " id="logo">
                     <img src="<?= get_stylesheet_directory_uri() ?>/assets/img/Logo.svg" alt="Logo Goddess-shape">
                 </div>
+                <!-- redes sociales -->
                 <div class="flex flex-row w-36 mx-2">
                     <a href="https://api.whatsapp.com/send?phone=+14075080242&text=Hello Goddess Shape%2C i'll like to make a order" class="flex flex-row rounded-full mx-auto my-2">
                         <iconify-icon class="w-full text-2xl text-red-soft" icon="fa:whatsapp"></iconify-icon>
@@ -89,22 +78,22 @@
                 wp_nav_menu([
                     'theme_location' => 'footer_menu',
                     'container'      => false,
-                    'menu_class'     => 'flex flex-row w-[90%] font-champagne_limousines text-red-semi text-2xl font-semibold justify-around',
+                    'menu_class'     => 'grid grid-cols-2 gap-5 font-champagne_limousines text-red-semi text-2xl font-semibold justify-around',
                     'menu_id'        => 'footer-Menu',
-                    'add_li_class' => 'arroz'
+                    'add_li_class' => ''
                 ])
                 ?>
             </div>
         </div>
-        <div class="hidden lg:flex flex-col bottom-0">
-            <div class="flex flex-row items-center justify-center w-full h-6 border border-secondary bg-white">
-                <a class="flex font-champagne_limousines text-red-semi font-base font-light underline pr-8" href="#terms">Terms</a>
-                <p class="flex items-center justify-center font-champagne_limousines text-red-semi font-base font-light ">l</p>
-                <a class="flex font-champagne_limousines text-red-semi font-base font-light ml-8" href="#privacy">Privacy.</a>
+        <div class="flex flex-col bottom-0">
+            <div class="flex flex-row items-center justify-center w-full h-10 border border-secondary bg-white">
+                <a class="flex font-champagne_limousines text-red-semi font-lg font-light underline pr-8" href="<?= $permalink ?>">Terms</a>
+                <p class="flex items-center justify-center font-champagne_limousines text-red-semi font-lg font-light ">l</p>
+                <a class="flex font-champagne_limousines text-red-semi font-lg font-light ml-8" href="#privacy">Privacy.</a>
 
             </div>
-            <div class="flex flex-row items-center justify-around  w-full h-6  bg-white">
-                <p class="flex  font-champagne_limousines text-red-semi font-base font-light">Copyright 2022 - Goddess Shape</p>
+            <div class="flex flex-row items-center justify-around  w-full h-8 bg-white">
+                <p class="flex  font-champagne_limousines text-red-semi font-lg font-light">Copyright 2022 - Goddess Shape</p>
             </div>
         </div>
     </div>
