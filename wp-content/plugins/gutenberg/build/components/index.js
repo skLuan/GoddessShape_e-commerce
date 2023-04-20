@@ -2421,6 +2421,147 @@ if (true) {
 
 /***/ }),
 
+/***/ 2364:
+/***/ (function(module) {
+
+"use strict";
+
+
+var isMergeableObject = function isMergeableObject(value) {
+	return isNonNullObject(value)
+		&& !isSpecial(value)
+};
+
+function isNonNullObject(value) {
+	return !!value && typeof value === 'object'
+}
+
+function isSpecial(value) {
+	var stringValue = Object.prototype.toString.call(value);
+
+	return stringValue === '[object RegExp]'
+		|| stringValue === '[object Date]'
+		|| isReactElement(value)
+}
+
+// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+	return value.$$typeof === REACT_ELEMENT_TYPE
+}
+
+function emptyTarget(val) {
+	return Array.isArray(val) ? [] : {}
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+	return (options.clone !== false && options.isMergeableObject(value))
+		? deepmerge(emptyTarget(value), value, options)
+		: value
+}
+
+function defaultArrayMerge(target, source, options) {
+	return target.concat(source).map(function(element) {
+		return cloneUnlessOtherwiseSpecified(element, options)
+	})
+}
+
+function getMergeFunction(key, options) {
+	if (!options.customMerge) {
+		return deepmerge
+	}
+	var customMerge = options.customMerge(key);
+	return typeof customMerge === 'function' ? customMerge : deepmerge
+}
+
+function getEnumerableOwnPropertySymbols(target) {
+	return Object.getOwnPropertySymbols
+		? Object.getOwnPropertySymbols(target).filter(function(symbol) {
+			return Object.propertyIsEnumerable.call(target, symbol)
+		})
+		: []
+}
+
+function getKeys(target) {
+	return Object.keys(target).concat(getEnumerableOwnPropertySymbols(target))
+}
+
+function propertyIsOnObject(object, property) {
+	try {
+		return property in object
+	} catch(_) {
+		return false
+	}
+}
+
+// Protects from prototype poisoning and unexpected merging up the prototype chain.
+function propertyIsUnsafe(target, key) {
+	return propertyIsOnObject(target, key) // Properties are safe to merge if they don't exist in the target yet,
+		&& !(Object.hasOwnProperty.call(target, key) // unsafe if they exist up the prototype chain,
+			&& Object.propertyIsEnumerable.call(target, key)) // and also unsafe if they're nonenumerable.
+}
+
+function mergeObject(target, source, options) {
+	var destination = {};
+	if (options.isMergeableObject(target)) {
+		getKeys(target).forEach(function(key) {
+			destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+		});
+	}
+	getKeys(source).forEach(function(key) {
+		if (propertyIsUnsafe(target, key)) {
+			return
+		}
+
+		if (propertyIsOnObject(target, key) && options.isMergeableObject(source[key])) {
+			destination[key] = getMergeFunction(key, options)(target[key], source[key], options);
+		} else {
+			destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+		}
+	});
+	return destination
+}
+
+function deepmerge(target, source, options) {
+	options = options || {};
+	options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+	options.isMergeableObject = options.isMergeableObject || isMergeableObject;
+	// cloneUnlessOtherwiseSpecified is added to `options` so that custom arrayMerge()
+	// implementations can use it. The caller may not replace it.
+	options.cloneUnlessOtherwiseSpecified = cloneUnlessOtherwiseSpecified;
+
+	var sourceIsArray = Array.isArray(source);
+	var targetIsArray = Array.isArray(target);
+	var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+	if (!sourceAndTargetTypesMatch) {
+		return cloneUnlessOtherwiseSpecified(source, options)
+	} else if (sourceIsArray) {
+		return options.arrayMerge(target, source, options)
+	} else {
+		return mergeObject(target, source, options)
+	}
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+	if (!Array.isArray(array)) {
+		throw new Error('first argument should be an array')
+	}
+
+	return array.reduce(function(prev, next) {
+		return deepmerge(prev, next, options)
+	}, {})
+};
+
+var deepmerge_1 = deepmerge;
+
+module.exports = deepmerge_1;
+
+
+/***/ }),
+
 /***/ 9196:
 /***/ (function(module) {
 
@@ -2506,8 +2647,8 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "AnglePickerControl": function() { return /* reexport */ AnglePickerControl; },
-  "Animate": function() { return /* reexport */ Animate; },
+  "AnglePickerControl": function() { return /* reexport */ angle_picker_control; },
+  "Animate": function() { return /* reexport */ build_module_animate; },
   "Autocomplete": function() { return /* reexport */ Autocomplete; },
   "BaseControl": function() { return /* reexport */ base_control; },
   "BlockQuotation": function() { return /* reexport */ external_wp_primitives_namespaceObject.BlockQuotation; },
@@ -2526,8 +2667,8 @@ __webpack_require__.d(__webpack_exports__, {
   "ColorPalette": function() { return /* reexport */ color_palette; },
   "ColorPicker": function() { return /* reexport */ LegacyAdapter; },
   "ComboboxControl": function() { return /* reexport */ combobox_control; },
-  "CustomGradientPicker": function() { return /* reexport */ CustomGradientPicker; },
-  "CustomSelectControl": function() { return /* reexport */ CustomSelectControl; },
+  "CustomGradientPicker": function() { return /* reexport */ custom_gradient_picker; },
+  "CustomSelectControl": function() { return /* reexport */ StableCustomSelectControl; },
   "Dashicon": function() { return /* reexport */ dashicon; },
   "DatePicker": function() { return /* reexport */ date; },
   "DateTimePicker": function() { return /* reexport */ build_module_date_time; },
@@ -2552,8 +2693,8 @@ __webpack_require__.d(__webpack_exports__, {
   "FormToggle": function() { return /* reexport */ form_toggle; },
   "FormTokenField": function() { return /* reexport */ form_token_field; },
   "G": function() { return /* reexport */ external_wp_primitives_namespaceObject.G; },
-  "GradientPicker": function() { return /* reexport */ GradientPicker; },
-  "Guide": function() { return /* reexport */ Guide; },
+  "GradientPicker": function() { return /* reexport */ gradient_picker; },
+  "Guide": function() { return /* reexport */ guide; },
   "GuidePage": function() { return /* reexport */ GuidePage; },
   "HorizontalRule": function() { return /* reexport */ external_wp_primitives_namespaceObject.HorizontalRule; },
   "Icon": function() { return /* reexport */ build_module_icon; },
@@ -2563,7 +2704,7 @@ __webpack_require__.d(__webpack_exports__, {
   "Line": function() { return /* reexport */ external_wp_primitives_namespaceObject.Line; },
   "MenuGroup": function() { return /* reexport */ menu_group; },
   "MenuItem": function() { return /* reexport */ menu_item; },
-  "MenuItemsChoice": function() { return /* reexport */ MenuItemsChoice; },
+  "MenuItemsChoice": function() { return /* reexport */ menu_items_choice; },
   "Modal": function() { return /* reexport */ modal; },
   "NavigableMenu": function() { return /* reexport */ navigable_container_menu; },
   "Notice": function() { return /* reexport */ build_module_notice; },
@@ -2576,7 +2717,7 @@ __webpack_require__.d(__webpack_exports__, {
   "Placeholder": function() { return /* reexport */ placeholder; },
   "Polygon": function() { return /* reexport */ external_wp_primitives_namespaceObject.Polygon; },
   "Popover": function() { return /* reexport */ popover; },
-  "QueryControls": function() { return /* reexport */ QueryControls; },
+  "QueryControls": function() { return /* reexport */ query_controls; },
   "RadioControl": function() { return /* reexport */ radio_control; },
   "RangeControl": function() { return /* reexport */ range_control; },
   "Rect": function() { return /* reexport */ external_wp_primitives_namespaceObject.Rect; },
@@ -2612,7 +2753,7 @@ __webpack_require__.d(__webpack_exports__, {
   "__experimentalApplyValueToSides": function() { return /* reexport */ applyValueToSides; },
   "__experimentalBorderBoxControl": function() { return /* reexport */ border_box_control_component; },
   "__experimentalBorderControl": function() { return /* reexport */ border_control_component; },
-  "__experimentalBoxControl": function() { return /* reexport */ BoxControl; },
+  "__experimentalBoxControl": function() { return /* reexport */ box_control; },
   "__experimentalConfirmDialog": function() { return /* reexport */ confirm_dialog_component; },
   "__experimentalDimensionControl": function() { return /* reexport */ dimension_control; },
   "__experimentalDivider": function() { return /* reexport */ divider_component; },
@@ -2629,19 +2770,19 @@ __webpack_require__.d(__webpack_exports__, {
   "__experimentalIsEmptyBorder": function() { return /* reexport */ isEmptyBorder; },
   "__experimentalItem": function() { return /* reexport */ item_component; },
   "__experimentalItemGroup": function() { return /* reexport */ item_group_component; },
-  "__experimentalNavigation": function() { return /* reexport */ Navigation; },
+  "__experimentalNavigation": function() { return /* reexport */ navigation; },
   "__experimentalNavigationBackButton": function() { return /* reexport */ back_button; },
-  "__experimentalNavigationGroup": function() { return /* reexport */ NavigationGroup; },
-  "__experimentalNavigationItem": function() { return /* reexport */ NavigationItem; },
-  "__experimentalNavigationMenu": function() { return /* reexport */ NavigationMenu; },
+  "__experimentalNavigationGroup": function() { return /* reexport */ group; },
+  "__experimentalNavigationItem": function() { return /* reexport */ navigation_item; },
+  "__experimentalNavigationMenu": function() { return /* reexport */ navigation_menu; },
   "__experimentalNavigatorBackButton": function() { return /* reexport */ navigator_back_button_component; },
   "__experimentalNavigatorButton": function() { return /* reexport */ navigator_button_component; },
   "__experimentalNavigatorProvider": function() { return /* reexport */ navigator_provider_component; },
   "__experimentalNavigatorScreen": function() { return /* reexport */ navigator_screen_component; },
+  "__experimentalNavigatorToParentButton": function() { return /* reexport */ navigator_to_parent_button_component; },
   "__experimentalNumberControl": function() { return /* reexport */ number_control; },
-  "__experimentalPaletteEdit": function() { return /* reexport */ PaletteEdit; },
+  "__experimentalPaletteEdit": function() { return /* reexport */ palette_edit; },
   "__experimentalParseQuantityAndUnitFromRawValue": function() { return /* reexport */ parseQuantityAndUnitFromRawValue; },
-  "__experimentalPopoverPositionToPlacement": function() { return /* reexport */ positionToPlacement; },
   "__experimentalRadio": function() { return /* reexport */ radio_group_radio; },
   "__experimentalRadioGroup": function() { return /* reexport */ radio_group; },
   "__experimentalScrollable": function() { return /* reexport */ scrollable_component; },
@@ -2681,6 +2822,7 @@ __webpack_require__.d(__webpack_exports__, {
   "__unstableUseNavigateRegions": function() { return /* reexport */ useNavigateRegions; },
   "createSlotFill": function() { return /* reexport */ createSlotFill; },
   "navigateRegions": function() { return /* reexport */ navigate_regions; },
+  "privateApis": function() { return /* reexport */ privateApis; },
   "useBaseControlProps": function() { return /* reexport */ useBaseControlProps; },
   "withConstrainedTabbing": function() { return /* reexport */ with_constrained_tabbing; },
   "withFallbackStyles": function() { return /* reexport */ with_fallback_styles; },
@@ -15060,6 +15202,8 @@ const close_close = (0,external_wp_element_namespaceObject.createElement)(extern
 ;// CONCATENATED MODULE: external ["wp","deprecated"]
 var external_wp_deprecated_namespaceObject = window["wp"]["deprecated"];
 var external_wp_deprecated_default = /*#__PURE__*/__webpack_require__.n(external_wp_deprecated_namespaceObject);
+;// CONCATENATED MODULE: external ["wp","dom"]
+var external_wp_dom_namespaceObject = window["wp"]["dom"];
 ;// CONCATENATED MODULE: ./packages/components/build-module/dashicon/index.js
 
 
@@ -15141,14 +15285,7 @@ function Icon(_ref) {
   }
 
   if ('function' === typeof icon) {
-    if (icon.prototype instanceof external_wp_element_namespaceObject.Component) {
-      return (0,external_wp_element_namespaceObject.createElement)(icon, {
-        size,
-        ...additionalProps
-      });
-    }
-
-    return icon({
+    return (0,external_wp_element_namespaceObject.createElement)(icon, {
       size,
       ...additionalProps
     });
@@ -15178,11 +15315,48 @@ function Icon(_ref) {
 
 ;// CONCATENATED MODULE: external ["wp","warning"]
 var external_wp_warning_namespaceObject = window["wp"]["warning"];
+// EXTERNAL MODULE: ./packages/components/node_modules/deepmerge/dist/cjs.js
+var cjs = __webpack_require__(2364);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 // EXTERNAL MODULE: ./node_modules/fast-deep-equal/es6/index.js
 var es6 = __webpack_require__(5619);
 var es6_default = /*#__PURE__*/__webpack_require__.n(es6);
-;// CONCATENATED MODULE: external "lodash"
-var external_lodash_namespaceObject = window["lodash"];
+;// CONCATENATED MODULE: ./node_modules/is-plain-object/dist/is-plain-object.mjs
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+function is_plain_object_isObject(o) {
+  return Object.prototype.toString.call(o) === '[object Object]';
+}
+
+function is_plain_object_isPlainObject(o) {
+  var ctor,prot;
+
+  if (is_plain_object_isObject(o) === false) return false;
+
+  // If has modified constructor
+  ctor = o.constructor;
+  if (ctor === undefined) return true;
+
+  // If has modified prototype
+  prot = ctor.prototype;
+  if (is_plain_object_isObject(prot) === false) return false;
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+}
+
+
+
 ;// CONCATENATED MODULE: ./packages/components/build-module/utils/hooks/use-update-effect.js
 /**
  * WordPress dependencies
@@ -15221,6 +15395,7 @@ function useUpdateEffect(effect, deps) {
 /**
  * External dependencies
  */
+
 
 
 /**
@@ -15263,7 +15438,7 @@ function useContextSystemBridge(_ref) {
   }, [value]); // `parentContext` will always be memoized (i.e., the result of this hook itself)
   // or the default value from when the `ComponentsContext` was originally
   // initialized (which will never change, it's a static variable)
-  // so this memoization will prevent `merge` and `JSON.parse/stringify` from rerunning unless
+  // so this memoization will prevent `deepmerge()` from rerunning unless
   // the references to `value` change OR the `parentContext` has an actual material change
   // (because again, it's guaranteed to be memoized or a static reference to the empty object
   // so we know that the only changes for `parentContext` are material ones... i.e., why we
@@ -15271,11 +15446,13 @@ function useContextSystemBridge(_ref) {
   // need to bother with the `value`). The `useUpdateEffect` above will ensure that we are
   // correctly warning when the `value` isn't being properly memoized. All of that to say
   // that this should be super safe to assume that `useMemo` will only run on actual
-  // changes to the two dependencies, therefore saving us calls to `merge` and `JSON.parse/stringify`!
+  // changes to the two dependencies, therefore saving us calls to `deepmerge()`!
 
   const config = (0,external_wp_element_namespaceObject.useMemo)(() => {
     // Deep clone `parentContext` to avoid mutating it later.
-    return (0,external_lodash_namespaceObject.merge)(JSON.parse(JSON.stringify(parentContext)), value);
+    return cjs_default()(parentContext !== null && parentContext !== void 0 ? parentContext : {}, value !== null && value !== void 0 ? value : {}, {
+      isMergeableObject: is_plain_object_isPlainObject
+    });
   }, [parentContext, value]);
   return config;
 }
@@ -15366,6 +15543,344 @@ function getConnectedNamespace() {
   };
 }
 
+;// CONCATENATED MODULE: ./node_modules/tslib/tslib.es6.js
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var tslib_es6_extendStatics = function(d, b) {
+    tslib_es6_extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return tslib_es6_extendStatics(d, b);
+};
+
+function tslib_es6_extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    tslib_es6_extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var tslib_es6_assign = function() {
+    tslib_es6_assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    }
+    return tslib_es6_assign.apply(this, arguments);
+}
+
+function tslib_es6_rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function tslib_es6_decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function tslib_es6_param(paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+}
+
+function tslib_es6_metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function tslib_es6_awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function tslib_es6_generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var tslib_es6_createBinding = Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+});
+
+function tslib_es6_exportStar(m, o) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) tslib_es6_createBinding(o, m, p);
+}
+
+function tslib_es6_values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
+function tslib_es6_read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+/** @deprecated */
+function tslib_es6_spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(tslib_es6_read(arguments[i]));
+    return ar;
+}
+
+/** @deprecated */
+function tslib_es6_spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+}
+
+function tslib_es6_spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || from);
+}
+
+function tslib_es6_await(v) {
+    return this instanceof tslib_es6_await ? (this.v = v, this) : new tslib_es6_await(v);
+}
+
+function tslib_es6_asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof tslib_es6_await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+}
+
+function tslib_es6_asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: tslib_es6_await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+}
+
+function tslib_es6_asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof tslib_es6_values === "function" ? tslib_es6_values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+}
+
+function tslib_es6_makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+
+var tslib_es6_setModuleDefault = Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+};
+
+function tslib_es6_importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) tslib_es6_createBinding(result, mod, k);
+    tslib_es6_setModuleDefault(result, mod);
+    return result;
+}
+
+function tslib_es6_importDefault(mod) {
+    return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function tslib_es6_classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+function tslib_es6_classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+}
+
+;// CONCATENATED MODULE: ./node_modules/lower-case/dist.es2015/index.js
+/**
+ * Source: ftp://ftp.unicode.org/Public/UCD/latest/ucd/SpecialCasing.txt
+ */
+var SUPPORTED_LOCALE = {
+    tr: {
+        regexp: /\u0130|\u0049|\u0049\u0307/g,
+        map: {
+            İ: "\u0069",
+            I: "\u0131",
+            İ: "\u0069",
+        },
+    },
+    az: {
+        regexp: /\u0130/g,
+        map: {
+            İ: "\u0069",
+            I: "\u0131",
+            İ: "\u0069",
+        },
+    },
+    lt: {
+        regexp: /\u0049|\u004A|\u012E|\u00CC|\u00CD|\u0128/g,
+        map: {
+            I: "\u0069\u0307",
+            J: "\u006A\u0307",
+            Į: "\u012F\u0307",
+            Ì: "\u0069\u0307\u0300",
+            Í: "\u0069\u0307\u0301",
+            Ĩ: "\u0069\u0307\u0303",
+        },
+    },
+};
+/**
+ * Localized lower case.
+ */
+function localeLowerCase(str, locale) {
+    var lang = SUPPORTED_LOCALE[locale.toLowerCase()];
+    if (lang)
+        return lowerCase(str.replace(lang.regexp, function (m) { return lang.map[m]; }));
+    return lowerCase(str);
+}
+/**
+ * Lower case as a function.
+ */
+function lowerCase(str) {
+    return str.toLowerCase();
+}
+
+;// CONCATENATED MODULE: ./node_modules/no-case/dist.es2015/index.js
+
+// Support camel case ("camelCase" -> "camel Case" and "CAMELCase" -> "CAMEL Case").
+var DEFAULT_SPLIT_REGEXP = [/([a-z0-9])([A-Z])/g, /([A-Z])([A-Z][a-z])/g];
+// Remove all non-word characters.
+var DEFAULT_STRIP_REGEXP = /[^A-Z0-9]+/gi;
+/**
+ * Normalize the string into something other libraries can manipulate easier.
+ */
+function noCase(input, options) {
+    if (options === void 0) { options = {}; }
+    var _a = options.splitRegexp, splitRegexp = _a === void 0 ? DEFAULT_SPLIT_REGEXP : _a, _b = options.stripRegexp, stripRegexp = _b === void 0 ? DEFAULT_STRIP_REGEXP : _b, _c = options.transform, transform = _c === void 0 ? lowerCase : _c, _d = options.delimiter, delimiter = _d === void 0 ? " " : _d;
+    var result = replace(replace(input, splitRegexp, "$1\0$2"), stripRegexp, "\0");
+    var start = 0;
+    var end = result.length;
+    // Trim the delimiter from around the output string.
+    while (result.charAt(start) === "\0")
+        start++;
+    while (result.charAt(end - 1) === "\0")
+        end--;
+    // Transform each token independently.
+    return result.slice(start, end).split("\0").map(transform).join(delimiter);
+}
+/**
+ * Replace `re` in the input string with the replacement value.
+ */
+function replace(input, re, value) {
+    if (re instanceof RegExp)
+        return input.replace(re, value);
+    return re.reduce(function (input, re) { return input.replace(re, value); }, input);
+}
+
+;// CONCATENATED MODULE: ./node_modules/dot-case/dist.es2015/index.js
+
+
+function dotCase(input, options) {
+    if (options === void 0) { options = {}; }
+    return noCase(input, tslib_es6_assign({ delimiter: "." }, options));
+}
+
+;// CONCATENATED MODULE: ./node_modules/param-case/dist.es2015/index.js
+
+
+function paramCase(input, options) {
+    if (options === void 0) { options = {}; }
+    return dotCase(input, tslib_es6_assign({ delimiter: "-" }, options));
+}
+
 // EXTERNAL MODULE: ./node_modules/memize/index.js
 var memize = __webpack_require__(9756);
 var memize_default = /*#__PURE__*/__webpack_require__.n(memize);
@@ -15378,18 +15893,18 @@ var memize_default = /*#__PURE__*/__webpack_require__.n(memize);
 /**
  * Generates the connected component CSS className based on the namespace.
  *
- * @param  namespace The name of the connected component.
+ * @param namespace The name of the connected component.
  * @return The generated CSS className.
  */
 
 function getStyledClassName(namespace) {
-  const kebab = (0,external_lodash_namespaceObject.kebabCase)(namespace);
+  const kebab = paramCase(namespace);
   return `components-${kebab}`;
 }
 
 const getStyledClassNameFromKey = memize_default()(getStyledClassName);
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/@emotion/sheet/dist/emotion-sheet.browser.esm.js
+;// CONCATENATED MODULE: ./node_modules/@emotion/sheet/dist/emotion-sheet.browser.esm.js
 /*
 
 Based off glamor's StyleSheet, thanks Sunil ❤️
@@ -15530,7 +16045,7 @@ var emotion_sheet_browser_esm_StyleSheet = /*#__PURE__*/function () {
 
 
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Utility.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Utility.js
 /**
  * @param {number}
  * @return {number}
@@ -15581,7 +16096,7 @@ function match (value, pattern) {
  * @param {string} replacement
  * @return {string}
  */
-function replace (value, pattern, replacement) {
+function Utility_replace (value, pattern, replacement) {
 	return value.replace(pattern, replacement)
 }
 
@@ -15647,7 +16162,7 @@ function Utility_combine (array, callback) {
 	return array.map(callback).join('')
 }
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Tokenizer.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Tokenizer.js
 
 
 var line = 1
@@ -15895,7 +16410,7 @@ function identifier (index) {
 	return slice(index, position)
 }
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Enum.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Enum.js
 var MS = '-ms-'
 var MOZ = '-moz-'
 var WEBKIT = '-webkit-'
@@ -15917,7 +16432,7 @@ var FONT_FACE = '@font-face'
 var COUNTER_STYLE = '@counter-style'
 var FONT_FEATURE_VALUES = '@font-feature-values'
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Serializer.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Serializer.js
 
 
 
@@ -15954,7 +16469,7 @@ function stringify (element, index, children, callback) {
 	return Utility_strlen(children = serialize(element.children, callback)) ? element.return = element.value + '{' + children + '}' : ''
 }
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Prefixer.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Prefixer.js
 
 
 
@@ -15988,37 +16503,37 @@ function prefix (value, length) {
 			return WEBKIT + value + MS + 'flex-' + value + value
 		// align-items
 		case 5187:
-			return WEBKIT + value + replace(value, /(\w+).+(:[^]+)/, WEBKIT + 'box-$1$2' + MS + 'flex-$1$2') + value
+			return WEBKIT + value + Utility_replace(value, /(\w+).+(:[^]+)/, WEBKIT + 'box-$1$2' + MS + 'flex-$1$2') + value
 		// align-self
 		case 5443:
-			return WEBKIT + value + MS + 'flex-item-' + replace(value, /flex-|-self/, '') + value
+			return WEBKIT + value + MS + 'flex-item-' + Utility_replace(value, /flex-|-self/, '') + value
 		// align-content
 		case 4675:
-			return WEBKIT + value + MS + 'flex-line-pack' + replace(value, /align-content|flex-|-self/, '') + value
+			return WEBKIT + value + MS + 'flex-line-pack' + Utility_replace(value, /align-content|flex-|-self/, '') + value
 		// flex-shrink
 		case 5548:
-			return WEBKIT + value + MS + replace(value, 'shrink', 'negative') + value
+			return WEBKIT + value + MS + Utility_replace(value, 'shrink', 'negative') + value
 		// flex-basis
 		case 5292:
-			return WEBKIT + value + MS + replace(value, 'basis', 'preferred-size') + value
+			return WEBKIT + value + MS + Utility_replace(value, 'basis', 'preferred-size') + value
 		// flex-grow
 		case 6060:
-			return WEBKIT + 'box-' + replace(value, '-grow', '') + WEBKIT + value + MS + replace(value, 'grow', 'positive') + value
+			return WEBKIT + 'box-' + Utility_replace(value, '-grow', '') + WEBKIT + value + MS + Utility_replace(value, 'grow', 'positive') + value
 		// transition
 		case 4554:
-			return WEBKIT + replace(value, /([^-])(transform)/g, '$1' + WEBKIT + '$2') + value
+			return WEBKIT + Utility_replace(value, /([^-])(transform)/g, '$1' + WEBKIT + '$2') + value
 		// cursor
 		case 6187:
-			return replace(replace(replace(value, /(zoom-|grab)/, WEBKIT + '$1'), /(image-set)/, WEBKIT + '$1'), value, '') + value
+			return Utility_replace(Utility_replace(Utility_replace(value, /(zoom-|grab)/, WEBKIT + '$1'), /(image-set)/, WEBKIT + '$1'), value, '') + value
 		// background, background-image
 		case 5495: case 3959:
-			return replace(value, /(image-set\([^]*)/, WEBKIT + '$1' + '$`$1')
+			return Utility_replace(value, /(image-set\([^]*)/, WEBKIT + '$1' + '$`$1')
 		// justify-content
 		case 4968:
-			return replace(replace(value, /(.+:)(flex-)?(.*)/, WEBKIT + 'box-pack:$3' + MS + 'flex-pack:$3'), /s.+-b[^;]+/, 'justify') + WEBKIT + value + value
+			return Utility_replace(Utility_replace(value, /(.+:)(flex-)?(.*)/, WEBKIT + 'box-pack:$3' + MS + 'flex-pack:$3'), /s.+-b[^;]+/, 'justify') + WEBKIT + value + value
 		// (margin|padding)-inline-(start|end)
 		case 4095: case 3583: case 4068: case 2532:
-			return replace(value, /(.+)-inline(.+)/, WEBKIT + '$1$2') + value
+			return Utility_replace(value, /(.+)-inline(.+)/, WEBKIT + '$1$2') + value
 		// (min|max)?(width|height|inline-size|block-size)
 		case 8116: case 7059: case 5753: case 5535:
 		case 5445: case 5701: case 4933: case 4677:
@@ -16033,10 +16548,10 @@ function prefix (value, length) {
 							break
 					// (f)ill-available, (f)it-content
 					case 102:
-						return replace(value, /(.+:)(.+)-([^]+)/, '$1' + WEBKIT + '$2-$3' + '$1' + MOZ + (Utility_charat(value, length + 3) == 108 ? '$3' : '$2-$3')) + value
+						return Utility_replace(value, /(.+:)(.+)-([^]+)/, '$1' + WEBKIT + '$2-$3' + '$1' + MOZ + (Utility_charat(value, length + 3) == 108 ? '$3' : '$2-$3')) + value
 					// (s)tretch
 					case 115:
-						return ~indexof(value, 'stretch') ? prefix(replace(value, 'stretch', 'fill-available'), length) + value : value
+						return ~indexof(value, 'stretch') ? prefix(Utility_replace(value, 'stretch', 'fill-available'), length) + value : value
 				}
 			break
 		// position: sticky
@@ -16049,10 +16564,10 @@ function prefix (value, length) {
 			switch (Utility_charat(value, Utility_strlen(value) - 3 - (~indexof(value, '!important') && 10))) {
 				// stic(k)y
 				case 107:
-					return replace(value, ':', ':' + WEBKIT) + value
+					return Utility_replace(value, ':', ':' + WEBKIT) + value
 				// (inline-)?fl(e)x
 				case 101:
-					return replace(value, /(.+:)([^;!]+)(;|!.+)?/, '$1' + WEBKIT + (Utility_charat(value, 14) === 45 ? 'inline-' : '') + 'box$3' + '$1' + WEBKIT + '$2$3' + '$1' + MS + '$2box$3') + value
+					return Utility_replace(value, /(.+:)([^;!]+)(;|!.+)?/, '$1' + WEBKIT + (Utility_charat(value, 14) === 45 ? 'inline-' : '') + 'box$3' + '$1' + WEBKIT + '$2$3' + '$1' + MS + '$2box$3') + value
 			}
 			break
 		// writing-mode
@@ -16060,13 +16575,13 @@ function prefix (value, length) {
 			switch (Utility_charat(value, length + 11)) {
 				// vertical-l(r)
 				case 114:
-					return WEBKIT + value + MS + replace(value, /[svh]\w+-[tblr]{2}/, 'tb') + value
+					return WEBKIT + value + MS + Utility_replace(value, /[svh]\w+-[tblr]{2}/, 'tb') + value
 				// vertical-r(l)
 				case 108:
-					return WEBKIT + value + MS + replace(value, /[svh]\w+-[tblr]{2}/, 'tb-rl') + value
+					return WEBKIT + value + MS + Utility_replace(value, /[svh]\w+-[tblr]{2}/, 'tb-rl') + value
 				// horizontal(-)tb
 				case 45:
-					return WEBKIT + value + MS + replace(value, /[svh]\w+-[tblr]{2}/, 'lr') + value
+					return WEBKIT + value + MS + Utility_replace(value, /[svh]\w+-[tblr]{2}/, 'lr') + value
 			}
 
 			return WEBKIT + value + MS + value + value
@@ -16075,7 +16590,7 @@ function prefix (value, length) {
 	return value
 }
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Middleware.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Middleware.js
 
 
 
@@ -16124,20 +16639,20 @@ function prefixer (element, index, children, callback) {
 				case DECLARATION: element.return = prefix(element.value, element.length)
 					break
 				case KEYFRAMES:
-					return serialize([copy(element, {value: replace(element.value, '@', '@' + WEBKIT)})], callback)
+					return serialize([copy(element, {value: Utility_replace(element.value, '@', '@' + WEBKIT)})], callback)
 				case Enum_RULESET:
 					if (element.length)
 						return Utility_combine(element.props, function (value) {
 							switch (match(value, /(::plac\w+|:read-\w+)/)) {
 								// :read-(only|write)
 								case ':read-only': case ':read-write':
-									return serialize([copy(element, {props: [replace(value, /:(read-\w+)/, ':' + MOZ + '$1')]})], callback)
+									return serialize([copy(element, {props: [Utility_replace(value, /:(read-\w+)/, ':' + MOZ + '$1')]})], callback)
 								// :placeholder
 								case '::placeholder':
 									return serialize([
-										copy(element, {props: [replace(value, /:(plac\w+)/, ':' + WEBKIT + 'input-$1')]}),
-										copy(element, {props: [replace(value, /:(plac\w+)/, ':' + MOZ + '$1')]}),
-										copy(element, {props: [replace(value, /:(plac\w+)/, MS + 'input-$1')]})
+										copy(element, {props: [Utility_replace(value, /:(plac\w+)/, ':' + WEBKIT + 'input-$1')]}),
+										copy(element, {props: [Utility_replace(value, /:(plac\w+)/, ':' + MOZ + '$1')]}),
+										copy(element, {props: [Utility_replace(value, /:(plac\w+)/, MS + 'input-$1')]})
 									], callback)
 							}
 
@@ -16185,7 +16700,7 @@ function namespace (element) {
 	}
 }
 
-;// CONCATENATED MODULE: ./node_modules/@emotion/cache/node_modules/stylis/src/Parser.js
+;// CONCATENATED MODULE: ./node_modules/stylis/src/Parser.js
 
 
 
@@ -16232,7 +16747,7 @@ function Parser_parse (value, root, parent, rule, rules, rulesets, pseudo, point
 			// (
 			case 40:
 				if (previous != 108 && characters.charCodeAt(length - 1) == 58) {
-					if (indexof(characters += replace(delimit(character), '&', '&\f'), '&\f') != -1)
+					if (indexof(characters += Utility_replace(delimit(character), '&', '&\f'), '&\f') != -1)
 						ampersand = -1
 					break
 				}
@@ -16269,7 +16784,7 @@ function Parser_parse (value, root, parent, rule, rules, rulesets, pseudo, point
 					// ;
 					case 59 + offset:
 						if (property > 0 && (Utility_strlen(characters) - length))
-							Utility_append(property > 32 ? declaration(characters + ';', rule, parent, length - 1) : declaration(replace(characters, ' ', '') + ';', rule, parent, length - 2), declarations)
+							Utility_append(property > 32 ? declaration(characters + ';', rule, parent, length - 1) : declaration(Utility_replace(characters, ' ', '') + ';', rule, parent, length - 2), declarations)
 						break
 					// @ ;
 					case 59: characters += ';'
@@ -16351,7 +16866,7 @@ function ruleset (value, root, parent, index, offset, rules, points, type, props
 
 	for (var i = 0, j = 0, k = 0; i < index; ++i)
 		for (var x = 0, y = Utility_substr(value, post + 1, post = abs(j = points[i])), z = value; x < size; ++x)
-			if (z = trim(j > 0 ? rule[x] + ' ' + y : replace(y, /&\f/g, rule[x])))
+			if (z = trim(j > 0 ? rule[x] + ' ' + y : Utility_replace(y, /&\f/g, rule[x])))
 				props[k++] = z
 
 	return node(value, root, parent, offset === 0 ? Enum_RULESET : type, props, children, length)
@@ -17621,8 +18136,8 @@ function useContextSystem(props, namespace) {
  * Forwards ref (React.ForwardRef) and "Connects" (or registers) a component
  * within the Context system under a specified namespace.
  *
- * @param  Component The component to register into the Context system.
- * @param  namespace The namespace to register the component under.
+ * @param Component The component to register into the Context system.
+ * @param namespace The namespace to register the component under.
  * @return The connected WordPressComponent
  */
 function contextConnect(Component, namespace) {
@@ -17634,8 +18149,8 @@ function contextConnect(Component, namespace) {
  * "Connects" (or registers) a component within the Context system under a specified namespace.
  * Does not forward a ref.
  *
- * @param  Component The component to register into the Context system.
- * @param  namespace The namespace to register the component under.
+ * @param Component The component to register into the Context system.
+ * @param namespace The namespace to register the component under.
  * @return The connected WordPressComponent
  */
 
@@ -17677,7 +18192,7 @@ function _contextConnect(Component, namespace, options) {
 /**
  * Attempts to retrieve the connected namespace from a component.
  *
- * @param  Component The component to retrieve a namespace from.
+ * @param Component The component to retrieve a namespace from.
  * @return The connected namespaces.
  */
 
@@ -17702,8 +18217,8 @@ function getConnectNamespace(Component) {
 /**
  * Checks to see if a component is connected within the Context system.
  *
- * @param  Component The component to retrieve a namespace from.
- * @param  match     The namespace to check.
+ * @param Component The component to retrieve a namespace from.
+ * @param match     The namespace to check.
  */
 
 function hasConnectNamespace(Component, match) {
@@ -18000,16 +18515,15 @@ const VisuallyHidden = contextConnect(UnconnectedVisuallyHidden, 'VisuallyHidden
 ;// CONCATENATED MODULE: ./packages/components/build-module/button/index.js
 
 
-// @ts-nocheck
 
 /**
  * External dependencies
  */
 
+
 /**
  * WordPress dependencies
  */
-
 
 
 
@@ -18074,12 +18588,10 @@ function useDeprecatedProps(_ref) {
   };
 }
 
-function Button(props, ref) {
+function UnforwardedButton(props, ref) {
   var _children$, _children$$props;
 
   const {
-    href,
-    target,
     isSmall,
     isPressed,
     isBusy,
@@ -18098,10 +18610,19 @@ function Button(props, ref) {
     variant,
     __experimentalIsFocusable: isFocusable,
     describedBy,
-    ...additionalProps
+    ...buttonOrAnchorProps
   } = useDeprecatedProps(props);
+  const {
+    href,
+    target,
+    ...additionalProps
+  } = 'href' in buttonOrAnchorProps ? buttonOrAnchorProps : {
+    href: undefined,
+    target: undefined,
+    ...buttonOrAnchorProps
+  };
   const instanceId = (0,external_wp_compose_namespaceObject.useInstanceId)(Button, 'components-button__description');
-  const hasChildren = (children === null || children === void 0 ? void 0 : children[0]) && children[0] !== null && // Tooltip should not considered as a child
+  const hasChildren = 'string' === typeof children && !!children || Array.isArray(children) && (children === null || children === void 0 ? void 0 : children[0]) && children[0] !== null && // Tooltip should not considered as a child
   (children === null || children === void 0 ? void 0 : (_children$ = children[0]) === null || _children$ === void 0 ? void 0 : (_children$$props = _children$.props) === null || _children$$props === void 0 ? void 0 : _children$$props.className) !== 'components-tooltip';
   const classes = classnames_default()('components-button', className, {
     'is-secondary': variant === 'secondary',
@@ -18117,24 +18638,28 @@ function Button(props, ref) {
   });
   const trulyDisabled = disabled && !isFocusable;
   const Tag = href !== undefined && !trulyDisabled ? 'a' : 'button';
-  const tagProps = Tag === 'a' ? {
-    href,
-    target
-  } : {
+  const buttonProps = Tag === 'button' ? {
     type: 'button',
     disabled: trulyDisabled,
     'aria-pressed': isPressed
-  };
+  } : {};
+  const anchorProps = Tag === 'a' ? {
+    href,
+    target
+  } : {};
 
   if (disabled && isFocusable) {
     // In this case, the button will be disabled, but still focusable and
     // perceivable by screen reader users.
-    tagProps['aria-disabled'] = true;
+    buttonProps['aria-disabled'] = true;
+    anchorProps['aria-disabled'] = true;
 
     for (const disabledEvent of disabledEventsOnDisabledButton) {
       additionalProps[disabledEvent] = event => {
-        event.stopPropagation();
-        event.preventDefault();
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
       };
     }
   } // Should show the tooltip if...
@@ -18146,20 +18671,22 @@ function Button(props, ref) {
   !!label && // The children are empty and...
   !(children !== null && children !== void 0 && children.length) && // The tooltip is not explicitly disabled.
   false !== showTooltip);
-  const descriptionId = describedBy ? instanceId : null;
+  const descriptionId = describedBy ? instanceId : undefined;
   const describedById = additionalProps['aria-describedby'] || descriptionId;
-  const element = (0,external_wp_element_namespaceObject.createElement)(Tag, extends_extends({}, tagProps, additionalProps, {
+  const commonProps = {
     className: classes,
-    "aria-label": additionalProps['aria-label'] || label,
-    "aria-describedby": describedById,
-    ref: ref
-  }), icon && iconPosition === 'left' && (0,external_wp_element_namespaceObject.createElement)(build_module_icon, {
+    'aria-label': additionalProps['aria-label'] || label,
+    'aria-describedby': describedById,
+    ref
+  };
+  const elementChildren = (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, icon && iconPosition === 'left' && (0,external_wp_element_namespaceObject.createElement)(build_module_icon, {
     icon: icon,
     size: iconSize
   }), text && (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, text), icon && iconPosition === 'right' && (0,external_wp_element_namespaceObject.createElement)(build_module_icon, {
     icon: icon,
     size: iconSize
   }), children);
+  const element = Tag === 'a' ? (0,external_wp_element_namespaceObject.createElement)("a", extends_extends({}, anchorProps, additionalProps, commonProps), elementChildren) : (0,external_wp_element_namespaceObject.createElement)("button", extends_extends({}, buttonProps, additionalProps, commonProps), elementChildren);
 
   if (!shouldShowTooltip) {
     return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, element, describedBy && (0,external_wp_element_namespaceObject.createElement)(visually_hidden_component, null, (0,external_wp_element_namespaceObject.createElement)("span", {
@@ -18175,7 +18702,24 @@ function Button(props, ref) {
     id: descriptionId
   }, describedBy)));
 }
-/* harmony default export */ var build_module_button = ((0,external_wp_element_namespaceObject.forwardRef)(Button));
+/**
+ * Lets users take actions and make choices with a single click or tap.
+ *
+ * ```jsx
+ * import { Button } from '@wordpress/components';
+ * const Mybutton = () => (
+ *   <Button
+ *     variant="primary"
+ *     onClick={ handleClick }
+ *   >
+ *     Click here
+ *   </Button>
+ * );
+ * ```
+ */
+
+const Button = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedButton);
+/* harmony default export */ var build_module_button = (Button);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/scroll-lock/index.js
 /**
@@ -18305,17 +18849,7 @@ const useSlot = name => {
     getSlot,
     subscribe
   } = (0,external_wp_element_namespaceObject.useContext)(context);
-  const [slot, setSlot] = (0,external_wp_element_namespaceObject.useState)(getSlot(name));
-  (0,external_wp_element_namespaceObject.useEffect)(() => {
-    setSlot(getSlot(name));
-    const unsubscribe = subscribe(() => {
-      setSlot(getSlot(name));
-    });
-    return unsubscribe; // Ignore reason: Modifying this dep array could introduce unexpected changes in behavior,
-    // so we'll leave it as=is until the hook can be properly refactored for exhaustive-deps.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name]);
-  return slot;
+  return (0,external_wp_element_namespaceObject.useSyncExternalStore)(subscribe, () => getSlot(name), () => getSlot(name));
 };
 
 /* harmony default export */ var use_slot = (useSlot);
@@ -18439,6 +18973,7 @@ class SlotComponent extends external_wp_element_namespaceObject.Component {
     const {
       registerSlot
     } = this.props;
+    this.isUnmounted = false;
     registerSlot(this.props.name, this);
   }
 
@@ -19607,6 +20142,7 @@ function useForceUpdate() {
   const [, setState] = (0,external_wp_element_namespaceObject.useState)({});
   const mounted = (0,external_wp_element_namespaceObject.useRef)(true);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
+    mounted.current = true;
     return () => {
       mounted.current = false;
     };
@@ -20058,7 +20594,7 @@ const POSITION_TO_PLACEMENT = {
  * Converts the `Popover`'s legacy "position" prop to the new "placement" prop
  * (used by `floating-ui`).
  *
- * @param  position The legacy position
+ * @param position The legacy position
  * @return The corresponding placement
  */
 
@@ -20133,14 +20669,19 @@ const PLACEMENT_TO_ANIMATION_ORIGIN = {
   'left-end': {
     originX: 1,
     originY: 1
-  } // open from bottom, right
+  },
+  // open from bottom, right
+  overlay: {
+    originX: 0.5,
+    originY: 0.5
+  } // open from center, center
 
 };
 /**
  * Given the floating-ui `placement`, compute the framer-motion props for the
  * popover's entry animation.
  *
- * @param  placement A placement string from floating ui
+ * @param placement A placement string from floating ui
  * @return The object containing the motion props
  */
 
@@ -20168,7 +20709,7 @@ const placementToMotionAnimationProps = placement => {
 /**
  * Returns the offset of a document's frame element.
  *
- * @param  document The iframe's owner document.
+ * @param document The iframe's owner document.
  *
  * @return The offset of the document's frame element, or undefined if the
  * document has no frame element.
@@ -20187,6 +20728,24 @@ const getFrameOffset = document => {
   return {
     x: iframeRect.left,
     y: iframeRect.top
+  };
+};
+const getFrameScale = document => {
+  var _document$defaultView2;
+
+  const frameElement = document === null || document === void 0 ? void 0 : (_document$defaultView2 = document.defaultView) === null || _document$defaultView2 === void 0 ? void 0 : _document$defaultView2.frameElement;
+
+  if (!frameElement) {
+    return {
+      x: 1,
+      y: 1
+    };
+  }
+
+  const rect = frameElement.getBoundingClientRect();
+  return {
+    x: rect.width / frameElement.offsetWidth,
+    y: rect.height / frameElement.offsetHeight
   };
 };
 const getReferenceOwnerDocument = _ref => {
@@ -20238,7 +20797,8 @@ const getReferenceElement = _ref2 => {
     anchorRef,
     anchorRect,
     getAnchorRect,
-    fallbackReferenceElement
+    fallbackReferenceElement,
+    scale
   } = _ref2;
   let referenceElement = null;
 
@@ -20287,6 +20847,18 @@ const getReferenceElement = _ref2 => {
     // If no explicit ref is passed via props, fall back to
     // anchoring to the popover's parent node.
     referenceElement = fallbackReferenceElement.parentElement;
+  }
+
+  if (referenceElement && (scale.x !== 1 || scale.y !== 1)) {
+    // If the popover is inside an iframe, the coordinates of the
+    // reference element need to be scaled to match the iframe's scale.
+    const rect = referenceElement.getBoundingClientRect();
+    referenceElement = {
+      getBoundingClientRect() {
+        return new window.DOMRect(rect.x * scale.x, rect.y * scale.y, rect.width * scale.x, rect.height * scale.y);
+      }
+
+    };
   } // Convert any `undefined` value to `null`.
 
 
@@ -20430,6 +21002,45 @@ const limitShift = function () {
   };
 };
 
+;// CONCATENATED MODULE: ./packages/components/build-module/popover/overlay-middlewares.js
+/**
+ * External dependencies
+ */
+
+function overlayMiddlewares() {
+  return [{
+    name: 'overlay',
+
+    fn(_ref) {
+      let {
+        rects
+      } = _ref;
+      return rects.reference;
+    }
+
+  }, k({
+    apply(_ref2) {
+      var _elements$floating;
+
+      let {
+        rects,
+        elements
+      } = _ref2;
+      const {
+        firstElementChild
+      } = (_elements$floating = elements.floating) !== null && _elements$floating !== void 0 ? _elements$floating : {}; // Only HTMLElement instances have the `style` property.
+
+      if (!(firstElementChild instanceof HTMLElement)) return; // Reduce the height of the popover to the available space.
+
+      Object.assign(firstElementChild.style, {
+        width: `${rects.reference.width}px`,
+        height: `${rects.reference.height}px`
+      });
+    }
+
+  })];
+}
+
 ;// CONCATENATED MODULE: ./packages/components/build-module/popover/index.js
 
 
@@ -20450,9 +21061,11 @@ const limitShift = function () {
 
 
 
+
 /**
  * Internal dependencies
  */
+
 
 
 
@@ -20612,7 +21225,7 @@ const UnforwardedPopover = (props, forwardedRef) => {
    */
 
   const frameOffsetRef = (0,external_wp_element_namespaceObject.useRef)(getFrameOffset(referenceOwnerDocument));
-  const middleware = [// Custom middleware which adjusts the popover's position by taking into
+  const middleware = [...(placementProp === 'overlay' ? overlayMiddlewares() : []), // Custom middleware which adjusts the popover's position by taking into
   // account the offset of the anchor's iframe (if any) compared to the page.
   {
     name: 'frameOffset',
@@ -20706,7 +21319,7 @@ const UnforwardedPopover = (props, forwardedRef) => {
       arrow: arrowData
     }
   } = useFloating({
-    placement: normalizedPlacementFromProps,
+    placement: normalizedPlacementFromProps === 'overlay' ? undefined : normalizedPlacementFromProps,
     middleware,
     whileElementsMounted: (referenceParam, floatingParam, updateParam) => N(referenceParam, floatingParam, updateParam, {
       animationFrame: true
@@ -20731,12 +21344,14 @@ const UnforwardedPopover = (props, forwardedRef) => {
       fallbackReferenceElement,
       fallbackDocument: document
     });
+    const scale = getFrameScale(resultingReferenceOwnerDoc);
     const resultingReferenceElement = getReferenceElement({
       anchor,
       anchorRef,
       anchorRect,
       getAnchorRect,
-      fallbackReferenceElement
+      fallbackReferenceElement,
+      scale
     });
     referenceCallbackRef(resultingReferenceElement);
     setReferenceOwnerDocument(resultingReferenceOwnerDoc);
@@ -20759,6 +21374,10 @@ const UnforwardedPopover = (props, forwardedRef) => {
     const {
       defaultView
     } = referenceOwnerDocument;
+    const {
+      frameElement
+    } = defaultView;
+    const scrollContainer = frameElement ? (0,external_wp_dom_namespaceObject.getScrollContainer)(frameElement) : null;
 
     const updateFrameOffset = () => {
       frameOffsetRef.current = getFrameOffset(referenceOwnerDocument);
@@ -20766,9 +21385,11 @@ const UnforwardedPopover = (props, forwardedRef) => {
     };
 
     defaultView.addEventListener('resize', updateFrameOffset);
+    scrollContainer === null || scrollContainer === void 0 ? void 0 : scrollContainer.addEventListener('scroll', updateFrameOffset);
     updateFrameOffset();
     return () => {
       defaultView.removeEventListener('resize', updateFrameOffset);
+      scrollContainer === null || scrollContainer === void 0 ? void 0 : scrollContainer.removeEventListener('scroll', updateFrameOffset);
     };
   }, [referenceOwnerDocument, update, refs.floating]);
   const mergedFloatingRef = (0,external_wp_compose_namespaceObject.useMergeRefs)([floating, dialogRef, forwardedRef]); // Disable reason: We care to capture the _bubbled_ events from inputs
@@ -20918,11 +21539,17 @@ function Shortcut(props) {
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/tooltip/index.js
 
+
 // @ts-nocheck
+
+/**
+ * External dependencies
+ */
 
 /**
  * WordPress dependencies
  */
+
 
 
 /**
@@ -20979,18 +21606,20 @@ const addPopoverToGrandchildren = _ref3 => {
     offset,
     position,
     shortcut,
-    text
+    text,
+    className,
+    ...props
   } = _ref3;
-  return (0,external_wp_element_namespaceObject.concatChildren)(grandchildren, isOver && (0,external_wp_element_namespaceObject.createElement)(popover, {
+  return (0,external_wp_element_namespaceObject.concatChildren)(grandchildren, isOver && (0,external_wp_element_namespaceObject.createElement)(popover, extends_extends({
     focusOnMount: false,
     position: position,
-    className: "components-tooltip",
+    className: classnames_default()('components-tooltip', className),
     "aria-hidden": "true",
     animate: false,
     offset: offset,
     anchor: anchor,
     shift: true
-  }, text, (0,external_wp_element_namespaceObject.createElement)(build_module_shortcut, {
+  }, props), text, (0,external_wp_element_namespaceObject.createElement)(build_module_shortcut, {
     className: "components-tooltip__shortcut",
     shortcut: shortcut
   })));
@@ -21020,7 +21649,8 @@ function Tooltip(props) {
     position = 'bottom middle',
     text,
     shortcut,
-    delay = TOOLTIP_DELAY
+    delay = TOOLTIP_DELAY,
+    ...popoverProps
   } = props;
   /**
    * Whether a mouse is currently pressed, used in determining whether
@@ -21169,7 +21799,8 @@ function Tooltip(props) {
   };
   const childrenWithPopover = addPopoverToGrandchildren({
     grandchildren,
-    ...popoverData
+    ...popoverData,
+    ...popoverProps
   });
   return getElementWithPopover({
     child,
@@ -21197,8 +21828,8 @@ const ALIGNMENT_LABEL = {
   'top center': (0,external_wp_i18n_namespaceObject.__)('Top Center'),
   'top right': (0,external_wp_i18n_namespaceObject.__)('Top Right'),
   'center left': (0,external_wp_i18n_namespaceObject.__)('Center Left'),
-  'center center': (0,external_wp_i18n_namespaceObject.__)('Center Center'),
-  center: (0,external_wp_i18n_namespaceObject.__)('Center Center'),
+  'center center': (0,external_wp_i18n_namespaceObject.__)('Center'),
+  center: (0,external_wp_i18n_namespaceObject.__)('Center'),
   'center right': (0,external_wp_i18n_namespaceObject.__)('Center Right'),
   'bottom left': (0,external_wp_i18n_namespaceObject.__)('Bottom Left'),
   'bottom center': (0,external_wp_i18n_namespaceObject.__)('Bottom Center'),
@@ -21209,7 +21840,7 @@ const ALIGNMENTS = GRID.flat();
 /**
  * Parses and transforms an incoming value to better match the alignment values
  *
- * @param  value An alignment value to parse.
+ * @param value An alignment value to parse.
  *
  * @return The parsed value.
  */
@@ -21221,8 +21852,8 @@ function transformValue(value) {
 /**
  * Creates an item ID based on a prefix ID and an alignment value.
  *
- * @param  prefixId An ID to prefix.
- * @param  value    An alignment value.
+ * @param prefixId An ID to prefix.
+ * @param value    An alignment value.
  *
  * @return The item id.
  */
@@ -21234,7 +21865,7 @@ function getItemId(prefixId, value) {
 /**
  * Retrieves the alignment index from a value.
  *
- * @param  alignment Value to check.
+ * @param alignment Value to check.
  *
  * @return The index of a matching alignment.
  */
@@ -23655,30 +24286,20 @@ AlignmentMatrixControl.Icon = icon;
  */
 
 /**
- * @typedef {'top' | 'top left' | 'top right' | 'middle' | 'middle left' | 'middle right' | 'bottom' | 'bottom left' | 'bottom right'} AppearOrigin
- * @typedef {'left' | 'right'} SlideInOrigin
- * @typedef {{ type: 'appear'; origin?: AppearOrigin }} AppearOptions
- * @typedef {{ type: 'slide-in'; origin?: SlideInOrigin }} SlideInOptions
- * @typedef {{ type: 'loading' }} LoadingOptions
- * @typedef {AppearOptions | SlideInOptions | LoadingOptions} GetAnimateOptions
+ * Internal dependencies
  */
-
-/* eslint-disable jsdoc/valid-types */
 
 /**
- * @param {GetAnimateOptions['type']} type The animation type
- * @return {'top' | 'left'} Default origin
+ * @param type The animation type
+ * @return Default origin
  */
-
 function getDefaultOrigin(type) {
   return type === 'appear' ? 'top' : 'left';
 }
-/* eslint-enable jsdoc/valid-types */
-
 /**
- * @param {GetAnimateOptions} options
+ * @param options
  *
- * @return {string | void} ClassName that applies the animations
+ * @return ClassName that applies the animations
  */
 
 
@@ -23703,7 +24324,26 @@ function getAnimateClassName(options) {
   if (type === 'slide-in') {
     return classnames_default()('components-animate__slide-in', 'is-from-' + origin);
   }
-} // @ts-ignore Reason: Planned for deprecation
+
+  return undefined;
+}
+/**
+ * Simple interface to introduce animations to components.
+ *
+ * ```jsx
+ * import { Animate, Notice } from '@wordpress/components';
+ *
+ * const MyAnimatedNotice = () => (
+ * 	<Animate type="slide-in" options={ { origin: 'top' } }>
+ * 		{ ( { className } ) => (
+ * 			<Notice className={ className } status="success">
+ * 				<p>Animation finished.</p>
+ * 			</Notice>
+ * 		) }
+ * 	</Animate>
+ * );
+ * ```
+ */
 
 function Animate(_ref) {
   let {
@@ -23718,6 +24358,7 @@ function Animate(_ref) {
     })
   });
 }
+/* harmony default export */ var build_module_animate = (Animate);
 
 ;// CONCATENATED MODULE: ./node_modules/framer-motion/dist/es/utils/use-is-mounted.mjs
 
@@ -24191,7 +24832,202 @@ function UnconnectedFlexBlock(props, forwardedRef) {
 const FlexBlock = contextConnect(UnconnectedFlexBlock, 'FlexBlock');
 /* harmony default export */ var flex_block_component = (FlexBlock);
 
-;// CONCATENATED MODULE: ./packages/components/build-module/flex/flex-item/component.js
+;// CONCATENATED MODULE: ./packages/components/build-module/ui/utils/space.js
+/**
+ * The argument value for the `space()` utility function.
+ *
+ * When this is a number or a numeric string, it will be interpreted as a
+ * multiplier for the grid base value (4px). For example, `space( 2 )` will be 8px.
+ *
+ * Otherwise, it will be interpreted as a literal CSS length value. For example,
+ * `space( 'auto' )` will be 'auto', and `space( '2px' )` will be 2px.
+ */
+const GRID_BASE = '4px';
+/**
+ * A function that handles numbers, numeric strings, and unit values.
+ *
+ * When given a number or a numeric string, it will return the grid-based
+ * value as a factor of GRID_BASE, defined above.
+ *
+ * When given a unit value or one of the named CSS values like `auto`,
+ * it will simply return the value back.
+ *
+ * @param value A number, numeric string, or a unit value.
+ */
+
+function space(value) {
+  var _window$CSS, _window$CSS$supports;
+
+  if (typeof value === 'undefined') {
+    return undefined;
+  } // Handle empty strings, if it's the number 0 this still works.
+
+
+  if (!value) {
+    return '0';
+  }
+
+  const asInt = typeof value === 'number' ? value : Number(value); // Test if the input has a unit, was NaN, or was one of the named CSS values (like `auto`), in which case just use that value.
+
+  if (typeof window !== 'undefined' && (_window$CSS = window.CSS) !== null && _window$CSS !== void 0 && (_window$CSS$supports = _window$CSS.supports) !== null && _window$CSS$supports !== void 0 && _window$CSS$supports.call(_window$CSS, 'margin', value.toString()) || Number.isNaN(asInt)) {
+    return value.toString();
+  }
+
+  return `calc(${GRID_BASE} * ${value})`;
+}
+
+;// CONCATENATED MODULE: ./packages/components/build-module/utils/rtl.js
+/**
+ * External dependencies
+ */
+
+/**
+ * WordPress dependencies
+ */
+
+
+const LOWER_LEFT_REGEXP = new RegExp(/-left/g);
+const LOWER_RIGHT_REGEXP = new RegExp(/-right/g);
+const UPPER_LEFT_REGEXP = new RegExp(/Left/g);
+const UPPER_RIGHT_REGEXP = new RegExp(/Right/g);
+/**
+ * Flips a CSS property from left <-> right.
+ *
+ * @param {string} key The CSS property name.
+ *
+ * @return {string} The flipped CSS property name, if applicable.
+ */
+
+function getConvertedKey(key) {
+  if (key === 'left') {
+    return 'right';
+  }
+
+  if (key === 'right') {
+    return 'left';
+  }
+
+  if (LOWER_LEFT_REGEXP.test(key)) {
+    return key.replace(LOWER_LEFT_REGEXP, '-right');
+  }
+
+  if (LOWER_RIGHT_REGEXP.test(key)) {
+    return key.replace(LOWER_RIGHT_REGEXP, '-left');
+  }
+
+  if (UPPER_LEFT_REGEXP.test(key)) {
+    return key.replace(UPPER_LEFT_REGEXP, 'Right');
+  }
+
+  if (UPPER_RIGHT_REGEXP.test(key)) {
+    return key.replace(UPPER_RIGHT_REGEXP, 'Left');
+  }
+
+  return key;
+}
+/**
+ * An incredibly basic ltr -> rtl converter for style properties
+ *
+ * @param {import('react').CSSProperties} ltrStyles
+ *
+ * @return {import('react').CSSProperties} Converted ltr -> rtl styles
+ */
+
+
+const convertLTRToRTL = function () {
+  let ltrStyles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return Object.fromEntries(Object.entries(ltrStyles).map(_ref => {
+    let [key, value] = _ref;
+    return [getConvertedKey(key), value];
+  }));
+};
+/**
+ * A higher-order function that create an incredibly basic ltr -> rtl style converter for CSS objects.
+ *
+ * @param {import('react').CSSProperties} ltrStyles   Ltr styles. Converts and renders from ltr -> rtl styles, if applicable.
+ * @param {import('react').CSSProperties} [rtlStyles] Rtl styles. Renders if provided.
+ *
+ * @return {() => import('@emotion/react').SerializedStyles} A function to output CSS styles for Emotion's renderer
+ */
+
+function rtl() {
+  let ltrStyles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  let rtlStyles = arguments.length > 1 ? arguments[1] : undefined;
+  return () => {
+    if (rtlStyles) {
+      // @ts-ignore: `css` types are wrong, it can accept an object: https://emotion.sh/docs/object-styles#with-css
+      return (0,external_wp_i18n_namespaceObject.isRTL)() ? /*#__PURE__*/emotion_react_browser_esm_css(rtlStyles,  true ? "" : 0) : /*#__PURE__*/emotion_react_browser_esm_css(ltrStyles,  true ? "" : 0);
+    } // @ts-ignore: `css` types are wrong, it can accept an object: https://emotion.sh/docs/object-styles#with-css
+
+
+    return (0,external_wp_i18n_namespaceObject.isRTL)() ? /*#__PURE__*/emotion_react_browser_esm_css(convertLTRToRTL(ltrStyles),  true ? "" : 0) : /*#__PURE__*/emotion_react_browser_esm_css(ltrStyles,  true ? "" : 0);
+  };
+}
+/**
+ * Call this in the `useMemo` dependency array to ensure that subsequent renders will
+ * cause rtl styles to update based on the `isRTL` return value even if all other dependencies
+ * remain the same.
+ *
+ * @example
+ * const styles = useMemo( () => {
+ *   return css`
+ *     ${ rtl( { marginRight: '10px' } ) }
+ *   `;
+ * }, [ rtl.watch() ] );
+ */
+
+rtl.watch = () => (0,external_wp_i18n_namespaceObject.isRTL)();
+
+;// CONCATENATED MODULE: ./packages/components/build-module/spacer/hook.js
+/**
+ * External dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+
+const isDefined = o => typeof o !== 'undefined' && o !== null;
+
+function useSpacer(props) {
+  const {
+    className,
+    margin,
+    marginBottom = 2,
+    marginLeft,
+    marginRight,
+    marginTop,
+    marginX,
+    marginY,
+    padding,
+    paddingBottom,
+    paddingLeft,
+    paddingRight,
+    paddingTop,
+    paddingX,
+    paddingY,
+    ...otherProps
+  } = useContextSystem(props, 'Spacer');
+  const cx = useCx();
+  const classes = cx(isDefined(margin) && /*#__PURE__*/emotion_react_browser_esm_css("margin:", space(margin), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginY) && /*#__PURE__*/emotion_react_browser_esm_css("margin-bottom:", space(marginY), ";margin-top:", space(marginY), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginX) && /*#__PURE__*/emotion_react_browser_esm_css("margin-left:", space(marginX), ";margin-right:", space(marginX), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginTop) && /*#__PURE__*/emotion_react_browser_esm_css("margin-top:", space(marginTop), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginBottom) && /*#__PURE__*/emotion_react_browser_esm_css("margin-bottom:", space(marginBottom), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginLeft) && rtl({
+    marginLeft: space(marginLeft)
+  })(), isDefined(marginRight) && rtl({
+    marginRight: space(marginRight)
+  })(), isDefined(padding) && /*#__PURE__*/emotion_react_browser_esm_css("padding:", space(padding), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingY) && /*#__PURE__*/emotion_react_browser_esm_css("padding-bottom:", space(paddingY), ";padding-top:", space(paddingY), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingX) && /*#__PURE__*/emotion_react_browser_esm_css("padding-left:", space(paddingX), ";padding-right:", space(paddingX), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingTop) && /*#__PURE__*/emotion_react_browser_esm_css("padding-top:", space(paddingTop), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingBottom) && /*#__PURE__*/emotion_react_browser_esm_css("padding-bottom:", space(paddingBottom), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingLeft) && rtl({
+    paddingLeft: space(paddingLeft)
+  })(), isDefined(paddingRight) && rtl({
+    paddingRight: space(paddingRight)
+  })(), className);
+  return { ...otherProps,
+    className: classes
+  };
+}
+
+;// CONCATENATED MODULE: ./packages/components/build-module/spacer/component.js
 
 
 
@@ -24206,32 +25042,40 @@ const FlexBlock = contextConnect(UnconnectedFlexBlock, 'FlexBlock');
 
 
 
-function UnconnectedFlexItem(props, forwardedRef) {
-  const flexItemProps = useFlexItem(props);
-  return (0,external_wp_element_namespaceObject.createElement)(component, extends_extends({}, flexItemProps, {
+function UnconnectedSpacer(props, forwardedRef) {
+  const spacerProps = useSpacer(props);
+  return (0,external_wp_element_namespaceObject.createElement)(component, extends_extends({}, spacerProps, {
     ref: forwardedRef
   }));
 }
 /**
- * `FlexItem` is a primitive layout component that aligns content within layout
- * containers like `Flex`.
+ * `Spacer` is a primitive layout component that providers inner (`padding`) or outer (`margin`) space in-between components. It can also be used to adaptively provide space within an `HStack` or `VStack`.
+ *
+ * `Spacer` comes with a bunch of shorthand props to adjust `margin` and `padding`. The values of these props
+ * can either be a number (which will act as a multiplier to the library's grid system base of 4px),
+ * or a literal CSS value string.
  *
  * ```jsx
- * import { Flex, FlexItem } from '@wordpress/components';
+ * import { Spacer } from `@wordpress/components`
  *
  * function Example() {
  *   return (
- *     <Flex>
- *       <FlexItem>...</FlexItem>
- *     </Flex>
+ *     <View>
+ *       <Spacer>
+ *         <Heading>WordPress.org</Heading>
+ *       </Spacer>
+ *       <Text>
+ *         Code is Poetry
+ *       </Text>
+ *     </View>
  *   );
  * }
  * ```
  */
 
 
-const FlexItem = contextConnect(UnconnectedFlexItem, 'FlexItem');
-/* harmony default export */ var flex_item_component = (FlexItem);
+const Spacer = contextConnect(UnconnectedSpacer, 'Spacer');
+/* harmony default export */ var spacer_component = (Spacer);
 
 ;// CONCATENATED MODULE: ./packages/icons/build-module/library/plus.js
 
@@ -24325,50 +25169,6 @@ function useResponsiveValue(values) {
   );
 }
 
-;// CONCATENATED MODULE: ./packages/components/build-module/ui/utils/space.js
-/**
- * The argument value for the `space()` utility function.
- *
- * When this is a number or a numeric string, it will be interpreted as a
- * multiplier for the grid base value (4px). For example, `space( 2 )` will be 8px.
- *
- * Otherwise, it will be interpreted as a literal CSS length value. For example,
- * `space( 'auto' )` will be 'auto', and `space( '2px' )` will be 2px.
- */
-const GRID_BASE = '4px';
-/**
- * A function that handles numbers, numeric strings, and unit values.
- *
- * When given a number or a numeric string, it will return the grid-based
- * value as a factor of GRID_BASE, defined above.
- *
- * When given a unit value or one of the named CSS values like `auto`,
- * it will simply return the value back.
- *
- * @param  value A number, numeric string, or a unit value.
- */
-
-function space(value) {
-  var _window$CSS, _window$CSS$supports;
-
-  if (typeof value === 'undefined') {
-    return undefined;
-  } // Handle empty strings, if it's the number 0 this still works.
-
-
-  if (!value) {
-    return '0';
-  }
-
-  const asInt = typeof value === 'number' ? value : Number(value); // Test if the input has a unit, was NaN, or was one of the named CSS values (like `auto`), in which case just use that value.
-
-  if (typeof window !== 'undefined' && (_window$CSS = window.CSS) !== null && _window$CSS !== void 0 && (_window$CSS$supports = _window$CSS.supports) !== null && _window$CSS$supports !== void 0 && _window$CSS$supports.call(_window$CSS, 'margin', value.toString()) || Number.isNaN(asInt)) {
-    return value.toString();
-  }
-
-  return `calc(${GRID_BASE} * ${value})`;
-}
-
 ;// CONCATENATED MODULE: ./packages/components/build-module/flex/flex/hook.js
 /**
  * External dependencies
@@ -24411,7 +25211,7 @@ function hook_useDeprecatedProps(props) {
 
 function useFlex(props) {
   const {
-    align = 'center',
+    align,
     className,
     direction: directionProp = 'row',
     expanded = true,
@@ -24426,7 +25226,7 @@ function useFlex(props) {
   const cx = useCx();
   const classes = (0,external_wp_element_namespaceObject.useMemo)(() => {
     const base = /*#__PURE__*/emotion_react_browser_esm_css({
-      alignItems: isColumn ? 'normal' : align,
+      alignItems: align !== null && align !== void 0 ? align : isColumn ? 'normal' : 'center',
       flexDirection: direction,
       flexWrap: wrap ? 'wrap' : undefined,
       gap: space(gap),
@@ -24501,6 +25301,48 @@ function UnconnectedFlex(props, forwardedRef) {
 
 const component_Flex = contextConnect(UnconnectedFlex, 'Flex');
 /* harmony default export */ var flex_component = (component_Flex);
+
+;// CONCATENATED MODULE: ./packages/components/build-module/flex/flex-item/component.js
+
+
+
+/**
+ * External dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+function UnconnectedFlexItem(props, forwardedRef) {
+  const flexItemProps = useFlexItem(props);
+  return (0,external_wp_element_namespaceObject.createElement)(component, extends_extends({}, flexItemProps, {
+    ref: forwardedRef
+  }));
+}
+/**
+ * `FlexItem` is a primitive layout component that aligns content within layout
+ * containers like `Flex`.
+ *
+ * ```jsx
+ * import { Flex, FlexItem } from '@wordpress/components';
+ *
+ * function Example() {
+ *   return (
+ *     <Flex>
+ *       <FlexItem>...</FlexItem>
+ *     </Flex>
+ *   );
+ * }
+ * ```
+ */
+
+
+const FlexItem = contextConnect(UnconnectedFlexItem, 'FlexItem');
+/* harmony default export */ var flex_item_component = (FlexItem);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/truncate/styles.js
 function truncate_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have tried to stringify object returned from `css` function. It isn't supposed to be used directly (e.g. as value of the `className` prop), but rather handed to emotion so it can handle it (e.g. as value of `css` prop)."; }
@@ -25430,108 +26272,6 @@ const baseLabelTypography =  true ? {
   styles: "font-size:11px;font-weight:500;line-height:1.4;text-transform:uppercase"
 } : 0;
 
-;// CONCATENATED MODULE: ./packages/components/build-module/utils/rtl.js
-/**
- * External dependencies
- */
-
-/**
- * WordPress dependencies
- */
-
-
-const LOWER_LEFT_REGEXP = new RegExp(/-left/g);
-const LOWER_RIGHT_REGEXP = new RegExp(/-right/g);
-const UPPER_LEFT_REGEXP = new RegExp(/Left/g);
-const UPPER_RIGHT_REGEXP = new RegExp(/Right/g);
-/**
- * Flips a CSS property from left <-> right.
- *
- * @param {string} key The CSS property name.
- *
- * @return {string} The flipped CSS property name, if applicable.
- */
-
-function getConvertedKey(key) {
-  if (key === 'left') {
-    return 'right';
-  }
-
-  if (key === 'right') {
-    return 'left';
-  }
-
-  if (LOWER_LEFT_REGEXP.test(key)) {
-    return key.replace(LOWER_LEFT_REGEXP, '-right');
-  }
-
-  if (LOWER_RIGHT_REGEXP.test(key)) {
-    return key.replace(LOWER_RIGHT_REGEXP, '-left');
-  }
-
-  if (UPPER_LEFT_REGEXP.test(key)) {
-    return key.replace(UPPER_LEFT_REGEXP, 'Right');
-  }
-
-  if (UPPER_RIGHT_REGEXP.test(key)) {
-    return key.replace(UPPER_RIGHT_REGEXP, 'Left');
-  }
-
-  return key;
-}
-/**
- * An incredibly basic ltr -> rtl converter for style properties
- *
- * @param {import('react').CSSProperties} ltrStyles
- *
- * @return {import('react').CSSProperties} Converted ltr -> rtl styles
- */
-
-
-const convertLTRToRTL = function () {
-  let ltrStyles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  return Object.fromEntries(Object.entries(ltrStyles).map(_ref => {
-    let [key, value] = _ref;
-    return [getConvertedKey(key), value];
-  }));
-};
-/**
- * A higher-order function that create an incredibly basic ltr -> rtl style converter for CSS objects.
- *
- * @param {import('react').CSSProperties} ltrStyles   Ltr styles. Converts and renders from ltr -> rtl styles, if applicable.
- * @param {import('react').CSSProperties} [rtlStyles] Rtl styles. Renders if provided.
- *
- * @return {() => import('@emotion/react').SerializedStyles} A function to output CSS styles for Emotion's renderer
- */
-
-function rtl() {
-  let ltrStyles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let rtlStyles = arguments.length > 1 ? arguments[1] : undefined;
-  return () => {
-    if (rtlStyles) {
-      // @ts-ignore: `css` types are wrong, it can accept an object: https://emotion.sh/docs/object-styles#with-css
-      return (0,external_wp_i18n_namespaceObject.isRTL)() ? /*#__PURE__*/emotion_react_browser_esm_css(rtlStyles,  true ? "" : 0) : /*#__PURE__*/emotion_react_browser_esm_css(ltrStyles,  true ? "" : 0);
-    } // @ts-ignore: `css` types are wrong, it can accept an object: https://emotion.sh/docs/object-styles#with-css
-
-
-    return (0,external_wp_i18n_namespaceObject.isRTL)() ? /*#__PURE__*/emotion_react_browser_esm_css(convertLTRToRTL(ltrStyles),  true ? "" : 0) : /*#__PURE__*/emotion_react_browser_esm_css(ltrStyles,  true ? "" : 0);
-  };
-}
-/**
- * Call this in the `useMemo` dependency array to ensure that subsequent renders will
- * cause rtl styles to update based on the `isRTL` return value even if all other dependencies
- * remain the same.
- *
- * @example
- * const styles = useMemo( () => {
- *   return css`
- *     ${ rtl( { marginRight: '10px' } ) }
- *   `;
- * }, [ rtl.watch() ] );
- */
-
-rtl.watch = () => (0,external_wp_i18n_namespaceObject.isRTL)();
-
 ;// CONCATENATED MODULE: ./packages/components/build-module/input-control/styles/input-control-styles.js
 
 
@@ -25947,8 +26687,8 @@ function InputBase(_ref, ref) {
 }
 /* harmony default export */ var input_base = ((0,external_wp_element_namespaceObject.forwardRef)(InputBase));
 
-;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/maths-b2a210f4.esm.js
-function maths_b2a210f4_esm_clamp(v, min, max) {
+;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/maths-0ab39ae9.esm.js
+function maths_0ab39ae9_esm_clamp(v, min, max) {
   return Math.max(min, Math.min(v, max));
 }
 const V = {
@@ -25956,34 +26696,27 @@ const V = {
     if (v === undefined) v = fallback;
     return Array.isArray(v) ? v : [v, v];
   },
-
   add(v1, v2) {
     return [v1[0] + v2[0], v1[1] + v2[1]];
   },
-
   sub(v1, v2) {
     return [v1[0] - v2[0], v1[1] - v2[1]];
   },
-
   addTo(v1, v2) {
     v1[0] += v2[0];
     v1[1] += v2[1];
   },
-
   subTo(v1, v2) {
     v1[0] -= v2[0];
     v1[1] -= v2[1];
   }
-
 };
-
 function rubberband(distance, dimension, constant) {
   if (dimension === 0 || Math.abs(dimension) === Infinity) return Math.pow(distance, constant * 5);
   return distance * dimension * constant / (dimension + constant * distance);
 }
-
 function rubberbandIfOutOfBounds(position, min, max, constant = 0.15) {
-  if (constant === 0) return maths_b2a210f4_esm_clamp(position, min, max);
+  if (constant === 0) return maths_0ab39ae9_esm_clamp(position, min, max);
   if (position < min) return -rubberband(min - position, max - min, constant) + min;
   if (position > max) return +rubberband(position - max, max - min, constant) + max;
   return position;
@@ -25995,10 +26728,27 @@ function computeRubberband(bounds, [Vx, Vy], [Rx, Ry]) {
 
 
 
-;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/actions-5ad85d2f.esm.js
+;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/actions-b1cc53c2.esm.js
 
 
-function actions_5ad85d2f_esm_defineProperty(obj, key, value) {
+function _toPrimitive(input, hint) {
+  if (typeof input !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (typeof res !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+  return typeof key === "symbol" ? key : String(key);
+}
+
+function actions_b1cc53c2_esm_defineProperty(obj, key, value) {
+  key = _toPropertyKey(key);
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -26009,33 +26759,28 @@ function actions_5ad85d2f_esm_defineProperty(obj, key, value) {
   } else {
     obj[key] = value;
   }
-
   return obj;
 }
 
-function actions_5ad85d2f_esm_ownKeys(object, enumerableOnly) {
+function actions_b1cc53c2_esm_ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
-
   if (Object.getOwnPropertySymbols) {
     var symbols = Object.getOwnPropertySymbols(object);
     enumerableOnly && (symbols = symbols.filter(function (sym) {
       return Object.getOwnPropertyDescriptor(object, sym).enumerable;
     })), keys.push.apply(keys, symbols);
   }
-
   return keys;
 }
-
-function actions_5ad85d2f_esm_objectSpread2(target) {
+function actions_b1cc53c2_esm_objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? actions_5ad85d2f_esm_ownKeys(Object(source), !0).forEach(function (key) {
-      actions_5ad85d2f_esm_defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : actions_5ad85d2f_esm_ownKeys(Object(source)).forEach(function (key) {
+    i % 2 ? actions_b1cc53c2_esm_ownKeys(Object(source), !0).forEach(function (key) {
+      actions_b1cc53c2_esm_defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : actions_b1cc53c2_esm_ownKeys(Object(source)).forEach(function (key) {
       Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
     });
   }
-
   return target;
 }
 
@@ -26061,16 +26806,18 @@ const EVENT_TYPE_MAP = {
     end: 'end'
   }
 };
-
 function capitalize(string) {
   if (!string) return '';
   return string[0].toUpperCase() + string.slice(1);
 }
-
+const actionsWithoutCaptureSupported = ['enter', 'leave'];
+function hasCapture(capture = false, actionKey) {
+  return capture && !actionsWithoutCaptureSupported.includes(actionKey);
+}
 function toHandlerProp(device, action = '', capture = false) {
   const deviceProps = EVENT_TYPE_MAP[device];
   const actionKey = deviceProps ? deviceProps[action] || action : action;
-  return 'on' + capitalize(device) + capitalize(actionKey) + (capture ? 'Capture' : '');
+  return 'on' + capitalize(device) + capitalize(actionKey) + (hasCapture(capture, actionKey) ? 'Capture' : '');
 }
 const pointerCaptureEvents = ['gotpointercapture', 'lostpointercapture'];
 function parseProp(prop) {
@@ -26094,23 +26841,23 @@ function toDomEventType(device, action = '') {
 function isTouch(event) {
   return 'touches' in event;
 }
-
+function getPointerType(event) {
+  if (isTouch(event)) return 'touch';
+  if ('pointerType' in event) return event.pointerType;
+  return 'mouse';
+}
 function getCurrentTargetTouchList(event) {
   return Array.from(event.touches).filter(e => {
     var _event$currentTarget, _event$currentTarget$;
-
     return e.target === event.currentTarget || ((_event$currentTarget = event.currentTarget) === null || _event$currentTarget === void 0 ? void 0 : (_event$currentTarget$ = _event$currentTarget.contains) === null || _event$currentTarget$ === void 0 ? void 0 : _event$currentTarget$.call(_event$currentTarget, e.target));
   });
 }
-
 function getTouchList(event) {
   return event.type === 'touchend' || event.type === 'touchcancel' ? event.changedTouches : event.targetTouches;
 }
-
 function getValueEvent(event) {
   return isTouch(event) ? getTouchList(event)[0] : event;
 }
-
 function distanceAngle(P1, P2) {
   const dx = P2.clientX - P1.clientX;
   const dy = P2.clientY - P1.clientY;
@@ -26148,7 +26895,6 @@ function wheelValues(event) {
     deltaY,
     deltaMode
   } = event;
-
   if (deltaMode === 1) {
     deltaX *= LINE_HEIGHT;
     deltaY *= LINE_HEIGHT;
@@ -26156,12 +26902,10 @@ function wheelValues(event) {
     deltaX *= PAGE_HEIGHT;
     deltaY *= PAGE_HEIGHT;
   }
-
   return [deltaX, deltaY];
 }
 function scrollValues(event) {
   var _ref, _ref2;
-
   const {
     scrollX,
     scrollY,
@@ -26173,7 +26917,6 @@ function scrollValues(event) {
 function getEventDetails(event) {
   const payload = {};
   if ('buttons' in event) payload.buttons = event.buttons;
-
   if ('shiftKey' in event) {
     const {
       shiftKey,
@@ -26188,7 +26931,6 @@ function getEventDetails(event) {
       ctrlKey
     });
   }
-
   return payload;
 }
 
@@ -26199,17 +26941,15 @@ function call(v, ...args) {
     return v;
   }
 }
-function actions_5ad85d2f_esm_noop() {}
+function actions_b1cc53c2_esm_noop() {}
 function chain(...fns) {
-  if (fns.length === 0) return actions_5ad85d2f_esm_noop;
+  if (fns.length === 0) return actions_b1cc53c2_esm_noop;
   if (fns.length === 1) return fns[0];
   return function () {
     let result;
-
     for (const fn of fns) {
       result = fn.apply(this, arguments) || result;
     }
-
     return result;
   };
 }
@@ -26223,7 +26963,6 @@ class Engine {
     this.ctrl = ctrl;
     this.args = args;
     this.key = key;
-
     if (!this.state) {
       this.state = {};
       this.computeValues([0, 0]);
@@ -26232,39 +26971,30 @@ class Engine {
       this.reset();
     }
   }
-
   get state() {
     return this.ctrl.state[this.key];
   }
-
   set state(state) {
     this.ctrl.state[this.key] = state;
   }
-
   get shared() {
     return this.ctrl.state.shared;
   }
-
   get eventStore() {
     return this.ctrl.gestureEventStores[this.key];
   }
-
   get timeoutStore() {
     return this.ctrl.gestureTimeoutStores[this.key];
   }
-
   get config() {
     return this.ctrl.config[this.key];
   }
-
   get sharedConfig() {
     return this.ctrl.config.shared;
   }
-
   get handler() {
     return this.ctrl.handlers[this.key];
   }
-
   reset() {
     const {
       state,
@@ -26293,11 +27023,9 @@ class Engine {
     state.delta = [0, 0];
     state.timeStamp = 0;
   }
-
   start(event) {
     const state = this.state;
     const config = this.config;
-
     if (!state._active) {
       this.reset();
       this.computeInitial();
@@ -26307,22 +27035,18 @@ class Engine {
       state.lastOffset = config.from ? call(config.from, state) : state.offset;
       state.offset = state.lastOffset;
     }
-
     state.startTime = state.timeStamp = event.timeStamp;
   }
-
   computeValues(values) {
     const state = this.state;
     state._values = values;
     state.values = this.config.transform(values);
   }
-
   computeInitial() {
     const state = this.state;
     state._initial = state._values;
     state.initial = state.values;
   }
-
   compute(event) {
     const {
       state,
@@ -26331,7 +27055,6 @@ class Engine {
     } = this;
     state.args = this.args;
     let dt = 0;
-
     if (event) {
       state.event = event;
       if (config.preventDefault && event.cancelable) state.event.preventDefault();
@@ -26344,20 +27067,17 @@ class Engine {
       state.timeStamp = event.timeStamp;
       state.elapsedTime = state.timeStamp - state.startTime;
     }
-
     if (state._active) {
       const _absoluteDelta = state._delta.map(Math.abs);
-
       V.addTo(state._distance, _absoluteDelta);
     }
-
+    if (this.axisIntent) this.axisIntent(event);
     const [_m0, _m1] = state._movement;
     const [t0, t1] = config.threshold;
     const {
       _step,
       values
     } = state;
-
     if (config.hasCustomTransform) {
       if (_step[0] === false) _step[0] = Math.abs(_m0) >= t0 && values[0];
       if (_step[1] === false) _step[1] = Math.abs(_m1) >= t1 && values[1];
@@ -26365,11 +27085,9 @@ class Engine {
       if (_step[0] === false) _step[0] = Math.abs(_m0) >= t0 && Math.sign(_m0) * t0;
       if (_step[1] === false) _step[1] = Math.abs(_m1) >= t1 && Math.sign(_m1) * t1;
     }
-
     state.intentional = _step[0] !== false || _step[1] !== false;
     if (!state.intentional) return;
     const movement = [0, 0];
-
     if (config.hasCustomTransform) {
       const [v0, v1] = values;
       movement[0] = _step[0] !== false ? v0 - _step[0] : 0;
@@ -26378,38 +27096,22 @@ class Engine {
       movement[0] = _step[0] !== false ? _m0 - _step[0] : 0;
       movement[1] = _step[1] !== false ? _m1 - _step[1] : 0;
     }
-
-    if (this.intent) this.intent(movement);
-
-    if (state._active && !state._blocked || state.active) {
+    if (this.restrictToAxis && !state._blocked) this.restrictToAxis(movement);
+    const previousOffset = state.offset;
+    const gestureIsActive = state._active && !state._blocked || state.active;
+    if (gestureIsActive) {
       state.first = state._active && !state.active;
       state.last = !state._active && state.active;
       state.active = shared[this.ingKey] = state._active;
-
       if (event) {
         if (state.first) {
           if ('bounds' in config) state._bounds = call(config.bounds, state);
           if (this.setup) this.setup();
         }
-
         state.movement = movement;
-        const previousOffset = state.offset;
         this.computeOffset();
-
-        if (!state.last || dt > BEFORE_LAST_KINEMATICS_DELAY) {
-          state.delta = V.sub(state.offset, previousOffset);
-          const absoluteDelta = state.delta.map(Math.abs);
-          V.addTo(state.distance, absoluteDelta);
-          state.direction = state.delta.map(Math.sign);
-          state._direction = state._delta.map(Math.sign);
-
-          if (!state.first && dt > 0) {
-            state.velocity = [absoluteDelta[0] / dt, absoluteDelta[1] / dt];
-          }
-        }
       }
     }
-
     const [ox, oy] = state.offset;
     const [[x0, x1], [y0, y1]] = state._bounds;
     state.overflow = [ox < x0 ? -1 : ox > x1 ? 1 : 0, oy < y0 ? -1 : oy > y1 ? 1 : 0];
@@ -26417,82 +27119,87 @@ class Engine {
     state._movementBound[1] = state.overflow[1] ? state._movementBound[1] === false ? state._movement[1] : state._movementBound[1] : false;
     const rubberband = state._active ? config.rubberband || [0, 0] : [0, 0];
     state.offset = computeRubberband(state._bounds, state.offset, rubberband);
+    state.delta = V.sub(state.offset, previousOffset);
     this.computeMovement();
+    if (gestureIsActive && (!state.last || dt > BEFORE_LAST_KINEMATICS_DELAY)) {
+      state.delta = V.sub(state.offset, previousOffset);
+      const absoluteDelta = state.delta.map(Math.abs);
+      V.addTo(state.distance, absoluteDelta);
+      state.direction = state.delta.map(Math.sign);
+      state._direction = state._delta.map(Math.sign);
+      if (!state.first && dt > 0) {
+        state.velocity = [absoluteDelta[0] / dt, absoluteDelta[1] / dt];
+      }
+    }
   }
-
   emit() {
     const state = this.state;
     const shared = this.shared;
     const config = this.config;
     if (!state._active) this.clean();
     if ((state._blocked || !state.intentional) && !state._force && !config.triggerAllEvents) return;
-    const memo = this.handler(actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, shared), state), {}, {
+    const memo = this.handler(actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, shared), state), {}, {
       [this.aliasKey]: state.values
     }));
     if (memo !== undefined) state.memo = memo;
   }
-
   clean() {
     this.eventStore.clean();
     this.timeoutStore.clean();
   }
-
 }
 
-function selectAxis([dx, dy]) {
-  const d = Math.abs(dx) - Math.abs(dy);
-  if (d > 0) return 'x';
-  if (d < 0) return 'y';
+function selectAxis([dx, dy], threshold) {
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+  if (absDx > absDy && absDx > threshold) {
+    return 'x';
+  }
+  if (absDy > absDx && absDy > threshold) {
+    return 'y';
+  }
   return undefined;
 }
-
-function restrictVectorToAxis(v, axis) {
-  switch (axis) {
-    case 'x':
-      v[1] = 0;
-      break;
-
-    case 'y':
-      v[0] = 0;
-      break;
-  }
-}
-
 class CoordinatesEngine extends Engine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "aliasKey", 'xy');
+    actions_b1cc53c2_esm_defineProperty(this, "aliasKey", 'xy');
   }
-
   reset() {
     super.reset();
     this.state.axis = undefined;
   }
-
   init() {
     this.state.offset = [0, 0];
     this.state.lastOffset = [0, 0];
   }
-
   computeOffset() {
     this.state.offset = V.add(this.state.lastOffset, this.state.movement);
   }
-
   computeMovement() {
     this.state.movement = V.sub(this.state.offset, this.state.lastOffset);
   }
-
-  intent(v) {
-    this.state.axis = this.state.axis || selectAxis(v);
-    this.state._blocked = (this.config.lockDirection || !!this.config.axis) && !this.state.axis || !!this.config.axis && this.config.axis !== this.state.axis;
-    if (this.state._blocked) return;
-
+  axisIntent(event) {
+    const state = this.state;
+    const config = this.config;
+    if (!state.axis && event) {
+      const threshold = typeof config.axisThreshold === 'object' ? config.axisThreshold[getPointerType(event)] : config.axisThreshold;
+      state.axis = selectAxis(state._movement, threshold);
+    }
+    state._blocked = (config.lockDirection || !!config.axis) && !state.axis || !!config.axis && config.axis !== state.axis;
+  }
+  restrictToAxis(v) {
     if (this.config.axis || this.config.lockDirection) {
-      restrictVectorToAxis(v, this.state.axis);
+      switch (this.state.axis) {
+        case 'x':
+          v[1] = 0;
+          break;
+        case 'y':
+          v[0] = 0;
+          break;
+      }
     }
   }
-
 }
 
 const identity = v => v;
@@ -26501,71 +27208,62 @@ const commonConfigResolver = {
   enabled(value = true) {
     return value;
   },
-
+  eventOptions(value, _k, config) {
+    return actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, config.shared.eventOptions), value);
+  },
   preventDefault(value = false) {
     return value;
   },
-
   triggerAllEvents(value = false) {
     return value;
   },
-
   rubberband(value = 0) {
     switch (value) {
       case true:
         return [DEFAULT_RUBBERBAND, DEFAULT_RUBBERBAND];
-
       case false:
         return [0, 0];
-
       default:
         return V.toVector(value);
     }
   },
-
   from(value) {
     if (typeof value === 'function') return value;
     if (value != null) return V.toVector(value);
   },
-
   transform(value, _k, config) {
     const transform = value || config.shared.transform;
     this.hasCustomTransform = !!transform;
-
     if (false) {}
-
     return transform || identity;
   },
-
   threshold(value) {
     return V.toVector(value, 0);
   }
-
 };
-
 if (false) {}
 
-const coordinatesConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, commonConfigResolver), {}, {
+const DEFAULT_AXIS_THRESHOLD = 0;
+const coordinatesConfigResolver = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, commonConfigResolver), {}, {
   axis(_v, _k, {
     axis
   }) {
     this.lockDirection = axis === 'lock';
     if (!this.lockDirection) return axis;
   },
-
+  axisThreshold(value = DEFAULT_AXIS_THRESHOLD) {
+    return value;
+  },
   bounds(value = {}) {
     if (typeof value === 'function') {
       return state => coordinatesConfigResolver.bounds(value(state));
     }
-
     if ('current' in value) {
       return () => value.current;
     }
-
     if (typeof HTMLElement === 'function' && value instanceof HTMLElement) {
       return value;
     }
-
     const {
       left = -Infinity,
       right = Infinity,
@@ -26574,23 +27272,19 @@ const coordinatesConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad
     } = value;
     return [[left, right], [top, bottom]];
   }
-
 });
 
-const DISPLACEMENT = 10;
 const KEYS_DELTA_MAP = {
-  ArrowRight: (factor = 1) => [DISPLACEMENT * factor, 0],
-  ArrowLeft: (factor = 1) => [-DISPLACEMENT * factor, 0],
-  ArrowUp: (factor = 1) => [0, -DISPLACEMENT * factor],
-  ArrowDown: (factor = 1) => [0, DISPLACEMENT * factor]
+  ArrowRight: (displacement, factor = 1) => [displacement * factor, 0],
+  ArrowLeft: (displacement, factor = 1) => [-1 * displacement * factor, 0],
+  ArrowUp: (displacement, factor = 1) => [0, -1 * displacement * factor],
+  ArrowDown: (displacement, factor = 1) => [0, displacement * factor]
 };
 class DragEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'dragging');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'dragging');
   }
-
   reset() {
     super.reset();
     const state = this.state;
@@ -26604,13 +27298,10 @@ class DragEngine extends CoordinatesEngine {
     state.canceled = false;
     state.cancel = this.cancel.bind(this);
   }
-
   setup() {
     const state = this.state;
-
     if (state._bounds instanceof HTMLElement) {
       const boundRect = state._bounds.getBoundingClientRect();
-
       const targetRect = state.currentTarget.getBoundingClientRect();
       const _bounds = {
         left: boundRect.left - targetRect.left + state.offset[0],
@@ -26621,7 +27312,6 @@ class DragEngine extends CoordinatesEngine {
       state._bounds = coordinatesConfigResolver.bounds(_bounds);
     }
   }
-
   cancel() {
     const state = this.state;
     if (state.canceled) return;
@@ -26632,45 +27322,43 @@ class DragEngine extends CoordinatesEngine {
       this.emit();
     }, 0);
   }
-
   setActive() {
     this.state._active = this.state._pointerActive || this.state._keyboardActive;
   }
-
   clean() {
     this.pointerClean();
     this.state._pointerActive = false;
     this.state._keyboardActive = false;
     super.clean();
   }
-
   pointerDown(event) {
     const config = this.config;
     const state = this.state;
     if (event.buttons != null && (Array.isArray(config.pointerButtons) ? !config.pointerButtons.includes(event.buttons) : config.pointerButtons !== -1 && config.pointerButtons !== event.buttons)) return;
-    this.ctrl.setEventIds(event);
-
+    const ctrlIds = this.ctrl.setEventIds(event);
     if (config.pointerCapture) {
       event.target.setPointerCapture(event.pointerId);
     }
-
-    if (state._pointerActive) return;
+    if (ctrlIds && ctrlIds.size > 1 && state._pointerActive) return;
     this.start(event);
     this.setupPointer(event);
     state._pointerId = pointerId(event);
     state._pointerActive = true;
     this.computeValues(pointerValues(event));
     this.computeInitial();
-
-    if (config.preventScroll) {
+    if (config.preventScrollAxis && getPointerType(event) !== 'mouse') {
+      state._active = false;
       this.setupScrollPrevention(event);
     } else if (config.delay > 0) {
       this.setupDelayTrigger(event);
+      if (config.triggerAllEvents) {
+        this.compute(event);
+        this.emit();
+      }
     } else {
       this.startPointerDrag(event);
     }
   }
-
   startPointerDrag(event) {
     const state = this.state;
     state._active = true;
@@ -26679,35 +27367,29 @@ class DragEngine extends CoordinatesEngine {
     this.compute(event);
     this.emit();
   }
-
   pointerMove(event) {
     const state = this.state;
     const config = this.config;
     if (!state._pointerActive) return;
     if (state.type === event.type && event.timeStamp === state.timeStamp) return;
     const id = pointerId(event);
-    if (state._pointerId && id !== state._pointerId) return;
-
+    if (state._pointerId !== undefined && id !== state._pointerId) return;
     const _values = pointerValues(event);
-
     if (document.pointerLockElement === event.target) {
       state._delta = [event.movementX, event.movementY];
     } else {
       state._delta = V.sub(_values, state._values);
       this.computeValues(_values);
     }
-
     V.addTo(state._movement, state._delta);
     this.compute(event);
-
-    if (state._delayed) {
+    if (state._delayed && state.intentional) {
       this.timeoutStore.remove('dragDelay');
       state.active = false;
       this.startPointerDrag(event);
       return;
     }
-
-    if (config.preventScroll && !state._preventScroll) {
+    if (config.preventScrollAxis && !state._preventScroll) {
       if (state.axis) {
         if (state.axis === config.preventScrollAxis || config.preventScrollAxis === 'xy') {
           state._active = false;
@@ -26722,13 +27404,10 @@ class DragEngine extends CoordinatesEngine {
         return;
       }
     }
-
     this.emit();
   }
-
   pointerUp(event) {
     this.ctrl.setEventIds(event);
-
     try {
       if (this.config.pointerCapture && event.target.hasPointerCapture(event.pointerId)) {
         ;
@@ -26737,18 +27416,16 @@ class DragEngine extends CoordinatesEngine {
     } catch (_unused) {
       if (false) {}
     }
-
     const state = this.state;
     const config = this.config;
-    if (!state._pointerActive) return;
+    if (!state._active || !state._pointerActive) return;
     const id = pointerId(event);
-    if (state._pointerId && id !== state._pointerId) return;
+    if (state._pointerId !== undefined && id !== state._pointerId) return;
     this.state._pointerActive = false;
     this.setActive();
     this.compute(event);
     const [dx, dy] = state._distance;
     state.tap = dx <= config.tapsThreshold && dy <= config.tapsThreshold;
-
     if (state.tap && config.filterTaps) {
       state._force = true;
     } else {
@@ -26758,86 +27435,72 @@ class DragEngine extends CoordinatesEngine {
       const [svx, svy] = config.swipe.velocity;
       const [sx, sy] = config.swipe.distance;
       const sdt = config.swipe.duration;
-
       if (state.elapsedTime < sdt) {
         if (Math.abs(vx) > svx && Math.abs(mx) > sx) state.swipe[0] = dirx;
         if (Math.abs(vy) > svy && Math.abs(my) > sy) state.swipe[1] = diry;
       }
     }
-
     this.emit();
   }
-
   pointerClick(event) {
-    if (!this.state.tap) {
+    if (!this.state.tap && event.detail > 0) {
       event.preventDefault();
       event.stopPropagation();
     }
   }
-
   setupPointer(event) {
     const config = this.config;
-    let device = config.device;
-
+    const device = config.device;
     if (false) {}
-
     if (config.pointerLock) {
       event.currentTarget.requestPointerLock();
     }
-
     if (!config.pointerCapture) {
       this.eventStore.add(this.sharedConfig.window, device, 'change', this.pointerMove.bind(this));
       this.eventStore.add(this.sharedConfig.window, device, 'end', this.pointerUp.bind(this));
       this.eventStore.add(this.sharedConfig.window, device, 'cancel', this.pointerUp.bind(this));
     }
   }
-
   pointerClean() {
     if (this.config.pointerLock && document.pointerLockElement === this.state.currentTarget) {
       document.exitPointerLock();
     }
   }
-
   preventScroll(event) {
     if (this.state._preventScroll && event.cancelable) {
       event.preventDefault();
     }
   }
-
   setupScrollPrevention(event) {
+    this.state._preventScroll = false;
     persistEvent(event);
-    this.eventStore.add(this.sharedConfig.window, 'touch', 'change', this.preventScroll.bind(this), {
+    const remove = this.eventStore.add(this.sharedConfig.window, 'touch', 'change', this.preventScroll.bind(this), {
       passive: false
     });
-    this.eventStore.add(this.sharedConfig.window, 'touch', 'end', this.clean.bind(this), {
-      passive: false
-    });
-    this.eventStore.add(this.sharedConfig.window, 'touch', 'cancel', this.clean.bind(this), {
-      passive: false
-    });
-    this.timeoutStore.add('startPointerDrag', this.startPointerDrag.bind(this), this.config.preventScroll, event);
+    this.eventStore.add(this.sharedConfig.window, 'touch', 'end', remove);
+    this.eventStore.add(this.sharedConfig.window, 'touch', 'cancel', remove);
+    this.timeoutStore.add('startPointerDrag', this.startPointerDrag.bind(this), this.config.preventScrollDelay, event);
   }
-
   setupDelayTrigger(event) {
     this.state._delayed = true;
-    this.timeoutStore.add('dragDelay', this.startPointerDrag.bind(this), this.config.delay, event);
+    this.timeoutStore.add('dragDelay', () => {
+      this.state._step = [0, 0];
+      this.startPointerDrag(event);
+    }, this.config.delay);
   }
-
   keyDown(event) {
     const deltaFn = KEYS_DELTA_MAP[event.key];
-
     if (deltaFn) {
       const state = this.state;
       const factor = event.shiftKey ? 10 : event.altKey ? 0.1 : 1;
-      state._delta = deltaFn(factor);
       this.start(event);
+      state._delta = deltaFn(this.config.keyboardDisplacement, factor);
       state._keyboardActive = true;
       V.addTo(state._movement, state._delta);
       this.compute(event);
       this.emit();
     }
   }
-
   keyUp(event) {
     if (!(event.key in KEYS_DELTA_MAP)) return;
     this.state._keyboardActive = false;
@@ -26845,21 +27508,19 @@ class DragEngine extends CoordinatesEngine {
     this.compute(event);
     this.emit();
   }
-
   bind(bindFunction) {
     const device = this.config.device;
     bindFunction(device, 'start', this.pointerDown.bind(this));
-
     if (this.config.pointerCapture) {
       bindFunction(device, 'change', this.pointerMove.bind(this));
       bindFunction(device, 'end', this.pointerUp.bind(this));
       bindFunction(device, 'cancel', this.pointerUp.bind(this));
       bindFunction('lostPointerCapture', '', this.pointerUp.bind(this));
     }
-
-    bindFunction('key', 'down', this.keyDown.bind(this));
-    bindFunction('key', 'up', this.keyUp.bind(this));
-
+    if (this.config.keys) {
+      bindFunction('key', 'down', this.keyDown.bind(this));
+      bindFunction('key', 'up', this.keyUp.bind(this));
+    }
     if (this.config.filterTaps) {
       bindFunction('click', '', this.pointerClick.bind(this), {
         capture: true,
@@ -26867,31 +27528,24 @@ class DragEngine extends CoordinatesEngine {
       });
     }
   }
-
 }
-
 function persistEvent(event) {
   'persist' in event && typeof event.persist === 'function' && event.persist();
 }
 
-const actions_5ad85d2f_esm_isBrowser = typeof window !== 'undefined' && window.document && window.document.createElement;
-
-function actions_5ad85d2f_esm_supportsTouchEvents() {
-  return actions_5ad85d2f_esm_isBrowser && 'ontouchstart' in window;
+const actions_b1cc53c2_esm_isBrowser = typeof window !== 'undefined' && window.document && window.document.createElement;
+function actions_b1cc53c2_esm_supportsTouchEvents() {
+  return actions_b1cc53c2_esm_isBrowser && 'ontouchstart' in window;
 }
-
 function isTouchScreen() {
-  return actions_5ad85d2f_esm_supportsTouchEvents() || actions_5ad85d2f_esm_isBrowser && window.navigator.maxTouchPoints > 1;
+  return actions_b1cc53c2_esm_supportsTouchEvents() || actions_b1cc53c2_esm_isBrowser && window.navigator.maxTouchPoints > 1;
 }
-
-function actions_5ad85d2f_esm_supportsPointerEvents() {
-  return actions_5ad85d2f_esm_isBrowser && 'onpointerdown' in window;
+function actions_b1cc53c2_esm_supportsPointerEvents() {
+  return actions_b1cc53c2_esm_isBrowser && 'onpointerdown' in window;
 }
-
 function supportsPointerLock() {
-  return actions_5ad85d2f_esm_isBrowser && 'exitPointerLock' in window.document;
+  return actions_b1cc53c2_esm_isBrowser && 'exitPointerLock' in window.document;
 }
-
 function supportsGestureEvents() {
   try {
     return 'constructor' in GestureEvent;
@@ -26899,13 +27553,12 @@ function supportsGestureEvents() {
     return false;
   }
 }
-
 const SUPPORT = {
-  isBrowser: actions_5ad85d2f_esm_isBrowser,
+  isBrowser: actions_b1cc53c2_esm_isBrowser,
   gesture: supportsGestureEvents(),
   touch: isTouchScreen(),
   touchscreen: isTouchScreen(),
-  pointer: actions_5ad85d2f_esm_supportsPointerEvents(),
+  pointer: actions_b1cc53c2_esm_supportsPointerEvents(),
   pointerLock: supportsPointerLock()
 };
 
@@ -26914,44 +27567,45 @@ const DEFAULT_DRAG_DELAY = 180;
 const DEFAULT_SWIPE_VELOCITY = 0.5;
 const DEFAULT_SWIPE_DISTANCE = 50;
 const DEFAULT_SWIPE_DURATION = 250;
-const dragConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
-  pointerLock(_v, _k, {
+const DEFAULT_KEYBOARD_DISPLACEMENT = 10;
+const DEFAULT_DRAG_AXIS_THRESHOLD = {
+  mouse: 0,
+  touch: 0,
+  pen: 8
+};
+const dragConfigResolver = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+  device(_v, _k, {
     pointer: {
+      touch = false,
       lock = false,
-      touch = false
+      mouse = false
     } = {}
   }) {
-    this.useTouch = touch && SUPPORT.touch;
-    return lock && SUPPORT.pointerLock;
-  },
-
-  device(_v, _k) {
-    if (this.useTouch) return 'touch';
+    this.pointerLock = lock && SUPPORT.pointerLock;
+    if (SUPPORT.touch && touch) return 'touch';
     if (this.pointerLock) return 'mouse';
-    if (SUPPORT.pointer) return 'pointer';
+    if (SUPPORT.pointer && !mouse) return 'pointer';
     if (SUPPORT.touch) return 'touch';
     return 'mouse';
   },
-
-  preventScroll(value = false, _k, {
-    preventScrollAxis = 'y'
+  preventScrollAxis(value, _k, {
+    preventScroll
   }) {
-    if (preventScrollAxis) this.preventScrollAxis = preventScrollAxis;
-    if (!SUPPORT.touchscreen) return false;
-    if (typeof value === 'number') return value;
-    return value ? DEFAULT_PREVENT_SCROLL_DELAY : false;
+    this.preventScrollDelay = typeof preventScroll === 'number' ? preventScroll : preventScroll || preventScroll === undefined && value ? DEFAULT_PREVENT_SCROLL_DELAY : undefined;
+    if (!SUPPORT.touchscreen || preventScroll === false) return undefined;
+    return value ? value : preventScroll !== undefined ? 'y' : undefined;
   },
-
   pointerCapture(_v, _k, {
     pointer: {
       capture = true,
-      buttons = 1
+      buttons = 1,
+      keys = true
     } = {}
   }) {
     this.pointerButtons = buttons;
+    this.keys = keys;
     return !this.pointerLock && this.device === 'pointer' && capture;
   },
-
   threshold(value, _k, {
     filterTaps = false,
     tapsThreshold = 3,
@@ -26962,7 +27616,6 @@ const dragConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_e
     this.tapsThreshold = tapsThreshold;
     return threshold;
   },
-
   swipe({
     velocity = DEFAULT_SWIPE_VELOCITY,
     distance = DEFAULT_SWIPE_DISTANCE,
@@ -26974,41 +27627,51 @@ const dragConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_e
       duration
     };
   },
-
   delay(value = 0) {
     switch (value) {
       case true:
         return DEFAULT_DRAG_DELAY;
-
       case false:
         return 0;
-
       default:
         return value;
     }
+  },
+  axisThreshold(value) {
+    if (!value) return DEFAULT_DRAG_AXIS_THRESHOLD;
+    return actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, DEFAULT_DRAG_AXIS_THRESHOLD), value);
+  },
+  keyboardDisplacement(value = DEFAULT_KEYBOARD_DISPLACEMENT) {
+    return value;
   }
-
 });
-
 if (false) {}
 
+function clampStateInternalMovementToBounds(state) {
+  const [ox, oy] = state.overflow;
+  const [dx, dy] = state._delta;
+  const [dirx, diry] = state._direction;
+  if (ox < 0 && dx > 0 && dirx < 0 || ox > 0 && dx < 0 && dirx > 0) {
+    state._movement[0] = state._movementBound[0];
+  }
+  if (oy < 0 && dy > 0 && diry < 0 || oy > 0 && dy < 0 && diry > 0) {
+    state._movement[1] = state._movementBound[1];
+  }
+}
+
 const SCALE_ANGLE_RATIO_INTENT_DEG = 30;
-const PINCH_WHEEL_RATIO = 36;
+const PINCH_WHEEL_RATIO = 100;
 class PinchEngine extends Engine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'pinching');
-
-    actions_5ad85d2f_esm_defineProperty(this, "aliasKey", 'da');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'pinching');
+    actions_b1cc53c2_esm_defineProperty(this, "aliasKey", 'da');
   }
-
   init() {
     this.state.offset = [1, 0];
     this.state.lastOffset = [1, 0];
     this.state._pointerEvents = new Map();
   }
-
   reset() {
     super.reset();
     const state = this.state;
@@ -27017,21 +27680,18 @@ class PinchEngine extends Engine {
     state.cancel = this.cancel.bind(this);
     state.turns = 0;
   }
-
   computeOffset() {
     const {
       type,
       movement,
       lastOffset
     } = this.state;
-
     if (type === 'wheel') {
       this.state.offset = V.add(movement, lastOffset);
     } else {
       this.state.offset = [(1 + movement[0]) * lastOffset[0], movement[1] + lastOffset[1]];
     }
   }
-
   computeMovement() {
     const {
       offset,
@@ -27039,20 +27699,19 @@ class PinchEngine extends Engine {
     } = this.state;
     this.state.movement = [offset[0] / lastOffset[0], offset[1] - lastOffset[1]];
   }
-
-  intent(v) {
+  axisIntent() {
     const state = this.state;
-
+    const [_m0, _m1] = state._movement;
     if (!state.axis) {
-      const axisMovementDifference = Math.abs(v[0]) * SCALE_ANGLE_RATIO_INTENT_DEG - Math.abs(v[1]);
+      const axisMovementDifference = Math.abs(_m0) * SCALE_ANGLE_RATIO_INTENT_DEG - Math.abs(_m1);
       if (axisMovementDifference < 0) state.axis = 'angle';else if (axisMovementDifference > 0) state.axis = 'scale';
     }
-
+  }
+  restrictToAxis(v) {
     if (this.config.lockDirection) {
-      if (state.axis === 'scale') v[1] = 0;else if (state.axis === 'angle') v[0] = 0;
+      if (this.state.axis === 'scale') v[1] = 0;else if (this.state.axis === 'angle') v[0] = 0;
     }
   }
-
   cancel() {
     const state = this.state;
     if (state.canceled) return;
@@ -27063,23 +27722,19 @@ class PinchEngine extends Engine {
       this.emit();
     }, 0);
   }
-
   touchStart(event) {
     this.ctrl.setEventIds(event);
     const state = this.state;
     const ctrlTouchIds = this.ctrl.touchIds;
-
     if (state._active) {
       if (state._touchIds.every(id => ctrlTouchIds.has(id))) return;
     }
-
     if (ctrlTouchIds.size < 2) return;
     this.start(event);
     state._touchIds = Array.from(ctrlTouchIds).slice(0, 2);
     const payload = touchDistanceAngle(event, state._touchIds);
     this.pinchStart(event, payload);
   }
-
   pointerStart(event) {
     if (event.buttons != null && event.buttons % 2 !== 1) return;
     this.ctrl.setEventIds(event);
@@ -27087,21 +27742,17 @@ class PinchEngine extends Engine {
     const state = this.state;
     const _pointerEvents = state._pointerEvents;
     const ctrlPointerIds = this.ctrl.pointerIds;
-
     if (state._active) {
       if (Array.from(_pointerEvents.keys()).every(id => ctrlPointerIds.has(id))) return;
     }
-
     if (_pointerEvents.size < 2) {
       _pointerEvents.set(event.pointerId, event);
     }
-
     if (state._pointerEvents.size < 2) return;
     this.start(event);
     const payload = distanceAngle(...Array.from(_pointerEvents.values()));
     this.pinchStart(event, payload);
   }
-
   pinchStart(event, payload) {
     const state = this.state;
     state.origin = payload.origin;
@@ -27110,25 +27761,20 @@ class PinchEngine extends Engine {
     this.compute(event);
     this.emit();
   }
-
   touchMove(event) {
     if (!this.state._active) return;
     const payload = touchDistanceAngle(event, this.state._touchIds);
     this.pinchMove(event, payload);
   }
-
   pointerMove(event) {
     const _pointerEvents = this.state._pointerEvents;
-
     if (_pointerEvents.has(event.pointerId)) {
       _pointerEvents.set(event.pointerId, event);
     }
-
     if (!this.state._active) return;
     const payload = distanceAngle(...Array.from(_pointerEvents.values()));
     this.pinchMove(event, payload);
   }
-
   pinchMove(event, payload) {
     const state = this.state;
     const prev_a = state._values[1];
@@ -27142,39 +27788,31 @@ class PinchEngine extends Engine {
     this.compute(event);
     this.emit();
   }
-
   touchEnd(event) {
     this.ctrl.setEventIds(event);
     if (!this.state._active) return;
-
     if (this.state._touchIds.some(id => !this.ctrl.touchIds.has(id))) {
       this.state._active = false;
       this.compute(event);
       this.emit();
     }
   }
-
   pointerEnd(event) {
     const state = this.state;
     this.ctrl.setEventIds(event);
-
     try {
       event.target.releasePointerCapture(event.pointerId);
     } catch (_unused) {}
-
     if (state._pointerEvents.has(event.pointerId)) {
       state._pointerEvents.delete(event.pointerId);
     }
-
     if (!state._active) return;
-
     if (state._pointerEvents.size < 2) {
       state._active = false;
       this.compute(event);
       this.emit();
     }
   }
-
   gestureStart(event) {
     if (event.cancelable) event.preventDefault();
     const state = this.state;
@@ -27185,7 +27823,6 @@ class PinchEngine extends Engine {
     this.compute(event);
     this.emit();
   }
-
   gestureMove(event) {
     if (event.cancelable) event.preventDefault();
     if (!this.state._active) return;
@@ -27198,88 +27835,75 @@ class PinchEngine extends Engine {
     this.compute(event);
     this.emit();
   }
-
   gestureEnd(event) {
     if (!this.state._active) return;
     this.state._active = false;
     this.compute(event);
     this.emit();
   }
-
   wheel(event) {
-    if (!event.ctrlKey) return;
+    const modifierKey = this.config.modifierKey;
+    if (modifierKey && !event[modifierKey]) return;
     if (!this.state._active) this.wheelStart(event);else this.wheelChange(event);
     this.timeoutStore.add('wheelEnd', this.wheelEnd.bind(this));
   }
-
   wheelStart(event) {
     this.start(event);
     this.wheelChange(event);
   }
-
   wheelChange(event) {
     const isR3f = ('uv' in event);
-
     if (!isR3f) {
       if (event.cancelable) {
         event.preventDefault();
       }
-
       if (false) {}
     }
-
     const state = this.state;
     state._delta = [-wheelValues(event)[1] / PINCH_WHEEL_RATIO * state.offset[0], 0];
     V.addTo(state._movement, state._delta);
+    clampStateInternalMovementToBounds(state);
     this.state.origin = [event.clientX, event.clientY];
     this.compute(event);
     this.emit();
   }
-
   wheelEnd() {
     if (!this.state._active) return;
     this.state._active = false;
     this.compute();
     this.emit();
   }
-
   bind(bindFunction) {
     const device = this.config.device;
-
     if (!!device) {
       bindFunction(device, 'start', this[device + 'Start'].bind(this));
       bindFunction(device, 'change', this[device + 'Move'].bind(this));
       bindFunction(device, 'end', this[device + 'End'].bind(this));
       bindFunction(device, 'cancel', this[device + 'End'].bind(this));
-    } else {
+    }
+    if (this.config.pinchOnWheel) {
       bindFunction('wheel', '', this.wheel.bind(this), {
         passive: false
       });
     }
   }
-
 }
 
-const pinchConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, commonConfigResolver), {}, {
-  useTouch(_v, _k, {
+const pinchConfigResolver = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, commonConfigResolver), {}, {
+  device(_v, _k, {
+    shared,
     pointer: {
       touch = false
     } = {}
   }) {
-    return touch && SUPPORT.touch;
-  },
-
-  device(_v, _k, config) {
-    const sharedConfig = config.shared;
+    const sharedConfig = shared;
     if (sharedConfig.target && !SUPPORT.touch && SUPPORT.gesture) return 'gesture';
-    if (this.useTouch) return 'touch';
-
+    if (SUPPORT.touch && touch) return 'touch';
     if (SUPPORT.touchscreen) {
       if (SUPPORT.pointer) return 'pointer';
       if (SUPPORT.touch) return 'touch';
     }
   },
-
   bounds(_v, _k, {
     scaleBounds = {},
     angleBounds = {}
@@ -27291,7 +27915,6 @@ const pinchConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_
       });
       return [D.min, D.max];
     };
-
     const _angleBounds = state => {
       const A = assignDefault(call(angleBounds, state), {
         min: -Infinity,
@@ -27299,32 +27922,33 @@ const pinchConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_
       });
       return [A.min, A.max];
     };
-
     if (typeof scaleBounds !== 'function' && typeof angleBounds !== 'function') return [_scaleBounds(), _angleBounds()];
     return state => [_scaleBounds(state), _angleBounds(state)];
   },
-
   threshold(value, _k, config) {
     this.lockDirection = config.axis === 'lock';
     const threshold = V.toVector(value, this.lockDirection ? [0.1, 3] : 0);
     return threshold;
+  },
+  modifierKey(value) {
+    if (value === undefined) return 'ctrlKey';
+    return value;
+  },
+  pinchOnWheel(value = true) {
+    return value;
   }
-
 });
 
 class MoveEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'moving');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'moving');
   }
-
   move(event) {
     if (this.config.mouseOnly && event.pointerType !== 'mouse') return;
     if (!this.state._active) this.moveStart(event);else this.moveChange(event);
     this.timeoutStore.add('moveEnd', this.moveEnd.bind(this));
   }
-
   moveStart(event) {
     this.start(event);
     this.computeValues(pointerValues(event));
@@ -27332,7 +27956,6 @@ class MoveEngine extends CoordinatesEngine {
     this.computeInitial();
     this.emit();
   }
-
   moveChange(event) {
     if (!this.state._active) return;
     const values = pointerValues(event);
@@ -27343,38 +27966,32 @@ class MoveEngine extends CoordinatesEngine {
     this.compute(event);
     this.emit();
   }
-
   moveEnd(event) {
     if (!this.state._active) return;
     this.state._active = false;
     this.compute(event);
     this.emit();
   }
-
   bind(bindFunction) {
     bindFunction('pointer', 'change', this.move.bind(this));
     bindFunction('pointer', 'leave', this.moveEnd.bind(this));
   }
-
 }
 
-const moveConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+const moveConfigResolver = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
   mouseOnly: (value = true) => value
 });
 
 class ScrollEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'scrolling');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'scrolling');
   }
-
   scroll(event) {
     if (!this.state._active) this.start(event);
     this.scrollChange(event);
     this.timeoutStore.add('scrollEnd', this.scrollEnd.bind(this));
   }
-
   scrollChange(event) {
     if (event.cancelable) event.preventDefault();
     const state = this.state;
@@ -27385,18 +28002,15 @@ class ScrollEngine extends CoordinatesEngine {
     this.compute(event);
     this.emit();
   }
-
   scrollEnd() {
     if (!this.state._active) return;
     this.state._active = false;
     this.compute();
     this.emit();
   }
-
   bind(bindFunction) {
     bindFunction('scroll', '', this.scroll.bind(this));
   }
-
 }
 
 const scrollConfigResolver = coordinatesConfigResolver;
@@ -27404,47 +28018,30 @@ const scrollConfigResolver = coordinatesConfigResolver;
 class WheelEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'wheeling');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'wheeling');
   }
-
   wheel(event) {
     if (!this.state._active) this.start(event);
     this.wheelChange(event);
     this.timeoutStore.add('wheelEnd', this.wheelEnd.bind(this));
   }
-
   wheelChange(event) {
     const state = this.state;
     state._delta = wheelValues(event);
     V.addTo(state._movement, state._delta);
-    const [ox, oy] = state.overflow;
-    const [dx, dy] = state._delta;
-    const [dirx, diry] = state._direction;
-
-    if (ox < 0 && dx > 0 && dirx < 0 || ox > 0 && dx < 0 && dirx > 0) {
-      state._movement[0] = state._movementBound[0];
-    }
-
-    if (oy < 0 && dy > 0 && diry < 0 || oy > 0 && dy < 0 && diry > 0) {
-      state._movement[1] = state._movementBound[1];
-    }
-
+    clampStateInternalMovementToBounds(state);
     this.compute(event);
     this.emit();
   }
-
   wheelEnd() {
     if (!this.state._active) return;
     this.state._active = false;
     this.compute();
     this.emit();
   }
-
   bind(bindFunction) {
     bindFunction('wheel', '', this.wheel.bind(this));
   }
-
 }
 
 const wheelConfigResolver = coordinatesConfigResolver;
@@ -27452,10 +28049,8 @@ const wheelConfigResolver = coordinatesConfigResolver;
 class HoverEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
-
-    actions_5ad85d2f_esm_defineProperty(this, "ingKey", 'hovering');
+    actions_b1cc53c2_esm_defineProperty(this, "ingKey", 'hovering');
   }
-
   enter(event) {
     if (this.config.mouseOnly && event.pointerType !== 'mouse') return;
     this.start(event);
@@ -27463,7 +28058,6 @@ class HoverEngine extends CoordinatesEngine {
     this.compute(event);
     this.emit();
   }
-
   leave(event) {
     if (this.config.mouseOnly && event.pointerType !== 'mouse') return;
     const state = this.state;
@@ -27476,50 +28070,48 @@ class HoverEngine extends CoordinatesEngine {
     state.delta = state.movement;
     this.emit();
   }
-
   bind(bindFunction) {
     bindFunction('pointer', 'enter', this.enter.bind(this));
     bindFunction('pointer', 'leave', this.leave.bind(this));
   }
-
 }
 
-const hoverConfigResolver = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+const hoverConfigResolver = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
   mouseOnly: (value = true) => value
 });
 
-const actions_5ad85d2f_esm_EngineMap = new Map();
+const actions_b1cc53c2_esm_EngineMap = new Map();
 const ConfigResolverMap = new Map();
-function actions_5ad85d2f_esm_registerAction(action) {
-  actions_5ad85d2f_esm_EngineMap.set(action.key, action.engine);
+function actions_b1cc53c2_esm_registerAction(action) {
+  actions_b1cc53c2_esm_EngineMap.set(action.key, action.engine);
   ConfigResolverMap.set(action.key, action.resolver);
 }
-const actions_5ad85d2f_esm_dragAction = {
+const actions_b1cc53c2_esm_dragAction = {
   key: 'drag',
   engine: DragEngine,
   resolver: dragConfigResolver
 };
-const actions_5ad85d2f_esm_hoverAction = {
+const actions_b1cc53c2_esm_hoverAction = {
   key: 'hover',
   engine: HoverEngine,
   resolver: hoverConfigResolver
 };
-const actions_5ad85d2f_esm_moveAction = {
+const actions_b1cc53c2_esm_moveAction = {
   key: 'move',
   engine: MoveEngine,
   resolver: moveConfigResolver
 };
-const actions_5ad85d2f_esm_pinchAction = {
+const actions_b1cc53c2_esm_pinchAction = {
   key: 'pinch',
   engine: PinchEngine,
   resolver: pinchConfigResolver
 };
-const actions_5ad85d2f_esm_scrollAction = {
+const actions_b1cc53c2_esm_scrollAction = {
   key: 'scroll',
   engine: ScrollEngine,
   resolver: scrollConfigResolver
 };
-const actions_5ad85d2f_esm_wheelAction = {
+const actions_b1cc53c2_esm_wheelAction = {
   key: 'wheel',
   engine: WheelEngine,
   resolver: wheelConfigResolver
@@ -27536,13 +28128,11 @@ function use_gesture_core_esm_objectWithoutPropertiesLoose(source, excluded) {
   var target = {};
   var sourceKeys = Object.keys(source);
   var key, i;
-
   for (i = 0; i < sourceKeys.length; i++) {
     key = sourceKeys[i];
     if (excluded.indexOf(key) >= 0) continue;
     target[key] = source[key];
   }
-
   return target;
 }
 
@@ -27550,10 +28140,8 @@ function _objectWithoutProperties(source, excluded) {
   if (source == null) return {};
   var target = use_gesture_core_esm_objectWithoutPropertiesLoose(source, excluded);
   var key, i;
-
   if (Object.getOwnPropertySymbols) {
     var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-
     for (i = 0; i < sourceSymbolKeys.length; i++) {
       key = sourceSymbolKeys[i];
       if (excluded.indexOf(key) >= 0) continue;
@@ -27561,7 +28149,6 @@ function _objectWithoutProperties(source, excluded) {
       target[key] = source[key];
     }
   }
-
   return target;
 }
 
@@ -27570,18 +28157,14 @@ const sharedConfigResolver = {
     if (value) {
       return () => 'current' in value ? value.current : value;
     }
-
     return undefined;
   },
-
   enabled(value = true) {
     return value;
   },
-
   window(value = SUPPORT.isBrowser ? window : undefined) {
     return value;
   },
-
   eventOptions({
     passive = true,
     capture = false
@@ -27591,148 +28174,120 @@ const sharedConfigResolver = {
       capture
     };
   },
-
   transform(value) {
     return value;
   }
-
 };
 
 const _excluded = ["target", "eventOptions", "window", "enabled", "transform"];
 function resolveWith(config = {}, resolvers) {
   const result = {};
-
   for (const [key, resolver] of Object.entries(resolvers)) {
     switch (typeof resolver) {
       case 'function':
         if (false) {} else {
           result[key] = resolver.call(result, config[key], key, config);
         }
-
         break;
-
       case 'object':
         result[key] = resolveWith(config[key], resolver);
         break;
-
       case 'boolean':
         if (resolver) result[key] = config[key];
         break;
     }
   }
-
   return result;
 }
-function use_gesture_core_esm_parse(config, gestureKey) {
-  const _ref = config,
-        {
-    target,
-    eventOptions,
-    window,
-    enabled,
-    transform
-  } = _ref,
-        rest = _objectWithoutProperties(_ref, _excluded);
-
-  const _config = {
-    shared: resolveWith({
+function use_gesture_core_esm_parse(newConfig, gestureKey, _config = {}) {
+  const _ref = newConfig,
+    {
       target,
       eventOptions,
       window,
       enabled,
       transform
-    }, sharedConfigResolver)
-  };
-
+    } = _ref,
+    rest = _objectWithoutProperties(_ref, _excluded);
+  _config.shared = resolveWith({
+    target,
+    eventOptions,
+    window,
+    enabled,
+    transform
+  }, sharedConfigResolver);
   if (gestureKey) {
     const resolver = ConfigResolverMap.get(gestureKey);
-    _config[gestureKey] = resolveWith(actions_5ad85d2f_esm_objectSpread2({
+    _config[gestureKey] = resolveWith(actions_b1cc53c2_esm_objectSpread2({
       shared: _config.shared
     }, rest), resolver);
   } else {
     for (const key in rest) {
       const resolver = ConfigResolverMap.get(key);
-
       if (resolver) {
-        _config[key] = resolveWith(actions_5ad85d2f_esm_objectSpread2({
+        _config[key] = resolveWith(actions_b1cc53c2_esm_objectSpread2({
           shared: _config.shared
         }, rest[key]), resolver);
       } else if (false) {}
     }
   }
-
   return _config;
 }
 
 class EventStore {
-  constructor(ctrl) {
-    actions_5ad85d2f_esm_defineProperty(this, "_listeners", []);
-
+  constructor(ctrl, gestureKey) {
+    actions_b1cc53c2_esm_defineProperty(this, "_listeners", new Set());
     this._ctrl = ctrl;
+    this._gestureKey = gestureKey;
   }
-
   add(element, device, action, handler, options) {
+    const listeners = this._listeners;
     const type = toDomEventType(device, action);
-
-    const eventOptions = actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, this._ctrl.config.shared.eventOptions), options);
-
+    const _options = this._gestureKey ? this._ctrl.config[this._gestureKey].eventOptions : {};
+    const eventOptions = actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, _options), options);
     element.addEventListener(type, handler, eventOptions);
-
-    this._listeners.push(() => element.removeEventListener(type, handler, eventOptions));
+    const remove = () => {
+      element.removeEventListener(type, handler, eventOptions);
+      listeners.delete(remove);
+    };
+    listeners.add(remove);
+    return remove;
   }
-
   clean() {
     this._listeners.forEach(remove => remove());
-
-    this._listeners = [];
+    this._listeners.clear();
   }
-
 }
 
 class TimeoutStore {
   constructor() {
-    actions_5ad85d2f_esm_defineProperty(this, "_timeouts", new Map());
+    actions_b1cc53c2_esm_defineProperty(this, "_timeouts", new Map());
   }
-
   add(key, callback, ms = 140, ...args) {
     this.remove(key);
-
     this._timeouts.set(key, window.setTimeout(callback, ms, ...args));
   }
-
   remove(key) {
     const timeout = this._timeouts.get(key);
-
     if (timeout) window.clearTimeout(timeout);
   }
-
   clean() {
     this._timeouts.forEach(timeout => void window.clearTimeout(timeout));
-
     this._timeouts.clear();
   }
-
 }
 
 class Controller {
   constructor(handlers) {
-    actions_5ad85d2f_esm_defineProperty(this, "gestures", new Set());
-
-    actions_5ad85d2f_esm_defineProperty(this, "_targetEventStore", new EventStore(this));
-
-    actions_5ad85d2f_esm_defineProperty(this, "gestureEventStores", {});
-
-    actions_5ad85d2f_esm_defineProperty(this, "gestureTimeoutStores", {});
-
-    actions_5ad85d2f_esm_defineProperty(this, "handlers", {});
-
-    actions_5ad85d2f_esm_defineProperty(this, "config", {});
-
-    actions_5ad85d2f_esm_defineProperty(this, "pointerIds", new Set());
-
-    actions_5ad85d2f_esm_defineProperty(this, "touchIds", new Set());
-
-    actions_5ad85d2f_esm_defineProperty(this, "state", {
+    actions_b1cc53c2_esm_defineProperty(this, "gestures", new Set());
+    actions_b1cc53c2_esm_defineProperty(this, "_targetEventStore", new EventStore(this));
+    actions_b1cc53c2_esm_defineProperty(this, "gestureEventStores", {});
+    actions_b1cc53c2_esm_defineProperty(this, "gestureTimeoutStores", {});
+    actions_b1cc53c2_esm_defineProperty(this, "handlers", {});
+    actions_b1cc53c2_esm_defineProperty(this, "config", {});
+    actions_b1cc53c2_esm_defineProperty(this, "pointerIds", new Set());
+    actions_b1cc53c2_esm_defineProperty(this, "touchIds", new Set());
+    actions_b1cc53c2_esm_defineProperty(this, "state", {
       shared: {
         shiftKey: false,
         metaKey: false,
@@ -27740,98 +28295,82 @@ class Controller {
         altKey: false
       }
     });
-
     resolveGestures(this, handlers);
   }
-
   setEventIds(event) {
     if (isTouch(event)) {
       this.touchIds = new Set(touchIds(event));
+      return this.touchIds;
     } else if ('pointerId' in event) {
       if (event.type === 'pointerup' || event.type === 'pointercancel') this.pointerIds.delete(event.pointerId);else if (event.type === 'pointerdown') this.pointerIds.add(event.pointerId);
+      return this.pointerIds;
     }
   }
-
   applyHandlers(handlers, nativeHandlers) {
     this.handlers = handlers;
     this.nativeHandlers = nativeHandlers;
   }
-
   applyConfig(config, gestureKey) {
-    this.config = use_gesture_core_esm_parse(config, gestureKey);
+    this.config = use_gesture_core_esm_parse(config, gestureKey, this.config);
   }
-
   clean() {
     this._targetEventStore.clean();
-
     for (const key of this.gestures) {
       this.gestureEventStores[key].clean();
       this.gestureTimeoutStores[key].clean();
     }
   }
-
   effect() {
     if (this.config.shared.target) this.bind();
     return () => this._targetEventStore.clean();
   }
-
   bind(...args) {
     const sharedConfig = this.config.shared;
-    const eventOptions = sharedConfig.eventOptions;
     const props = {};
     let target;
-
     if (sharedConfig.target) {
       target = sharedConfig.target();
       if (!target) return;
     }
-
-    const bindFunction = bindToProps(props, eventOptions, !!target);
-
     if (sharedConfig.enabled) {
       for (const gestureKey of this.gestures) {
-        if (this.config[gestureKey].enabled) {
-          const Engine = actions_5ad85d2f_esm_EngineMap.get(gestureKey);
+        const gestureConfig = this.config[gestureKey];
+        const bindFunction = bindToProps(props, gestureConfig.eventOptions, !!target);
+        if (gestureConfig.enabled) {
+          const Engine = actions_b1cc53c2_esm_EngineMap.get(gestureKey);
           new Engine(this, args, gestureKey).bind(bindFunction);
         }
       }
-
+      const nativeBindFunction = bindToProps(props, sharedConfig.eventOptions, !!target);
       for (const eventKey in this.nativeHandlers) {
-        bindFunction(eventKey, '', event => this.nativeHandlers[eventKey](actions_5ad85d2f_esm_objectSpread2(actions_5ad85d2f_esm_objectSpread2({}, this.state.shared), {}, {
+        nativeBindFunction(eventKey, '', event => this.nativeHandlers[eventKey](actions_b1cc53c2_esm_objectSpread2(actions_b1cc53c2_esm_objectSpread2({}, this.state.shared), {}, {
           event,
           args
         })), undefined, true);
       }
     }
-
     for (const handlerProp in props) {
       props[handlerProp] = chain(...props[handlerProp]);
     }
-
     if (!target) return props;
-
     for (const handlerProp in props) {
       const {
         device,
         capture,
         passive
       } = parseProp(handlerProp);
-
       this._targetEventStore.add(target, device, '', props[handlerProp], {
         capture,
         passive
       });
     }
   }
-
 }
-
 function setupGesture(ctrl, gestureKey) {
   ctrl.gestures.add(gestureKey);
-  ctrl.gestureEventStores[gestureKey] = new EventStore(ctrl);
+  ctrl.gestureEventStores[gestureKey] = new EventStore(ctrl, gestureKey);
   ctrl.gestureTimeoutStores[gestureKey] = new TimeoutStore();
 }
-
 function resolveGestures(ctrl, internalHandlers) {
   if (internalHandlers.drag) setupGesture(ctrl, 'drag');
   if (internalHandlers.wheel) setupGesture(ctrl, 'wheel');
@@ -27840,10 +28379,8 @@ function resolveGestures(ctrl, internalHandlers) {
   if (internalHandlers.pinch) setupGesture(ctrl, 'pinch');
   if (internalHandlers.hover) setupGesture(ctrl, 'hover');
 }
-
 const bindToProps = (props, eventOptions, withPassiveOption) => (device, action, handler, options = {}, isNative = false) => {
   var _options$capture, _options$passive;
-
   const capture = (_options$capture = options.capture) !== null && _options$capture !== void 0 ? _options$capture : eventOptions.capture;
   const passive = (_options$passive = options.passive) !== null && _options$passive !== void 0 ? _options$passive : eventOptions.passive;
   let handlerProp = isNative ? device : toHandlerProp(device, action, capture);
@@ -27853,12 +28390,10 @@ const bindToProps = (props, eventOptions, withPassiveOption) => (device, action,
 };
 
 const RE_NOT_NATIVE = /^on(Drag|Wheel|Scroll|Move|Pinch|Hover)/;
-
 function sortHandlers(_handlers) {
   const native = {};
   const handlers = {};
   const actions = new Set();
-
   for (let key in _handlers) {
     if (RE_NOT_NATIVE.test(key)) {
       actions.add(RegExp.lastMatch);
@@ -27867,22 +28402,16 @@ function sortHandlers(_handlers) {
       native[key] = _handlers[key];
     }
   }
-
   return [handlers, native, actions];
 }
-
 function registerGesture(actions, handlers, handlerKey, key, internalHandlers, config) {
   if (!actions.has(handlerKey)) return;
-
   if (!EngineMap.has(key)) {
     if (false) {}
-
     return;
   }
-
   const startKey = handlerKey + 'Start';
   const endKey = handlerKey + 'End';
-
   const fn = state => {
     let memo = undefined;
     if (state.first && startKey in handlers) handlers[startKey](state);
@@ -27890,11 +28419,9 @@ function registerGesture(actions, handlers, handlerKey, key, internalHandlers, c
     if (state.last && endKey in handlers) handlers[endKey](state);
     return memo;
   };
-
   internalHandlers[key] = fn;
   config[key] = config[key] || {};
 }
-
 function use_gesture_core_esm_parseMergedHandlers(mergedHandlers, mergedConfig) {
   const [handlers, nativeHandlers, actions] = sortHandlers(mergedHandlers);
   const internalHandlers = {};
@@ -27929,71 +28456,69 @@ function useRecognizers(handlers, config = {}, gestureKey, nativeHandlers) {
   external_React_default().useEffect(() => {
     return ctrl.clean.bind(ctrl);
   }, []);
-
   if (config.target === undefined) {
     return ctrl.bind.bind(ctrl);
   }
-
   return undefined;
 }
 
-function use_gesture_react_esm_useDrag(handler, config = {}) {
-  actions_5ad85d2f_esm_registerAction(actions_5ad85d2f_esm_dragAction);
+function use_gesture_react_esm_useDrag(handler, config) {
+  actions_b1cc53c2_esm_registerAction(actions_b1cc53c2_esm_dragAction);
   return useRecognizers({
     drag: handler
-  }, config, 'drag');
+  }, config || {}, 'drag');
 }
 
-function usePinch(handler, config = {}) {
+function usePinch(handler, config) {
   registerAction(pinchAction);
   return useRecognizers({
     pinch: handler
-  }, config, 'pinch');
+  }, config || {}, 'pinch');
 }
 
-function useWheel(handler, config = {}) {
+function useWheel(handler, config) {
   registerAction(wheelAction);
   return useRecognizers({
     wheel: handler
-  }, config, 'wheel');
+  }, config || {}, 'wheel');
 }
 
-function useScroll(handler, config = {}) {
+function useScroll(handler, config) {
   registerAction(scrollAction);
   return useRecognizers({
     scroll: handler
-  }, config, 'scroll');
+  }, config || {}, 'scroll');
 }
 
-function useMove(handler, config = {}) {
+function useMove(handler, config) {
   registerAction(moveAction);
   return useRecognizers({
     move: handler
-  }, config, 'move');
+  }, config || {}, 'move');
 }
 
-function useHover(handler, config = {}) {
-  actions_5ad85d2f_esm_registerAction(actions_5ad85d2f_esm_hoverAction);
+function useHover(handler, config) {
+  actions_b1cc53c2_esm_registerAction(actions_b1cc53c2_esm_hoverAction);
   return useRecognizers({
     hover: handler
-  }, config, 'hover');
+  }, config || {}, 'hover');
 }
 
 function createUseGesture(actions) {
   actions.forEach(registerAction);
-  return function useGesture(_handlers, _config = {}) {
+  return function useGesture(_handlers, _config) {
     const {
       handlers,
       nativeHandlers,
       config
-    } = parseMergedHandlers(_handlers, _config);
+    } = parseMergedHandlers(_handlers, _config || {});
     return useRecognizers(handlers, config, undefined, nativeHandlers);
   };
 }
 
-function useGesture(handlers, config = {}) {
+function useGesture(handlers, config) {
   const hook = createUseGesture([dragAction, pinchAction, scrollAction, wheelAction, moveAction, hoverAction]);
-  return hook(handlers, config);
+  return hook(handlers, config || {});
 }
 
 
@@ -28014,7 +28539,7 @@ function useGesture(handlers, config = {}) {
 /**
  * Gets a CSS cursor value based on a drag direction.
  *
- * @param  dragDirection The drag direction.
+ * @param dragDirection The drag direction.
  * @return  The CSS cursor value.
  */
 function getDragCursor(dragDirection) {
@@ -28153,7 +28678,7 @@ const RESET = 'RESET';
 /**
  * Prepares initialState for the reducer.
  *
- * @param  initialState The initial state.
+ * @param initialState The initial state.
  * @return Prepared initialState for the reducer
  */
 function mergeInitialState() {
@@ -28173,7 +28698,7 @@ function mergeInitialState() {
  * exception for CONTROL actions is because they represent controlled updates
  * from props and no case has yet presented for their specialization.
  *
- * @param  composedStateReducers A reducer to specialize state changes.
+ * @param composedStateReducers A reducer to specialize state changes.
  * @return The reducer.
  */
 
@@ -28272,9 +28797,9 @@ function inputControlStateReducer(composedStateReducers) {
  * This technique uses the "stateReducer" design pattern:
  * https://kentcdodds.com/blog/the-state-reducer-pattern/
  *
- * @param  stateReducer    An external state reducer.
- * @param  initialState    The initial state for the reducer.
- * @param  onChangeHandler A handler for the onChange event.
+ * @param stateReducer    An external state reducer.
+ * @param initialState    The initial state for the reducer.
+ * @param onChangeHandler A handler for the onChange event.
  * @return State, dispatch, and a collection of actions.
  */
 
@@ -28606,8 +29131,10 @@ function InputField(_ref, ref) {
     onKeyDown: handleOnKeyDown,
     onMouseDown: handleOnMouseDown,
     ref: ref,
-    inputSize: size,
-    value: value,
+    inputSize: size // Fallback to `''` to avoid "uncontrolled to controlled" warning.
+    // See https://github.com/WordPress/gutenberg/pull/47250 for details.
+    ,
+    value: value !== null && value !== void 0 ? value : '',
     type: type
   }));
 }
@@ -28625,13 +29152,8 @@ const ForwardedComponent = (0,external_wp_element_namespaceObject.forwardRef)(In
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/utils/font.js
 /**
- * External dependencies
- */
-
-/**
  * Internal dependencies
  */
-
 
 /**
  *
@@ -28640,7 +29162,9 @@ const ForwardedComponent = (0,external_wp_element_namespaceObject.forwardRef)(In
  */
 
 function font(value) {
-  return (0,external_lodash_namespaceObject.get)(font_values, value, '');
+  var _FONT$value;
+
+  return (_FONT$value = font_values[value]) !== null && _FONT$value !== void 0 ? _FONT$value : '';
 }
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/utils/box-sizing.js
@@ -29118,8 +29642,8 @@ const H_ALIGNMENTS = {
     justify: 'center'
   },
   bottomLeft: {
-    align: 'flex-start',
-    justify: 'flex-end'
+    align: 'flex-end',
+    justify: 'flex-start'
   },
   bottomRight: {
     align: 'flex-end',
@@ -29163,8 +29687,8 @@ const V_ALIGNMENTS = {
     align: 'center'
   },
   bottomLeft: {
-    justify: 'flex-start',
-    align: 'flex-end'
+    justify: 'flex-end',
+    align: 'flex-start'
   },
   bottomRight: {
     justify: 'flex-end',
@@ -29187,7 +29711,7 @@ const V_ALIGNMENTS = {
     align: 'flex-end'
   },
   stretch: {
-    justify: 'stretch'
+    align: 'stretch'
   },
   top: {
     justify: 'flex-start',
@@ -29229,7 +29753,7 @@ function getAlignmentProps(alignment) {
 /**
  * Gets a collection of available children elements from a React component's children prop.
  *
- * @param  children
+ * @param children
  *
  * @return An array of available children.
  */
@@ -29314,7 +29838,6 @@ function UnconnectedHStack(props, forwardedRef) {
  *
  * `HStack` can render anything inside.
  *
- * @example
  * ```jsx
  * import {
  * 	__experimentalHStack as HStack,
@@ -29336,105 +29859,6 @@ function UnconnectedHStack(props, forwardedRef) {
 
 const HStack = contextConnect(UnconnectedHStack, 'HStack');
 /* harmony default export */ var h_stack_component = (HStack);
-
-;// CONCATENATED MODULE: ./packages/components/build-module/spacer/hook.js
-/**
- * External dependencies
- */
-
-/**
- * Internal dependencies
- */
-
-
-
-
-
-const isDefined = o => typeof o !== 'undefined' && o !== null;
-
-function useSpacer(props) {
-  const {
-    className,
-    margin,
-    marginBottom = 2,
-    marginLeft,
-    marginRight,
-    marginTop,
-    marginX,
-    marginY,
-    padding,
-    paddingBottom,
-    paddingLeft,
-    paddingRight,
-    paddingTop,
-    paddingX,
-    paddingY,
-    ...otherProps
-  } = useContextSystem(props, 'Spacer');
-  const cx = useCx();
-  const classes = cx(isDefined(margin) && /*#__PURE__*/emotion_react_browser_esm_css("margin:", space(margin), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginY) && /*#__PURE__*/emotion_react_browser_esm_css("margin-bottom:", space(marginY), ";margin-top:", space(marginY), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginX) && /*#__PURE__*/emotion_react_browser_esm_css("margin-left:", space(marginX), ";margin-right:", space(marginX), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginTop) && /*#__PURE__*/emotion_react_browser_esm_css("margin-top:", space(marginTop), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginBottom) && /*#__PURE__*/emotion_react_browser_esm_css("margin-bottom:", space(marginBottom), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(marginLeft) && rtl({
-    marginLeft: space(marginLeft)
-  })(), isDefined(marginRight) && rtl({
-    marginRight: space(marginRight)
-  })(), isDefined(padding) && /*#__PURE__*/emotion_react_browser_esm_css("padding:", space(padding), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingY) && /*#__PURE__*/emotion_react_browser_esm_css("padding-bottom:", space(paddingY), ";padding-top:", space(paddingY), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingX) && /*#__PURE__*/emotion_react_browser_esm_css("padding-left:", space(paddingX), ";padding-right:", space(paddingX), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingTop) && /*#__PURE__*/emotion_react_browser_esm_css("padding-top:", space(paddingTop), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingBottom) && /*#__PURE__*/emotion_react_browser_esm_css("padding-bottom:", space(paddingBottom), ";" + ( true ? "" : 0),  true ? "" : 0), isDefined(paddingLeft) && rtl({
-    paddingLeft: space(paddingLeft)
-  })(), isDefined(paddingRight) && rtl({
-    paddingRight: space(paddingRight)
-  })(), className);
-  return { ...otherProps,
-    className: classes
-  };
-}
-
-;// CONCATENATED MODULE: ./packages/components/build-module/spacer/component.js
-
-
-
-/**
- * External dependencies
- */
-
-/**
- * Internal dependencies
- */
-
-
-
-
-function UnconnectedSpacer(props, forwardedRef) {
-  const spacerProps = useSpacer(props);
-  return (0,external_wp_element_namespaceObject.createElement)(component, extends_extends({}, spacerProps, {
-    ref: forwardedRef
-  }));
-}
-/**
- * `Spacer` is a primitive layout component that providers inner (`padding`) or outer (`margin`) space in-between components. It can also be used to adaptively provide space within an `HStack` or `VStack`.
- *
- * `Spacer` comes with a bunch of shorthand props to adjust `margin` and `padding`. The values of these props
- * can either be a number (which will act as a multiplier to the library's grid system base of 4px),
- * or a literal CSS value string.
- *
- * ```jsx
- * import { Spacer } from `@wordpress/components`
- *
- * function Example() {
- *   return (
- *     <View>
- *       <Spacer>
- *         <Heading>WordPress.org</Heading>
- *       </Spacer>
- *       <Text>
- *         Code is Poetry
- *       </Text>
- *     </View>
- *   );
- * }
- * ```
- */
-
-
-const Spacer = contextConnect(UnconnectedSpacer, 'Spacer');
-/* harmony default export */ var spacer_component = (Spacer);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/number-control/index.js
 
@@ -29490,7 +29914,7 @@ function UnforwardedNumberControl(_ref, forwardedRef) {
   } = _ref;
 
   if (hideHTMLArrows) {
-    external_wp_deprecated_default()('hideHTMLArrows', {
+    external_wp_deprecated_default()('wp.components.NumberControl hideHTMLArrows prop ', {
       alternative: 'spinControls="none"',
       since: '6.2',
       version: '6.3'
@@ -29558,9 +29982,7 @@ function UnforwardedNumberControl(_ref, forwardedRef) {
 
 
     if (type === DRAG && isDragEnabled) {
-      // @ts-expect-error TODO: See if reducer actions can be typed better
-      const [x, y] = payload.delta; // @ts-expect-error TODO: See if reducer actions can be typed better
-
+      const [x, y] = payload.delta;
       const enableShift = payload.shiftKey && isShiftStepEnabled;
       const modifier = enableShift ? ensureNumber(shiftStep) * baseStep : baseStep;
       let directionModifier;
@@ -29689,8 +30111,9 @@ function angle_picker_control_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "
 
 
 
+
 const CIRCLE_SIZE = 32;
-const INNER_CIRCLE_SIZE = 3;
+const INNER_CIRCLE_SIZE = 6;
 
 const deprecatedBottomMargin = _ref => {
   let {
@@ -29700,20 +30123,23 @@ const deprecatedBottomMargin = _ref => {
 };
 
 const angle_picker_control_styles_Root = /*#__PURE__*/emotion_styled_base_browser_esm(flex_component,  true ? {
-  target: "e65ony43"
+  target: "eln3bjz4"
 } : 0)(deprecatedBottomMargin, ";" + ( true ? "" : 0));
 const CircleRoot = emotion_styled_base_browser_esm("div",  true ? {
-  target: "e65ony42"
-} : 0)("border-radius:50%;border:", config_values.borderWidth, " solid ", COLORS.ui.border, ";box-sizing:border-box;cursor:grab;height:", CIRCLE_SIZE, "px;overflow:hidden;width:", CIRCLE_SIZE, "px;" + ( true ? "" : 0));
+  target: "eln3bjz3"
+} : 0)("border-radius:50%;border:", config_values.borderWidth, " solid ", COLORS.ui.border, ";box-sizing:border-box;cursor:grab;height:", CIRCLE_SIZE, "px;overflow:hidden;width:", CIRCLE_SIZE, "px;:active{cursor:grabbing;}" + ( true ? "" : 0));
 const CircleIndicatorWrapper = emotion_styled_base_browser_esm("div",  true ? {
-  target: "e65ony41"
+  target: "eln3bjz2"
 } : 0)( true ? {
   name: "1r307gh",
   styles: "box-sizing:border-box;position:relative;width:100%;height:100%;:focus-visible{outline:none;}"
 } : 0);
 const CircleIndicator = emotion_styled_base_browser_esm("div",  true ? {
-  target: "e65ony40"
-} : 0)("background:", COLORS.ui.theme, ";border-radius:50%;border:", INNER_CIRCLE_SIZE, "px solid ", COLORS.ui.theme, ";bottom:0;box-sizing:border-box;display:block;height:0px;left:0;margin:auto;position:absolute;right:0;top:-", CIRCLE_SIZE / 2, "px;width:0px;" + ( true ? "" : 0));
+  target: "eln3bjz1"
+} : 0)("background:", COLORS.ui.theme, ";border-radius:50%;box-sizing:border-box;display:block;left:50%;top:4px;transform:translateX( -50% );position:absolute;width:", INNER_CIRCLE_SIZE, "px;height:", INNER_CIRCLE_SIZE, "px;" + ( true ? "" : 0));
+const UnitText = /*#__PURE__*/emotion_styled_base_browser_esm(text_component,  true ? {
+  target: "eln3bjz0"
+} : 0)("color:", COLORS.ui.theme, ";margin-right:", space(3), ";" + ( true ? "" : 0));
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/angle-picker-control/angle-circle.js
 
@@ -29736,11 +30162,15 @@ function AngleCircle(_ref) {
     onChange,
     ...props
   } = _ref;
-  const angleCircleRef = (0,external_wp_element_namespaceObject.useRef)();
+  const angleCircleRef = (0,external_wp_element_namespaceObject.useRef)(null);
   const angleCircleCenter = (0,external_wp_element_namespaceObject.useRef)();
   const previousCursorValue = (0,external_wp_element_namespaceObject.useRef)();
 
   const setAngleCircleCenter = () => {
+    if (angleCircleRef.current === null) {
+      return;
+    }
+
     const rect = angleCircleRef.current.getBoundingClientRect();
     angleCircleCenter.current = {
       x: rect.x + rect.width / 2,
@@ -29749,16 +30179,25 @@ function AngleCircle(_ref) {
   };
 
   const changeAngleToPosition = event => {
-    const {
-      x: centerX,
-      y: centerY
-    } = angleCircleCenter.current; // Prevent (drag) mouse events from selecting and accidentally
+    var _event$target;
+
+    if (event === undefined) {
+      return;
+    } // Prevent (drag) mouse events from selecting and accidentally
     // triggering actions from other elements.
+
 
     event.preventDefault(); // Input control needs to lose focus and by preventDefault above, it doesn't.
 
-    event.target.focus();
-    onChange(getAngle(centerX, centerY, event.clientX, event.clientY));
+    (_event$target = event.target) === null || _event$target === void 0 ? void 0 : _event$target.focus();
+
+    if (angleCircleCenter.current !== undefined && onChange !== undefined) {
+      const {
+        x: centerX,
+        y: centerY
+      } = angleCircleCenter.current;
+      onChange(getAngle(centerX, centerY, event.clientX, event.clientY));
+    }
   };
 
   const {
@@ -29780,31 +30219,23 @@ function AngleCircle(_ref) {
 
       document.body.style.cursor = 'grabbing';
     } else {
-      document.body.style.cursor = previousCursorValue.current || null;
+      document.body.style.cursor = previousCursorValue.current || '';
       previousCursorValue.current = undefined;
     }
   }, [isDragging]);
-  return (
-    /* eslint-disable jsx-a11y/no-static-element-interactions */
-    (0,external_wp_element_namespaceObject.createElement)(CircleRoot, extends_extends({
-      ref: angleCircleRef,
-      onMouseDown: startDrag,
-      className: "components-angle-picker-control__angle-circle",
-      style: isDragging ? {
-        cursor: 'grabbing'
-      } : undefined
-    }, props), (0,external_wp_element_namespaceObject.createElement)(CircleIndicatorWrapper, {
-      style: value ? {
-        transform: `rotate(${value}deg)`
-      } : undefined,
-      className: "components-angle-picker-control__angle-circle-indicator-wrapper",
-      tabIndex: -1
-    }, (0,external_wp_element_namespaceObject.createElement)(CircleIndicator, {
-      className: "components-angle-picker-control__angle-circle-indicator"
-    })))
-    /* eslint-enable jsx-a11y/no-static-element-interactions */
-
-  );
+  return (0,external_wp_element_namespaceObject.createElement)(CircleRoot, extends_extends({
+    ref: angleCircleRef,
+    onMouseDown: startDrag,
+    className: "components-angle-picker-control__angle-circle"
+  }, props), (0,external_wp_element_namespaceObject.createElement)(CircleIndicatorWrapper, {
+    style: value ? {
+      transform: `rotate(${value}deg)`
+    } : undefined,
+    className: "components-angle-picker-control__angle-circle-indicator-wrapper",
+    tabIndex: -1
+  }, (0,external_wp_element_namespaceObject.createElement)(CircleIndicator, {
+    className: "components-angle-picker-control__angle-circle-indicator"
+  })));
 }
 
 function getAngle(centerX, centerY, pointX, pointY) {
@@ -29825,6 +30256,7 @@ function getAngle(centerX, centerY, pointX, pointY) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/angle-picker-control/index.js
 
 
+
 /**
  * External dependencies
  */
@@ -29832,6 +30264,7 @@ function getAngle(centerX, centerY, pointX, pointY) {
 /**
  * WordPress dependencies
  */
+
 
 
 
@@ -29845,17 +30278,15 @@ function getAngle(centerX, centerY, pointX, pointY) {
 
 
 
-
-
-function AnglePickerControl(_ref) {
-  let {
-    /** Start opting into the new margin-free styles that will become the default in a future version. */
+function UnforwardedAnglePickerControl(props, ref) {
+  const {
     __nextHasNoMarginBottom = false,
     className,
     label = (0,external_wp_i18n_namespaceObject.__)('Angle'),
     onChange,
-    value
-  } = _ref;
+    value,
+    ...restProps
+  } = props;
 
   if (!__nextHasNoMarginBottom) {
     external_wp_deprecated_default()('Bottom margin styles for wp.components.AnglePickerControl', {
@@ -29866,16 +30297,23 @@ function AnglePickerControl(_ref) {
   }
 
   const handleOnNumberChange = unprocessedValue => {
-    const inputValue = unprocessedValue !== '' ? parseInt(unprocessedValue, 10) : 0;
+    if (onChange === undefined) {
+      return;
+    }
+
+    const inputValue = unprocessedValue !== undefined && unprocessedValue !== '' ? parseInt(unprocessedValue, 10) : 0;
     onChange(inputValue);
   };
 
   const classes = classnames_default()('components-angle-picker-control', className);
-  return (0,external_wp_element_namespaceObject.createElement)(angle_picker_control_styles_Root, {
+  const unitText = (0,external_wp_element_namespaceObject.createElement)(UnitText, null, "\xB0");
+  const [prefixedUnitText, suffixedUnitText] = (0,external_wp_i18n_namespaceObject.isRTL)() ? [unitText, null] : [null, unitText];
+  return (0,external_wp_element_namespaceObject.createElement)(angle_picker_control_styles_Root, extends_extends({}, restProps, {
+    ref: ref,
     __nextHasNoMarginBottom: __nextHasNoMarginBottom,
     className: classes,
-    gap: 4
-  }, (0,external_wp_element_namespaceObject.createElement)(flex_block_component, null, (0,external_wp_element_namespaceObject.createElement)(number_control, {
+    gap: 2
+  }), (0,external_wp_element_namespaceObject.createElement)(flex_block_component, null, (0,external_wp_element_namespaceObject.createElement)(number_control, {
     label: label,
     className: "components-angle-picker-control__input-field",
     max: 360,
@@ -29885,25 +30323,43 @@ function AnglePickerControl(_ref) {
     step: "1",
     value: value,
     spinControls: "none",
-    suffix: (0,external_wp_element_namespaceObject.createElement)(spacer_component, {
-      as: text_component,
-      marginBottom: 0,
-      marginRight: space(3),
-      style: {
-        color: COLORS.ui.theme
-      }
-    }, "\xB0")
-  })), (0,external_wp_element_namespaceObject.createElement)(flex_item_component, {
-    style: {
-      marginBottom: space(1),
-      marginTop: 'auto'
-    }
+    prefix: prefixedUnitText,
+    suffix: suffixedUnitText
+  })), (0,external_wp_element_namespaceObject.createElement)(spacer_component, {
+    marginBottom: "1",
+    marginTop: "auto"
   }, (0,external_wp_element_namespaceObject.createElement)(angle_circle, {
     "aria-hidden": "true",
     value: value,
     onChange: onChange
   })));
 }
+/**
+ * `AnglePickerControl` is a React component to render a UI that allows users to
+ * pick an angle. Users can choose an angle in a visual UI with the mouse by
+ * dragging an angle indicator inside a circle or by directly inserting the
+ * desired angle in a text field.
+ *
+ * ```jsx
+ * import { useState } from '@wordpress/element';
+ * import { AnglePickerControl } from '@wordpress/components';
+ *
+ * function Example() {
+ *   const [ angle, setAngle ] = useState( 0 );
+ *   return (
+ *     <AnglePickerControl
+ *       value={ angle }
+ *       onChange={ setAngle }
+ *       __nextHasNoMarginBottom
+ *     </>
+ *   );
+ * }
+ * ```
+ */
+
+
+const AnglePickerControl = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedAnglePickerControl);
+/* harmony default export */ var angle_picker_control = (AnglePickerControl);
 
 // EXTERNAL MODULE: ./node_modules/remove-accents/index.js
 var remove_accents = __webpack_require__(4793);
@@ -30069,16 +30525,20 @@ function getDefaultUseItems(autocompleter) {
  * External dependencies
  */
 
-
 /**
  * WordPress dependencies
  */
+
+ // Error expected because `@wordpress/rich-text` is not yet fully typed.
+// @ts-expect-error
 
 
 
 /**
  * Internal dependencies
  */
+
+
 
 
 
@@ -30097,15 +30557,22 @@ function getAutoCompleterUI(autocompleter) {
       onSelect,
       onReset,
       reset,
-      value,
       contentRef
     } = _ref;
     const [items] = useItems(filterValue);
     const popoverAnchor = (0,external_wp_richText_namespaceObject.useAnchor)({
-      editableContentElement: contentRef.current,
-      value
+      editableContentElement: contentRef.current
     });
-    const popoverRef = (0,external_wp_element_namespaceObject.useRef)();
+    const [needsA11yCompat, setNeedsA11yCompat] = (0,external_wp_element_namespaceObject.useState)(false);
+    const popoverRef = (0,external_wp_element_namespaceObject.useRef)(null);
+    const popoverRefs = (0,external_wp_compose_namespaceObject.useMergeRefs)([popoverRef, (0,external_wp_compose_namespaceObject.useRefEffect)(node => {
+      if (!contentRef.current) return; // If the popover is rendered in a different document than
+      // the content, we need to duplicate the options list in the
+      // content document so that it's available to the screen
+      // readers, which check the DOM ID based aira-* attributes.
+
+      setNeedsA11yCompat(node.ownerDocument !== contentRef.current.ownerDocument);
+    }, [contentRef])]);
     useOnClickOutside(popoverRef, reset);
     (0,external_wp_element_namespaceObject.useLayoutEffect)(() => {
       onChangeOptions(items); // Temporarily disabling exhaustive-deps to avoid introducing unexpected side effecst.
@@ -30113,32 +30580,41 @@ function getAutoCompleterUI(autocompleter) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items]);
 
-    if (!items.length > 0) {
+    if (items.length === 0) {
       return null;
     }
 
-    return (0,external_wp_element_namespaceObject.createElement)(popover, {
+    const ListBox = _ref2 => {
+      let {
+        Component = 'div'
+      } = _ref2;
+      return (0,external_wp_element_namespaceObject.createElement)(Component, {
+        id: listBoxId,
+        role: "listbox",
+        className: "components-autocomplete__results"
+      }, items.map((option, index) => (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
+        key: option.key,
+        id: `components-autocomplete-item-${instanceId}-${option.key}`,
+        role: "option",
+        "aria-selected": index === selectedIndex,
+        disabled: option.isDisabled,
+        className: classnames_default()('components-autocomplete__result', className, {
+          'is-selected': index === selectedIndex
+        }),
+        onClick: () => onSelect(option)
+      }, option.label)));
+    };
+
+    return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, (0,external_wp_element_namespaceObject.createElement)(popover, {
       focusOnMount: false,
       onClose: onReset,
       placement: "top-start",
       className: "components-autocomplete__popover",
       anchor: popoverAnchor,
-      ref: popoverRef
-    }, (0,external_wp_element_namespaceObject.createElement)("div", {
-      id: listBoxId,
-      role: "listbox",
-      className: "components-autocomplete__results"
-    }, (0,external_lodash_namespaceObject.map)(items, (option, index) => (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
-      key: option.key,
-      id: `components-autocomplete-item-${instanceId}-${option.key}`,
-      role: "option",
-      "aria-selected": index === selectedIndex,
-      disabled: option.isDisabled,
-      className: classnames_default()('components-autocomplete__result', className, {
-        'is-selected': index === selectedIndex
-      }),
-      onClick: () => onSelect(option)
-    }, option.label))));
+      ref: popoverRefs
+    }, (0,external_wp_element_namespaceObject.createElement)(ListBox, null)), contentRef.current && needsA11yCompat && (0,external_ReactDOM_namespaceObject.createPortal)((0,external_wp_element_namespaceObject.createElement)(ListBox, {
+      Component: visually_hidden_component
+    }), contentRef.current.ownerDocument.body));
   }
 
   return AutocompleterUI;
@@ -30188,82 +30664,7 @@ function useOnClickOutside(ref, handler) {
 
 
 
-/**
- * A raw completer option.
- *
- * @typedef {*} CompleterOption
- */
-
-/**
- * @callback FnGetOptions
- *
- * @return {(CompleterOption[]|Promise.<CompleterOption[]>)} The completer options or a promise for them.
- */
-
-/**
- * @callback FnGetOptionKeywords
- * @param {CompleterOption} option a completer option.
- *
- * @return {string[]} list of key words to search.
- */
-
-/**
- * @callback FnIsOptionDisabled
- * @param {CompleterOption} option a completer option.
- *
- * @return {string[]} whether or not the given option is disabled.
- */
-
-/**
- * @callback FnGetOptionLabel
- * @param {CompleterOption} option a completer option.
- *
- * @return {(string|Array.<(string|WPElement)>)} list of react components to render.
- */
-
-/**
- * @callback FnAllowContext
- * @param {string} before the string before the auto complete trigger and query.
- * @param {string} after  the string after the autocomplete trigger and query.
- *
- * @return {boolean} true if the completer can handle.
- */
-
-/**
- * @typedef {Object} OptionCompletion
- * @property {'insert-at-caret'|'replace'} action the intended placement of the completion.
- * @property {OptionCompletionValue}       value  the completion value.
- */
-
-/**
- * A completion value.
- *
- * @typedef {(string|WPElement|Object)} OptionCompletionValue
- */
-
-/**
- * @callback FnGetOptionCompletion
- * @param {CompleterOption} value the value of the completer option.
- * @param {string}          query the text value of the autocomplete query.
- *
- * @return {(OptionCompletion|OptionCompletionValue)} the completion for the given option. If an
- * 													   OptionCompletionValue is returned, the
- * 													   completion action defaults to `insert-at-caret`.
- */
-
-/**
- * @typedef {Object} WPCompleter
- * @property {string}                           name                a way to identify a completer, useful for selective overriding.
- * @property {?string}                          className           A class to apply to the popup menu.
- * @property {string}                           triggerPrefix       the prefix that will display the menu.
- * @property {(CompleterOption[]|FnGetOptions)} options             the completer options or a function to get them.
- * @property {?FnGetOptionKeywords}             getOptionKeywords   get the keywords for a given option.
- * @property {?FnIsOptionDisabled}              isOptionDisabled    get whether or not the given option is disabled.
- * @property {FnGetOptionLabel}                 getOptionLabel      get the label for a given option.
- * @property {?FnAllowContext}                  allowContext        filter the context under which the autocomplete activates.
- * @property {FnGetOptionCompletion}            getOptionCompletion get the completion associated with a given option.
- */
-
+const EMPTY_FILTERED_OPTIONS = [];
 function useAutocomplete(_ref) {
   let {
     record,
@@ -30275,13 +30676,17 @@ function useAutocomplete(_ref) {
   const debouncedSpeak = (0,external_wp_compose_namespaceObject.useDebounce)(external_wp_a11y_namespaceObject.speak, 500);
   const instanceId = (0,external_wp_compose_namespaceObject.useInstanceId)(useAutocomplete);
   const [selectedIndex, setSelectedIndex] = (0,external_wp_element_namespaceObject.useState)(0);
-  const [filteredOptions, setFilteredOptions] = (0,external_wp_element_namespaceObject.useState)([]);
+  const [filteredOptions, setFilteredOptions] = (0,external_wp_element_namespaceObject.useState)(EMPTY_FILTERED_OPTIONS);
   const [filterValue, setFilterValue] = (0,external_wp_element_namespaceObject.useState)('');
   const [autocompleter, setAutocompleter] = (0,external_wp_element_namespaceObject.useState)(null);
   const [AutocompleterUI, setAutocompleterUI] = (0,external_wp_element_namespaceObject.useState)(null);
   const backspacing = (0,external_wp_element_namespaceObject.useRef)(false);
 
   function insertCompletion(replacement) {
+    if (autocompleter === null) {
+      return;
+    }
+
     const end = record.start;
     const start = end - autocompleter.triggerPrefix.length - filterValue.length;
     const toInsert = (0,external_wp_richText_namespaceObject.create)({
@@ -30301,21 +30706,23 @@ function useAutocomplete(_ref) {
 
     if (getOptionCompletion) {
       const completion = getOptionCompletion(option.value, filterValue);
-      const {
-        action,
-        value
-      } = undefined === completion.action || undefined === completion.value ? {
+
+      const isCompletionObject = obj => {
+        return obj !== null && typeof obj === 'object' && 'action' in obj && obj.action !== undefined && 'value' in obj && obj.value !== undefined;
+      };
+
+      const completionObject = isCompletionObject(completion) ? completion : {
         action: 'insert-at-caret',
         value: completion
-      } : completion;
+      };
 
-      if ('replace' === action) {
-        onReplace([value]); // When replacing, the component will unmount, so don't reset
+      if ('replace' === completionObject.action) {
+        onReplace([completionObject.value]); // When replacing, the component will unmount, so don't reset
         // state (below) on an unmounted component.
 
         return;
-      } else if ('insert-at-caret' === action) {
-        insertCompletion(value);
+      } else if ('insert-at-caret' === completionObject.action) {
+        insertCompletion(completionObject.value);
       }
     } // Reset autocomplete state after insertion rather than before
     // so insertion events don't cause the completion menu to redisplay.
@@ -30326,7 +30733,7 @@ function useAutocomplete(_ref) {
 
   function reset() {
     setSelectedIndex(0);
-    setFilteredOptions([]);
+    setFilteredOptions(EMPTY_FILTERED_OPTIONS);
     setFilterValue('');
     setAutocompleter(null);
     setAutocompleterUI(null);
@@ -30420,24 +30827,22 @@ function useAutocomplete(_ref) {
   }, [record]);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     if (!textContent) {
-      reset();
+      if (autocompleter) reset();
       return;
     }
 
-    const text = remove_accents_default()(textContent);
-    const textAfterSelection = (0,external_wp_richText_namespaceObject.getTextContent)((0,external_wp_richText_namespaceObject.slice)(record, undefined, (0,external_wp_richText_namespaceObject.getTextContent)(record).length));
     const completer = completers === null || completers === void 0 ? void 0 : completers.find(_ref2 => {
       let {
         triggerPrefix,
         allowContext
       } = _ref2;
-      const index = text.lastIndexOf(triggerPrefix);
+      const index = textContent.lastIndexOf(triggerPrefix);
 
       if (index === -1) {
         return false;
       }
 
-      const textWithoutTrigger = text.slice(index + triggerPrefix.length);
+      const textWithoutTrigger = textContent.slice(index + triggerPrefix.length);
       const tooDistantFromTrigger = textWithoutTrigger.length > 50; // 50 chars seems to be a good limit.
       // This is a final barrier to prevent the effect from completing with
       // an extremely long string, which causes the editor to slow-down
@@ -30471,7 +30876,9 @@ function useAutocomplete(_ref) {
         return false;
       }
 
-      if (allowContext && !allowContext(text.slice(0, index), textAfterSelection)) {
+      const textAfterSelection = (0,external_wp_richText_namespaceObject.getTextContent)((0,external_wp_richText_namespaceObject.slice)(record, undefined, (0,external_wp_richText_namespaceObject.getTextContent)(record).length));
+
+      if (allowContext && !allowContext(textContent.slice(0, index), textAfterSelection)) {
         return false;
       }
 
@@ -30483,16 +30890,17 @@ function useAutocomplete(_ref) {
     });
 
     if (!completer) {
-      reset();
+      if (autocompleter) reset();
       return;
     }
 
     const safeTrigger = escapeRegExp(completer.triggerPrefix);
+    const text = remove_accents_default()(textContent);
     const match = text.slice(text.lastIndexOf(completer.triggerPrefix)).match(new RegExp(`${safeTrigger}([\u0000-\uFFFF]*)$`));
     const query = match && match[1];
     setAutocompleter(completer);
     setAutocompleterUI(() => completer !== autocompleter ? getAutoCompleterUI(completer) : AutocompleterUI);
-    setFilterValue(query); // Temporarily disabling exhaustive-deps to avoid introducing unexpected side effecst.
+    setFilterValue(query === null ? '' : query); // Temporarily disabling exhaustive-deps to avoid introducing unexpected side effecst.
     // See https://github.com/WordPress/gutenberg/pull/41820
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textContent]);
@@ -30503,7 +30911,7 @@ function useAutocomplete(_ref) {
     className
   } = autocompleter || {};
   const isExpanded = !!autocompleter && filteredOptions.length > 0;
-  const listBoxId = isExpanded ? `components-autocomplete-listbox-${instanceId}` : null;
+  const listBoxId = isExpanded ? `components-autocomplete-listbox-${instanceId}` : undefined;
   const activeId = isExpanded ? `components-autocomplete-item-${instanceId}-${selectedKey}` : null;
   const hasSelection = record.start !== undefined;
   return {
@@ -30525,11 +30933,24 @@ function useAutocomplete(_ref) {
   };
 }
 
+function useLastDifferentValue(value) {
+  const history = (0,external_wp_element_namespaceObject.useRef)(new Set());
+  history.current.add(value); // Keep the history size to 2.
+
+  if (history.current.size > 2) {
+    history.current.delete(Array.from(history.current)[0]);
+  }
+
+  return Array.from(history.current)[0];
+}
+
 function useAutocompleteProps(options) {
-  const [isVisible, setIsVisible] = (0,external_wp_element_namespaceObject.useState)(false);
-  const ref = (0,external_wp_element_namespaceObject.useRef)();
-  const recordAfterInput = (0,external_wp_element_namespaceObject.useRef)();
+  const ref = (0,external_wp_element_namespaceObject.useRef)(null);
   const onKeyDownRef = (0,external_wp_element_namespaceObject.useRef)();
+  const {
+    record
+  } = options;
+  const previousRecord = useLastDifferentValue(record);
   const {
     popover,
     listBoxId,
@@ -30539,37 +30960,22 @@ function useAutocompleteProps(options) {
     contentRef: ref
   });
   onKeyDownRef.current = onKeyDown;
-  (0,external_wp_element_namespaceObject.useEffect)(() => {
-    if (isVisible) {
-      if (!recordAfterInput.current) {
-        recordAfterInput.current = options.record;
-      } else if (recordAfterInput.current.start !== options.record.start || recordAfterInput.current.end !== options.record.end) {
-        setIsVisible(false);
-        recordAfterInput.current = null;
-      }
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  }, [options.record]);
   const mergedRefs = (0,external_wp_compose_namespaceObject.useMergeRefs)([ref, (0,external_wp_compose_namespaceObject.useRefEffect)(element => {
     function _onKeyDown(event) {
-      onKeyDownRef.current(event);
-    }
+      var _onKeyDownRef$current;
 
-    function _onInput() {
-      // Only show auto complete UI if the user is inputting text.
-      setIsVisible(true);
-      recordAfterInput.current = null;
+      (_onKeyDownRef$current = onKeyDownRef.current) === null || _onKeyDownRef$current === void 0 ? void 0 : _onKeyDownRef$current.call(onKeyDownRef, event);
     }
 
     element.addEventListener('keydown', _onKeyDown);
-    element.addEventListener('input', _onInput);
     return () => {
       element.removeEventListener('keydown', _onKeyDown);
-      element.removeEventListener('input', _onInput);
     };
-  }, [])]);
+  }, [])]); // We only want to show the popover if the user has typed something.
 
-  if (!isVisible) {
+  const didUserInput = record.text !== (previousRecord === null || previousRecord === void 0 ? void 0 : previousRecord.text);
+
+  if (!didUserInput) {
     return {
       ref: mergedRefs
     };
@@ -30612,7 +31018,7 @@ function Autocomplete(_ref3) {
  *
  * Namely, it takes care of generating a unique `id`, properly associating it with the `label` and `help` elements.
  *
- * @param  props
+ * @param props
  */
 function useBaseControlProps(props) {
   const {
@@ -31215,6 +31621,7 @@ var a11y_o=function(o){var t=o/255;return t<.04045?t/12.92:Math.pow((t+.055)/1.0
  */
 
 
+
 /**
  * Internal dependencies
  */
@@ -31241,14 +31648,24 @@ function UnforwardedDropdown(_ref, forwardedRef) {
     expandOnMobile,
     headerTitle,
     focusOnMount,
-    position,
     popoverProps,
     onClose,
     onToggle,
-    style
+    style,
+    // Deprecated props
+    position
   } = _ref;
-  // Use internal state instead of a ref to make sure that the component
+
+  if (position !== undefined) {
+    external_wp_deprecated_default()('`position` prop in wp.components.Dropdown', {
+      since: '6.2',
+      alternative: '`popoverProps.placement` prop',
+      hint: 'Note that the `position` prop will override any values passed through the `popoverProps.placement` prop.'
+    });
+  } // Use internal state instead of a ref to make sure that the component
   // re-renders when the popover's anchor updates.
+
+
   const [fallbackPopoverAnchor, setFallbackPopoverAnchor] = (0,external_wp_element_namespaceObject.useState)(null);
   const containerRef = (0,external_wp_element_namespaceObject.useRef)();
   const [isOpen, setIsOpen] = useObservableState(false, onToggle);
@@ -31322,7 +31739,7 @@ function UnforwardedDropdown(_ref, forwardedRef) {
     offset: 13,
     anchor: !popoverPropsHaveAnchor ? fallbackPopoverAnchor : undefined
   }, popoverProps, {
-    className: classnames_default()('components-dropdown__content', popoverProps ? popoverProps.className : undefined, contentClassName)
+    className: classnames_default()('components-dropdown__content', popoverProps === null || popoverProps === void 0 ? void 0 : popoverProps.className, contentClassName)
   }), renderContent(args)));
 }
 /**
@@ -31334,18 +31751,18 @@ function UnforwardedDropdown(_ref, forwardedRef) {
  * const MyDropdown = () => (
  *   <Dropdown
  *     className="my-container-class-name"
- *     contentClassName="my-popover-content-classname"
- *     position="bottom right"
+ *     contentClassName="my-dropdown-content-classname"
+ *     popoverProps={ { placement: 'bottom-start' } }
  *     renderToggle={ ( { isOpen, onToggle } ) => (
  *       <Button
  *         variant="primary"
  *         onClick={ onToggle }
  *         aria-expanded={ isOpen }
  *       >
- *         Toggle Popover!
+ *         Toggle Dropdown!
  *       </Button>
  *     ) }
- *     renderContent={ () => <div>This is the content of the popover.</div> }
+ *     renderContent={ () => <div>This is the content of the dropdown.</div> }
  *   />
  * );
  * ```
@@ -31440,8 +31857,16 @@ const select_control_styles_fontSizeStyles = _ref2 => {
 const select_control_styles_sizeStyles = _ref3 => {
   let {
     __next36pxDefaultSize,
+    multiple,
     selectSize = 'default'
   } = _ref3;
+
+  if (multiple) {
+    // When `multiple`, just use the native browser styles
+    // without setting explicit height.
+    return;
+  }
+
   const sizes = {
     default: {
       height: 36,
@@ -31481,39 +31906,44 @@ const chevronIconSize = 18;
 const sizePaddings = _ref4 => {
   let {
     __next36pxDefaultSize,
+    multiple,
     selectSize = 'default'
   } = _ref4;
-  const iconWidth = chevronIconSize;
-  const sizes = {
-    default: {
-      paddingLeft: 16,
-      paddingRight: 16 + iconWidth
-    },
-    small: {
-      paddingLeft: 8,
-      paddingRight: 8 + iconWidth
-    },
-    '__unstable-large': {
-      paddingLeft: 16,
-      paddingRight: 16 + iconWidth
-    }
+  const padding = {
+    default: 16,
+    small: 8,
+    '__unstable-large': 16
   };
 
   if (!__next36pxDefaultSize) {
-    sizes.default = {
-      paddingLeft: 8,
-      paddingRight: 8 + iconWidth
-    };
+    padding.default = 8;
   }
 
-  return rtl(sizes[selectSize] || sizes.default);
+  const selectedPadding = padding[selectSize] || padding.default;
+  return rtl({
+    paddingLeft: selectedPadding,
+    paddingRight: selectedPadding + chevronIconSize,
+    ...(multiple ? {
+      paddingTop: selectedPadding,
+      paddingBottom: selectedPadding
+    } : {})
+  });
+};
+
+const overflowStyles = _ref5 => {
+  let {
+    multiple
+  } = _ref5;
+  return {
+    overflow: multiple ? 'auto' : 'hidden'
+  };
 }; // TODO: Resolve need to use &&& to increase specificity
 // https://github.com/WordPress/gutenberg/issues/18483
 
 
 const Select = emotion_styled_base_browser_esm("select",  true ? {
   target: "e1mv6sxx2"
-} : 0)("&&&{appearance:none;background:transparent;box-sizing:border-box;border:none;box-shadow:none!important;color:", COLORS.gray[900], ";display:block;font-family:inherit;margin:0;width:100%;max-width:none;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;", select_control_styles_disabledStyles, ";", select_control_styles_fontSizeStyles, ";", select_control_styles_sizeStyles, ";", sizePaddings, ";}" + ( true ? "" : 0));
+} : 0)("&&&{appearance:none;background:transparent;box-sizing:border-box;border:none;box-shadow:none!important;color:", COLORS.gray[900], ";display:block;font-family:inherit;margin:0;width:100%;max-width:none;cursor:pointer;white-space:nowrap;text-overflow:ellipsis;", select_control_styles_disabledStyles, ";", select_control_styles_fontSizeStyles, ";", select_control_styles_sizeStyles, ";", sizePaddings, ";", overflowStyles, ";}" + ( true ? "" : 0));
 const DownArrowWrapper = emotion_styled_base_browser_esm("div",  true ? {
   target: "e1mv6sxx1"
 } : 0)("margin-inline-end:", space(-1), ";line-height:0;" + ( true ? "" : 0));
@@ -31600,10 +32030,10 @@ const SelectControlChevronDown = () => {
  * External dependencies
  */
 
-
 /**
  * WordPress dependencies
  */
+
 
 
 /**
@@ -31623,8 +32053,8 @@ function select_control_useUniqueId(idProp) {
   return idProp || id;
 }
 
-function UnforwardedSelectControl(_ref, ref) {
-  let {
+function UnforwardedSelectControl(props, ref) {
+  const {
     className,
     disabled = false,
     help,
@@ -31633,7 +32063,7 @@ function UnforwardedSelectControl(_ref, ref) {
     label,
     multiple = false,
     onBlur = select_control_noop,
-    onChange = select_control_noop,
+    onChange,
     onFocus = select_control_noop,
     options = [],
     size = 'default',
@@ -31644,8 +32074,8 @@ function UnforwardedSelectControl(_ref, ref) {
     suffix,
     __next36pxDefaultSize = false,
     __nextHasNoMarginBottom = false,
-    ...props
-  } = _ref;
+    ...restProps
+  } = props;
   const [isFocused, setIsFocused] = (0,external_wp_element_namespaceObject.useState)(false);
   const id = select_control_useUniqueId(idProp);
   const helpId = help ? `${id}__help` : undefined; // Disable reason: A select with an onchange throws a warning.
@@ -31663,31 +32093,35 @@ function UnforwardedSelectControl(_ref, ref) {
   };
 
   const handleOnChange = event => {
-    if (multiple) {
-      const selectedOptions = Array.from(event.target.options).filter(_ref2 => {
+    var _props$onChange2;
+
+    if (props.multiple) {
+      var _props$onChange;
+
+      const selectedOptions = Array.from(event.target.options).filter(_ref => {
         let {
           selected
-        } = _ref2;
+        } = _ref;
         return selected;
       });
-      const newValues = selectedOptions.map(_ref3 => {
+      const newValues = selectedOptions.map(_ref2 => {
         let {
           value
-        } = _ref3;
+        } = _ref2;
         return value;
       });
-      onChange(newValues);
+      (_props$onChange = props.onChange) === null || _props$onChange === void 0 ? void 0 : _props$onChange.call(props, newValues, {
+        event
+      });
       return;
     }
 
-    onChange(event.target.value, {
+    (_props$onChange2 = props.onChange) === null || _props$onChange2 === void 0 ? void 0 : _props$onChange2.call(props, event.target.value, {
       event
     });
   };
 
   const classes = classnames_default()('components-select-control', className);
-  /* eslint-disable jsx-a11y/no-onchange */
-
   return (0,external_wp_element_namespaceObject.createElement)(base_control, {
     help: help,
     id: id,
@@ -31700,11 +32134,11 @@ function UnforwardedSelectControl(_ref, ref) {
     isFocused: isFocused,
     label: label,
     size: size,
-    suffix: suffix || (0,external_wp_element_namespaceObject.createElement)(select_control_chevron_down, null),
+    suffix: suffix || !multiple && (0,external_wp_element_namespaceObject.createElement)(select_control_chevron_down, null),
     prefix: prefix,
     labelPosition: labelPosition,
     __next36pxDefaultSize: __next36pxDefaultSize
-  }, (0,external_wp_element_namespaceObject.createElement)(Select, extends_extends({}, props, {
+  }, (0,external_wp_element_namespaceObject.createElement)(Select, extends_extends({}, restProps, {
     __next36pxDefaultSize: __next36pxDefaultSize,
     "aria-describedby": helpId,
     className: "components-select-control__input",
@@ -31725,7 +32159,6 @@ function UnforwardedSelectControl(_ref, ref) {
       disabled: option.disabled
     }, option.label);
   }))));
-  /* eslint-enable jsx-a11y/no-onchange */
 }
 /**
  * `SelectControl` allows users to select from a single or multiple option menu.
@@ -31770,8 +32203,8 @@ const SelectControl = (0,external_wp_element_namespaceObject.forwardRef)(Unforwa
 /**
  * @template T
  * @typedef Options
- * @property {T | undefined} initial  Initial value
- * @property {T | ""}        fallback Fallback value
+ * @property {T}      [initial] Initial value
+ * @property {T | ""} fallback  Fallback value
  */
 
 /** @type {Readonly<{ initial: undefined, fallback: '' }>} */
@@ -31860,9 +32293,9 @@ function useControlledState(currentState) {
 /**
  * A float supported clamp function for a specific value.
  *
- * @param  value The value to clamp.
- * @param  min   The minimum value.
- * @param  max   The maximum value.
+ * @param value The value to clamp.
+ * @param min   The minimum value.
+ * @param max   The maximum value.
  *
  * @return A (float) number
  */
@@ -31876,7 +32309,7 @@ function floatClamp(value, min, max) {
 /**
  * Hook to store a clamped value, derived from props.
  *
- * @param  settings
+ * @param settings
  * @return The controlled value and the value setter.
  */
 
@@ -32618,6 +33051,7 @@ function UnforwardedRangeControl(props, forwardedRef) {
     },
     trackColor: trackColor
   }), (0,external_wp_element_namespaceObject.createElement)(ThumbWrapper, {
+    className: "components-range-control__thumb-wrapper",
     style: offsetStyle,
     disabled: disabled
   }, (0,external_wp_element_namespaceObject.createElement)(Thumb, {
@@ -35995,10 +36429,6 @@ const HexInput = _ref => {
 
 
 /**
- * External dependencies
- */
-
-/**
  * Internal dependencies
  */
 
@@ -36046,6 +36476,10 @@ function index_module_u(){return(index_module_u=Object.assign||function(e){for(v
  */
 
 
+/**
+ * Internal dependencies
+ */
+
 const Picker = _ref => {
   let {
     color,
@@ -36071,10 +36505,10 @@ const Picker = _ref => {
 /**
  * Simplified and improved implementation of useControlledState.
  *
- * @param  props
- * @param  props.defaultValue
- * @param  props.value
- * @param  props.onChange
+ * @param props
+ * @param props.defaultValue
+ * @param props.value
+ * @param props.onChange
  * @return The controlled value and the value setter.
  */
 function useControlledValue(_ref) {
@@ -36141,7 +36575,7 @@ const options = [{
   value: 'hex'
 }];
 
-const ColorPicker = (props, forwardedRef) => {
+const UnconnectedColorPicker = (props, forwardedRef) => {
   const {
     enableAlpha = false,
     color: colorProp,
@@ -36193,8 +36627,8 @@ const ColorPicker = (props, forwardedRef) => {
   }))));
 };
 
-const ConnectedColorPicker = contextConnect(ColorPicker, 'ColorPicker');
-/* harmony default export */ var color_picker_component = (ConnectedColorPicker);
+const ColorPicker = contextConnect(UnconnectedColorPicker, 'ColorPicker');
+/* harmony default export */ var color_picker_component = (ColorPicker);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/color-picker/use-deprecated-props.js
 /**
@@ -36292,7 +36726,6 @@ const check = (0,external_wp_element_namespaceObject.createElement)(external_wp_
 ;// CONCATENATED MODULE: ./packages/components/build-module/circular-option-picker/index.js
 
 
-// @ts-nocheck
 
 /**
  * External dependencies
@@ -36310,15 +36743,14 @@ const check = (0,external_wp_element_namespaceObject.createElement)(external_wp_
 
 
 
-
-function Option(props) {
-  const {
+function Option(_ref) {
+  let {
     className,
     isSelected,
     selectedIconProps,
     tooltipText,
     ...additionalProps
-  } = props;
+  } = _ref;
   const optionButton = (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
     isPressed: isSelected,
     className: "components-circular-option-picker__option"
@@ -36331,21 +36763,20 @@ function Option(props) {
     icon: library_check
   }, selectedIconProps ? selectedIconProps : {})));
 }
-
-function DropdownLinkAction(props) {
-  const {
+function DropdownLinkAction(_ref2) {
+  let {
     buttonProps,
     className,
     dropdownProps,
     linkText
-  } = props;
+  } = _ref2;
   return (0,external_wp_element_namespaceObject.createElement)(dropdown, extends_extends({
     className: classnames_default()('components-circular-option-picker__dropdown-link-action', className),
-    renderToggle: _ref => {
+    renderToggle: _ref3 => {
       let {
         isOpen,
         onToggle
-      } = _ref;
+      } = _ref3;
       return (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
         "aria-expanded": isOpen,
         "aria-haspopup": "true",
@@ -36355,18 +36786,62 @@ function DropdownLinkAction(props) {
     }
   }, dropdownProps));
 }
-
-function ButtonAction(props) {
-  const {
+function ButtonAction(_ref4) {
+  let {
     className,
     children,
     ...additionalProps
-  } = props;
+  } = _ref4;
   return (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
     className: classnames_default()('components-circular-option-picker__clear', className),
     variant: "tertiary"
   }, additionalProps), children);
 }
+/**
+ *`CircularOptionPicker` is a component that displays a set of options as circular buttons.
+ *
+ * ```jsx
+ * import { CircularOptionPicker } from '../circular-option-picker';
+ * import { useState } from '@wordpress/element';
+ *
+ * const Example = () => {
+ * 	const [ currentColor, setCurrentColor ] = useState();
+ * 	const colors = [
+ * 		{ color: '#f00', name: 'Red' },
+ * 		{ color: '#0f0', name: 'Green' },
+ * 		{ color: '#00f', name: 'Blue' },
+ * 	];
+ * 	const colorOptions = (
+ * 		<>
+ * 			{ colors.map( ( { color, name }, index ) => {
+ * 				return (
+ * 					<CircularOptionPicker.Option
+ * 						key={ `${ color }-${ index }` }
+ * 						tooltipText={ name }
+ * 						style={ { backgroundColor: color, color } }
+ * 						isSelected={ index === currentColor }
+ * 						onClick={ () => setCurrentColor( index ) }
+ * 						aria-label={ name }
+ * 					/>
+ * 				);
+ * 			} ) }
+ * 		</>
+ * 	);
+ * 	return (
+ * 		<CircularOptionPicker
+ * 				options={ colorOptions }
+ * 				actions={
+ * 					<CircularOptionPicker.ButtonAction
+ * 						onClick={ () => setCurrentColor( undefined ) }
+ * 					>
+ * 						{ 'Clear' }
+ * 					</CircularOptionPicker.ButtonAction>
+ * 				}
+ * 			/>
+ * 	);
+ * };
+ * ```
+ */
 
 function CircularOptionPicker(props) {
   const {
@@ -36383,9 +36858,11 @@ function CircularOptionPicker(props) {
     className: "components-circular-option-picker__custom-clear-wrapper"
   }, actions));
 }
+
 CircularOptionPicker.Option = Option;
 CircularOptionPicker.ButtonAction = ButtonAction;
 CircularOptionPicker.DropdownLinkAction = DropdownLinkAction;
+/* harmony default export */ var circular_option_picker = (CircularOptionPicker);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/v-stack/hook.js
 /**
@@ -36396,11 +36873,13 @@ CircularOptionPicker.DropdownLinkAction = DropdownLinkAction;
 function useVStack(props) {
   const {
     expanded = false,
+    alignment = 'stretch',
     ...otherProps
   } = useContextSystem(props, 'VStack');
   const hStackProps = useHStack({
     direction: 'column',
     expanded,
+    alignment,
     ...otherProps
   });
   return hStackProps;
@@ -36673,10 +37152,7 @@ function UnconnectedDropdownContentWrapper(props, forwardedRef) {
 const DropdownContentWrapper = contextConnect(UnconnectedDropdownContentWrapper, 'DropdownContentWrapper');
 /* harmony default export */ var dropdown_content_wrapper = (DropdownContentWrapper);
 
-;// CONCATENATED MODULE: ./packages/components/build-module/color-palette/index.js
-
-
-
+;// CONCATENATED MODULE: ./packages/components/build-module/color-palette/utils.js
 /**
  * External dependencies
  */
@@ -36688,124 +37164,11 @@ const DropdownContentWrapper = contextConnect(UnconnectedDropdownContentWrapper,
  */
 
 
-
 /**
  * Internal dependencies
  */
 
-
-
-
-
-
-
-
-
 colord_k([names, a11y]);
-
-function SinglePalette(_ref) {
-  let {
-    className,
-    clearColor,
-    colors,
-    onChange,
-    value,
-    actions
-  } = _ref;
-  const colorOptions = (0,external_wp_element_namespaceObject.useMemo)(() => {
-    return colors.map((_ref2, index) => {
-      let {
-        color,
-        name
-      } = _ref2;
-      const colordColor = colord_w(color);
-      const isSelected = value === color;
-      return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.Option, {
-        key: `${color}-${index}`,
-        isSelected: isSelected,
-        selectedIconProps: isSelected ? {
-          fill: colordColor.contrast() > colordColor.contrast('#000') ? '#fff' : '#000'
-        } : {},
-        tooltipText: name || // translators: %s: color hex code e.g: "#f00".
-        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color code: %s'), color),
-        style: {
-          backgroundColor: color,
-          color
-        },
-        onClick: isSelected ? clearColor : () => onChange(color, index),
-        "aria-label": name ? // translators: %s: The name of the color e.g: "vivid red".
-        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color: %s'), name) : // translators: %s: color hex code e.g: "#f00".
-        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color code: %s'), color)
-      });
-    });
-  }, [colors, value, onChange, clearColor]);
-  return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker, {
-    className: className,
-    options: colorOptions,
-    actions: actions
-  });
-}
-
-function MultiplePalettes(_ref3) {
-  let {
-    className,
-    clearColor,
-    colors,
-    onChange,
-    value,
-    actions
-  } = _ref3;
-
-  if (colors.length === 0) {
-    return null;
-  }
-
-  return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
-    spacing: 3,
-    className: className
-  }, colors.map((_ref4, index) => {
-    let {
-      name,
-      colors: colorPalette
-    } = _ref4;
-    return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
-      spacing: 2,
-      key: index
-    }, (0,external_wp_element_namespaceObject.createElement)(ColorHeading, null, name), (0,external_wp_element_namespaceObject.createElement)(SinglePalette, {
-      clearColor: clearColor,
-      colors: colorPalette,
-      onChange: newColor => onChange(newColor, index),
-      value: value,
-      actions: colors.length === index + 1 ? actions : null
-    }));
-  }));
-}
-
-function CustomColorPickerDropdown(_ref5) {
-  let {
-    isRenderedInSidebar,
-    popoverProps: receivedPopoverProps,
-    ...props
-  } = _ref5;
-  const popoverProps = (0,external_wp_element_namespaceObject.useMemo)(() => ({
-    shift: true,
-    ...(isRenderedInSidebar ? {
-      // When in the sidebar: open to the left (stacking),
-      // leaving the same gap as the parent popover.
-      placement: 'left-start',
-      offset: 34
-    } : {
-      // Default behavior: open below the anchor
-      placement: 'bottom',
-      offset: 8
-    }),
-    ...receivedPopoverProps
-  }), [isRenderedInSidebar, receivedPopoverProps]);
-  return (0,external_wp_element_namespaceObject.createElement)(dropdown, extends_extends({
-    contentClassName: "components-color-palette__custom-color-dropdown-content",
-    popoverProps: popoverProps
-  }, props));
-}
 const extractColorNameFromCurrentValue = function (currentValue) {
   let colors = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
   let showMultiplePalettes = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
@@ -36845,11 +37208,175 @@ const showTransparentBackground = currentValue => {
   }
 
   return colord_w(currentValue).alpha() === 0;
+}; // The PaletteObject type has a `colors` property (an array of ColorObject),
+// while the ColorObject type has a `color` property (the CSS color value).
+
+const isMultiplePaletteObject = obj => Array.isArray(obj.colors) && !('color' in obj);
+const isMultiplePaletteArray = arr => {
+  return arr.length > 0 && arr.every(colorObj => isMultiplePaletteObject(colorObj));
+};
+/**
+ * Transform a CSS variable used as background color into the color value itself.
+ *
+ * @param value   The color value that may be a CSS variable.
+ * @param element The element for which to get the computed style.
+ * @return The background color value computed from a element.
+ */
+
+const normalizeColorValue = (value, element) => {
+  const currentValueIsCssVariable = /^var\(/.test(value !== null && value !== void 0 ? value : '');
+
+  if (!currentValueIsCssVariable || element === null) {
+    return value;
+  }
+
+  const {
+    ownerDocument
+  } = element;
+  const {
+    defaultView
+  } = ownerDocument;
+  const computedBackgroundColor = defaultView === null || defaultView === void 0 ? void 0 : defaultView.getComputedStyle(element).backgroundColor;
+  return computedBackgroundColor ? colord_w(computedBackgroundColor).toHex() : value;
 };
 
-const areColorsMultiplePalette = colors => {
-  return colors.every(colorObj => Array.isArray(colorObj.colors));
-};
+;// CONCATENATED MODULE: ./packages/components/build-module/color-palette/index.js
+
+
+
+/**
+ * External dependencies
+ */
+
+
+
+/**
+ * WordPress dependencies
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+
+
+
+
+
+
+colord_k([names, a11y]);
+
+function SinglePalette(_ref) {
+  let {
+    className,
+    clearColor,
+    colors,
+    onChange,
+    value,
+    actions
+  } = _ref;
+  const colorOptions = (0,external_wp_element_namespaceObject.useMemo)(() => {
+    return colors.map((_ref2, index) => {
+      let {
+        color,
+        name
+      } = _ref2;
+      const colordColor = colord_w(color);
+      const isSelected = value === color;
+      return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.Option, {
+        key: `${color}-${index}`,
+        isSelected: isSelected,
+        selectedIconProps: isSelected ? {
+          fill: colordColor.contrast() > colordColor.contrast('#000') ? '#fff' : '#000'
+        } : {},
+        tooltipText: name || // translators: %s: color hex code e.g: "#f00".
+        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color code: %s'), color),
+        style: {
+          backgroundColor: color,
+          color
+        },
+        onClick: isSelected ? clearColor : () => onChange(color, index),
+        "aria-label": name ? // translators: %s: The name of the color e.g: "vivid red".
+        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color: %s'), name) : // translators: %s: color hex code e.g: "#f00".
+        (0,external_wp_i18n_namespaceObject.sprintf)((0,external_wp_i18n_namespaceObject.__)('Color code: %s'), color)
+      });
+    });
+  }, [colors, value, onChange, clearColor]);
+  return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker, {
+    className: className,
+    options: colorOptions,
+    actions: actions
+  });
+}
+
+function MultiplePalettes(_ref3) {
+  let {
+    className,
+    clearColor,
+    colors,
+    onChange,
+    value,
+    actions,
+    headingLevel
+  } = _ref3;
+
+  if (colors.length === 0) {
+    return null;
+  }
+
+  return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
+    spacing: 3,
+    className: className
+  }, colors.map((_ref4, index) => {
+    let {
+      name,
+      colors: colorPalette
+    } = _ref4;
+    return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
+      spacing: 2,
+      key: index
+    }, (0,external_wp_element_namespaceObject.createElement)(ColorHeading, {
+      level: headingLevel
+    }, name), (0,external_wp_element_namespaceObject.createElement)(SinglePalette, {
+      clearColor: clearColor,
+      colors: colorPalette,
+      onChange: newColor => onChange(newColor, index),
+      value: value,
+      actions: colors.length === index + 1 ? actions : null
+    }));
+  }));
+}
+
+function CustomColorPickerDropdown(_ref5) {
+  let {
+    isRenderedInSidebar,
+    popoverProps: receivedPopoverProps,
+    ...props
+  } = _ref5;
+  const popoverProps = (0,external_wp_element_namespaceObject.useMemo)(() => ({
+    shift: true,
+    ...(isRenderedInSidebar ? {
+      // When in the sidebar: open to the left (stacking),
+      // leaving the same gap as the parent popover.
+      placement: 'left-start',
+      offset: 34
+    } : {
+      // Default behavior: open below the anchor
+      placement: 'bottom',
+      offset: 8
+    }),
+    ...receivedPopoverProps
+  }), [isRenderedInSidebar, receivedPopoverProps]);
+  return (0,external_wp_element_namespaceObject.createElement)(dropdown, extends_extends({
+    contentClassName: "components-color-palette__custom-color-dropdown-content",
+    popoverProps: popoverProps
+  }, props));
+}
 
 function UnforwardedColorPalette(props, forwardedRef) {
   const {
@@ -36860,27 +37387,26 @@ function UnforwardedColorPalette(props, forwardedRef) {
     onChange,
     value,
     __experimentalIsRenderedInSidebar = false,
+    headingLevel = 2,
     ...otherProps
   } = props;
+  const [normalizedColorValue, setNormalizedColorValue] = (0,external_wp_element_namespaceObject.useState)(value);
   const clearColor = (0,external_wp_element_namespaceObject.useCallback)(() => onChange(undefined), [onChange]);
-  const hasMultipleColorOrigins = colors.length > 0 && colors[0].colors !== undefined;
-  const buttonLabelName = (0,external_wp_element_namespaceObject.useMemo)(() => extractColorNameFromCurrentValue(value, colors, hasMultipleColorOrigins), [value, colors, hasMultipleColorOrigins]); // Make sure that the `colors` array has a valid format.
-
-  if (colors.length > 0 && hasMultipleColorOrigins !== areColorsMultiplePalette(colors)) {
-    // eslint-disable-next-line no-console
-    console.warn('wp.components.ColorPalette: please specify a valid format for the `colors` prop. ');
-    return null;
-  }
+  const customColorPaletteCallbackRef = (0,external_wp_element_namespaceObject.useCallback)(node => {
+    setNormalizedColorValue(normalizeColorValue(value, node));
+  }, [value]);
+  const hasMultipleColorOrigins = isMultiplePaletteArray(colors);
+  const buttonLabelName = (0,external_wp_element_namespaceObject.useMemo)(() => extractColorNameFromCurrentValue(value, colors, hasMultipleColorOrigins), [value, colors, hasMultipleColorOrigins]);
 
   const renderCustomColorPicker = () => (0,external_wp_element_namespaceObject.createElement)(dropdown_content_wrapper, {
     paddingSize: "none"
   }, (0,external_wp_element_namespaceObject.createElement)(LegacyAdapter, {
-    color: value,
+    color: normalizedColorValue,
     onChange: color => onChange(color),
     enableAlpha: enableAlpha
   }));
 
-  const colordColor = colord_w(value !== null && value !== void 0 ? value : '');
+  const colordColor = colord_w(normalizedColorValue !== null && normalizedColorValue !== void 0 ? normalizedColorValue : '');
   const valueWithoutLeadingHash = value !== null && value !== void 0 && value.startsWith('#') ? value.substring(1) : value !== null && value !== void 0 ? value : '';
   const customColorAccessibleLabel = !!valueWithoutLeadingHash ? (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %1$s: The name of the color e.g: "vivid red". %2$s: The color's hex code e.g: "#f00".
   (0,external_wp_i18n_namespaceObject.__)('Custom color picker. The currently selected color is called "%1$s" and has a value of "%2$s".'), buttonLabelName, valueWithoutLeadingHash) : (0,external_wp_i18n_namespaceObject.__)('Custom color picker.');
@@ -36889,9 +37415,10 @@ function UnforwardedColorPalette(props, forwardedRef) {
     clearColor,
     onChange,
     value,
-    actions: !!clearable && (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.ButtonAction, {
+    actions: !!clearable && (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.ButtonAction, {
       onClick: clearColor
-    }, (0,external_wp_i18n_namespaceObject.__)('Clear'))
+    }, (0,external_wp_i18n_namespaceObject.__)('Clear')),
+    headingLevel
   };
   return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, extends_extends({
     spacing: 3,
@@ -36906,6 +37433,7 @@ function UnforwardedColorPalette(props, forwardedRef) {
       } = _ref6;
       return (0,external_wp_element_namespaceObject.createElement)(flex_component, {
         as: 'button',
+        ref: customColorPaletteCallbackRef,
         justify: "space-between",
         align: "flex-start",
         className: "components-color-palette__custom-color",
@@ -37084,9 +37612,9 @@ const DEFAULT_UNIT = allUnits.px;
  * Moving forward, ideally the value should be a string that contains both
  * the value and unit, example: '10px'
  *
- * @param  rawValue     The raw value as a string (may or may not contain the unit)
- * @param  fallbackUnit The unit used as a fallback, if not unit is detected in the `value`
- * @param  allowedUnits Units to derive from.
+ * @param rawValue     The raw value as a string (may or may not contain the unit)
+ * @param fallbackUnit The unit used as a fallback, if not unit is detected in the `value`
+ * @param allowedUnits Units to derive from.
  * @return The extracted quantity and unit. The quantity can be `undefined` in case the raw value
  * could not be parsed to a number correctly. The unit can be `undefined` in case the unit parse
  * from the raw value could not be matched against the list of allowed units.
@@ -37099,7 +37627,7 @@ function getParsedQuantityAndUnit(rawValue, fallbackUnit, allowedUnits) {
 /**
  * Checks if units are defined.
  *
- * @param  units List of units.
+ * @param units List of units.
  * @return Whether the list actually contains any units.
  */
 
@@ -37113,8 +37641,8 @@ function hasUnits(units) {
  * Parses a quantity and unit from a raw string value, given a list of allowed
  * units and otherwise falling back to the default unit.
  *
- * @param  rawValue     The raw value as a string (may or may not contain the unit)
- * @param  allowedUnits Units to derive from.
+ * @param rawValue     The raw value as a string (may or may not contain the unit)
+ * @param allowedUnits Units to derive from.
  * @return The extracted quantity and unit. The quantity can be `undefined` in case the raw value
  * could not be parsed to a number correctly. The unit can be `undefined` in case the unit parsed
  * from the raw value could not be matched against the list of allowed units.
@@ -37150,10 +37678,10 @@ function parseQuantityAndUnitFromRawValue(rawValue) {
  * Parses quantity and unit from a raw value. Validates parsed value, using fallback
  * value if invalid.
  *
- * @param  rawValue         The next value.
- * @param  allowedUnits     Units to derive from.
- * @param  fallbackQuantity The fallback quantity, used in case it's not possible to parse a valid quantity from the raw value.
- * @param  fallbackUnit     The fallback unit, used in case it's not possible to parse a valid unit from the raw value.
+ * @param rawValue         The next value.
+ * @param allowedUnits     Units to derive from.
+ * @param fallbackQuantity The fallback quantity, used in case it's not possible to parse a valid quantity from the raw value.
+ * @param fallbackUnit     The fallback unit, used in case it's not possible to parse a valid unit from the raw value.
  * @return The extracted quantity and unit. The quantity can be `undefined` in case the raw value
  * could not be parsed to a number correctly, and the `fallbackQuantity` was also `undefined`. The
  * unit can be `undefined` only if the unit parsed from the raw value could not be matched against
@@ -37180,7 +37708,7 @@ function getValidParsedQuantityAndUnit(rawValue, allowedUnits, fallbackQuantity,
  * Takes a unit value and finds the matching accessibility label for the
  * unit abbreviation.
  *
- * @param  unit Unit value (example: `px`)
+ * @param unit Unit value (example: `px`)
  * @return a11y label for the unit abbreviation
  */
 
@@ -37191,8 +37719,8 @@ function getAccessibleLabelForUnit(unit) {
 /**
  * Filters available units based on values defined a list of allowed unit values.
  *
- * @param  allowedUnitValues Collection of allowed unit value strings.
- * @param  availableUnits    Collection of available unit objects.
+ * @param allowedUnitValues Collection of allowed unit value strings.
+ * @param availableUnits    Collection of available unit objects.
  * @return Filtered units.
  */
 
@@ -37209,10 +37737,10 @@ function filterUnitsWithSettings() {
  * TODO: ideally this hook shouldn't be needed
  * https://github.com/WordPress/gutenberg/pull/31822#discussion_r633280823
  *
- * @param  args                An object containing units, settingPath & defaultUnits.
- * @param  args.units          Collection of all potentially available units.
- * @param  args.availableUnits Collection of unit value strings for filtering available units.
- * @param  args.defaultValues  Collection of default values for defined units. Example: `{ px: 350, em: 15 }`.
+ * @param args                An object containing units, settingPath & defaultUnits.
+ * @param args.units          Collection of all potentially available units.
+ * @param args.availableUnits Collection of unit value strings for filtering available units.
+ * @param args.defaultValues  Collection of default values for defined units. Example: `{ px: 350, em: 15 }`.
  *
  * @return Filtered list of units, with their default values updated following the `defaultValues`
  * argument's property.
@@ -37245,9 +37773,9 @@ const useCustomUnits = _ref => {
  * accurately displayed in the UI, even if the intention is to hide
  * the availability of that unit.
  *
- * @param  rawValue   Selected value to parse.
- * @param  legacyUnit Legacy unit value, if rawValue needs it appended.
- * @param  units      List of available units.
+ * @param rawValue   Selected value to parse.
+ * @param legacyUnit Legacy unit value, if rawValue needs it appended.
+ * @param units      List of available units.
  *
  * @return A collection of units containing the unit for the current value.
  */
@@ -37387,12 +37915,14 @@ function useBorderControlDropdown(props) {
 
 
 
+
 const getColorObject = (colorValue, colors) => {
-  if (!colorValue || !colors || colors.length === 0) {
+  if (!colorValue || !colors) {
     return;
   }
 
-  if (colors[0].colors !== undefined) {
+  if (isMultiplePaletteArray(colors)) {
+    // Multiple origins
     let matchedColor;
     colors.some(origin => origin.colors.some(color => {
       if (color.color === colorValue) {
@@ -37403,7 +37933,8 @@ const getColorObject = (colorValue, colors) => {
       return false;
     }));
     return matchedColor;
-  }
+  } // Single origin
+
 
   return colors.find(color => color.color === colorValue);
 };
@@ -37475,7 +38006,7 @@ const BorderControlDropdown = (props, forwardedRef) => {
       onClick: onToggle,
       variant: "tertiary",
       "aria-label": toggleAriaLabel,
-      position: dropdownPosition,
+      tooltipPosition: dropdownPosition,
       label: (0,external_wp_i18n_namespaceObject.__)('Border color and style picker'),
       showTooltip: true
     }, (0,external_wp_element_namespaceObject.createElement)("span", {
@@ -37738,8 +38269,8 @@ function UnforwardedUnitControl(unitControlProps, forwardedRef) {
    * This allows us to tap into actions to transform the (next) state for
    * InputControl.
    *
-   * @param  state  State from InputControl
-   * @param  action Action triggering state change
+   * @param state  State from InputControl
+   * @param action Action triggering state change
    * @return The updated state to apply to InputControl
    */
 
@@ -38432,7 +38963,7 @@ const UNITED_VALUE_REGEX = /^([\d.\-+]*)\s*(fr|cm|mm|Q|in|pc|pt|px|em|ex|ch|rem|
 /**
  * Parses a number and unit from a value.
  *
- * @param  toParse Value to parse
+ * @param toParse Value to parse
  *
  * @return  The extracted number and unit.
  */
@@ -38453,8 +38984,8 @@ function parseCSSUnitValue(toParse) {
 /**
  * Combines a value and a unit into a unit value.
  *
- * @param  value
- * @param  unit
+ * @param value
+ * @param unit
  *
  * @return The unit value.
  */
@@ -38602,7 +39133,7 @@ const getMostCommonUnit = values => {
  * Finds the mode value out of the array passed favouring the first value
  * as a tiebreaker.
  *
- * @param  values Values to determine the mode from.
+ * @param values Values to determine the mode from.
  *
  * @return The mode value.
  */
@@ -38929,37 +39460,37 @@ function box_control_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have 
 
 
 const box_control_styles_Root = emotion_styled_base_browser_esm("div",  true ? {
-  target: "e7pk0lh6"
+  target: "e1jovhle6"
 } : 0)( true ? {
   name: "14bvcyk",
   styles: "box-sizing:border-box;max-width:235px;padding-bottom:12px;width:100%"
 } : 0);
 const Header = /*#__PURE__*/emotion_styled_base_browser_esm(flex_component,  true ? {
-  target: "e7pk0lh5"
+  target: "e1jovhle5"
 } : 0)( true ? {
   name: "5bhc30",
   styles: "margin-bottom:8px"
 } : 0);
 const HeaderControlWrapper = /*#__PURE__*/emotion_styled_base_browser_esm(flex_component,  true ? {
-  target: "e7pk0lh4"
+  target: "e1jovhle4"
 } : 0)( true ? {
   name: "aujtid",
   styles: "min-height:30px;gap:0"
 } : 0);
 const UnitControlWrapper = emotion_styled_base_browser_esm("div",  true ? {
-  target: "e7pk0lh3"
+  target: "e1jovhle3"
 } : 0)( true ? {
   name: "112jwab",
   styles: "box-sizing:border-box;max-width:80px"
 } : 0);
 const LayoutContainer = /*#__PURE__*/emotion_styled_base_browser_esm(flex_component,  true ? {
-  target: "e7pk0lh2"
+  target: "e1jovhle2"
 } : 0)( true ? {
   name: "xy18ro",
   styles: "justify-content:center;padding-top:8px"
 } : 0);
 const Layout = /*#__PURE__*/emotion_styled_base_browser_esm(flex_component,  true ? {
-  target: "e7pk0lh1"
+  target: "e1jovhle1"
 } : 0)( true ? {
   name: "3tw5wk",
   styles: "position:relative;height:100%;width:100%;justify-content:flex-start"
@@ -39015,7 +39546,7 @@ const unitControlMarginStyles = _ref4 => {
 };
 
 const box_control_styles_UnitControl = /*#__PURE__*/emotion_styled_base_browser_esm(unit_control,  true ? {
-  target: "e7pk0lh0"
+  target: "e1jovhle0"
 } : 0)("max-width:60px;", unitControlBorderRadiusStyles, ";", unitControlMarginStyles, ";" + ( true ? "" : 0));
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/box-control/unit-control.js
@@ -39124,8 +39655,8 @@ const ALL_SIDES = ['top', 'right', 'bottom', 'left'];
  * Gets an items with the most occurrence within an array
  * https://stackoverflow.com/a/20762713
  *
- * @param {Array<any>} arr Array of items to check.
- * @return {any} The item with the most occurrences.
+ * @param arr Array of items to check.
+ * @return The item with the most occurrences.
  */
 
 function utils_mode(arr) {
@@ -39134,11 +39665,11 @@ function utils_mode(arr) {
 /**
  * Gets the 'all' input value and unit from values data.
  *
- * @param {Object} values         Box values.
- * @param {Object} selectedUnits  Box units.
- * @param {Array}  availableSides Available box sides to evaluate.
+ * @param values         Box values.
+ * @param selectedUnits  Box units.
+ * @param availableSides Available box sides to evaluate.
  *
- * @return {string} A value + unit for the 'all' input.
+ * @return A value + unit for the 'all' input.
  */
 
 
@@ -39182,8 +39713,8 @@ function getAllValue() {
 /**
  * Determine the most common unit selection to use as a fallback option.
  *
- * @param {Object} selectedUnits Current unit selections for individual sides.
- * @return {string} Most common unit selection.
+ * @param selectedUnits Current unit selections for individual sides.
+ * @return  Most common unit selection.
  */
 
 function getAllUnitFallback(selectedUnits) {
@@ -39197,11 +39728,11 @@ function getAllUnitFallback(selectedUnits) {
 /**
  * Checks to determine if values are mixed.
  *
- * @param {Object} values        Box values.
- * @param {Object} selectedUnits Box units.
- * @param {Array}  sides         Available box sides to evaluate.
+ * @param values        Box values.
+ * @param selectedUnits Box units.
+ * @param sides         Available box sides to evaluate.
  *
- * @return {boolean} Whether values are mixed.
+ * @return Whether values are mixed.
  */
 
 function isValuesMixed() {
@@ -39215,9 +39746,9 @@ function isValuesMixed() {
 /**
  * Checks to determine if values are defined.
  *
- * @param {Object} values Box values.
+ * @param values Box values.
  *
- * @return {boolean} Whether values are mixed.
+ * @return  Whether values are mixed.
  */
 
 function isValuesDefined(values) {
@@ -39230,9 +39761,9 @@ function isValuesDefined(values) {
  * Get initial selected side, factoring in whether the sides are linked,
  * and whether the vertical / horizontal directions are grouped via splitOnAxis.
  *
- * @param {boolean} isLinked    Whether the box control's fields are linked.
- * @param {boolean} splitOnAxis Whether splitting by horizontal or vertical axis.
- * @return {string} The initial side.
+ * @param isLinked    Whether the box control's fields are linked.
+ * @param splitOnAxis Whether splitting by horizontal or vertical axis.
+ * @return The initial side.
  */
 
 function getInitialSide(isLinked, splitOnAxis) {
@@ -39250,8 +39781,8 @@ function getInitialSide(isLinked, splitOnAxis) {
  * to their appropriate sides to facilitate correctly determining value for
  * all input control.
  *
- * @param {Array} sides Available sides for box control.
- * @return {Array} Normalized sides configuration.
+ * @param sides Available sides for box control.
+ * @return Normalized sides configuration.
  */
 
 function normalizeSides(sides) {
@@ -39276,11 +39807,11 @@ function normalizeSides(sides) {
  * Applies a value to an object representing top, right, bottom and left sides
  * while taking into account any custom side configuration.
  *
- * @param {Object}        currentValues The current values for each side.
- * @param {string|number} newValue      The value to apply to the sides object.
- * @param {string[]}      sides         Array defining valid sides.
+ * @param currentValues The current values for each side.
+ * @param newValue      The value to apply to the sides object.
+ * @param sides         Array defining valid sides.
  *
- * @return {Object} Object containing the updated values for each side.
+ * @return Object containing the updated values for each side.
  */
 
 function applyValueToSides(currentValues, newValue, sides) {
@@ -39333,7 +39864,7 @@ function AllInputControl(_ref) {
   const allValue = getAllValue(values, selectedUnits, sides);
   const hasValues = isValuesDefined(values);
   const isMixed = hasValues && isValuesMixed(values, selectedUnits, sides);
-  const allPlaceholder = isMixed ? LABELS.mixed : null;
+  const allPlaceholder = isMixed ? LABELS.mixed : undefined;
 
   const handleOnFocus = event => {
     onFocus(event, {
@@ -39342,7 +39873,7 @@ function AllInputControl(_ref) {
   };
 
   const handleOnChange = next => {
-    const isNumeric = !isNaN(parseFloat(next));
+    const isNumeric = next !== undefined && !isNaN(parseFloat(next));
     const nextValue = isNumeric ? next : undefined;
     const nextValues = applyValueToSides(values, nextValue, sides);
     onChange(nextValues);
@@ -39439,20 +39970,20 @@ function BoxInputControls(_ref) {
     let {
       event
     } = _ref2;
-    const {
-      altKey
-    } = event;
     const nextValues = { ...values
     };
-    const isNumeric = !isNaN(parseFloat(next));
+    const isNumeric = next !== undefined && !isNaN(parseFloat(next));
     const nextValue = isNumeric ? next : undefined;
     nextValues[side] = nextValue;
     /**
      * Supports changing pair sides. For example, holding the ALT key
      * when changing the TOP will also update BOTTOM.
      */
+    // @ts-expect-error - TODO: event.altKey is only present when the change event was
+    // triggered by a keyboard event. Should this feature be implemented differently so
+    // it also works with drag events?
 
-    if (altKey) {
+    if (event.altKey) {
       switch (side) {
         case 'top':
           nextValues.bottom = nextValue;
@@ -39594,7 +40125,7 @@ function AxialInputControls(_ref) {
 
     const nextValues = { ...values
     };
-    const isNumeric = !isNaN(parseFloat(next));
+    const isNumeric = next !== undefined && !isNaN(parseFloat(next));
     const nextValue = isNumeric ? next : undefined;
 
     if (side === 'vertical') {
@@ -39665,13 +40196,13 @@ function box_control_icon_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You 
  */
 
 const box_control_icon_styles_Root = emotion_styled_base_browser_esm("span",  true ? {
-  target: "eaw9yqk8"
+  target: "e1j5nr4z8"
 } : 0)( true ? {
   name: "1w884gc",
   styles: "box-sizing:border-box;display:block;width:24px;height:24px;position:relative;padding:4px"
 } : 0);
 const Viewbox = emotion_styled_base_browser_esm("span",  true ? {
-  target: "eaw9yqk7"
+  target: "e1j5nr4z7"
 } : 0)( true ? {
   name: "i6vjox",
   styles: "box-sizing:border-box;display:block;position:relative;width:100%;height:100%"
@@ -39688,43 +40219,43 @@ const strokeFocus = _ref => {
 };
 
 const Stroke = emotion_styled_base_browser_esm("span",  true ? {
-  target: "eaw9yqk6"
+  target: "e1j5nr4z6"
 } : 0)("box-sizing:border-box;display:block;pointer-events:none;position:absolute;", strokeFocus, ";" + ( true ? "" : 0));
 
 const VerticalStroke = /*#__PURE__*/emotion_styled_base_browser_esm(Stroke,  true ? {
-  target: "eaw9yqk5"
+  target: "e1j5nr4z5"
 } : 0)( true ? {
   name: "1k2w39q",
   styles: "bottom:3px;top:3px;width:2px"
 } : 0);
 
 const HorizontalStroke = /*#__PURE__*/emotion_styled_base_browser_esm(Stroke,  true ? {
-  target: "eaw9yqk4"
+  target: "e1j5nr4z4"
 } : 0)( true ? {
   name: "1q9b07k",
   styles: "height:2px;left:3px;right:3px"
 } : 0);
 
 const TopStroke = /*#__PURE__*/emotion_styled_base_browser_esm(HorizontalStroke,  true ? {
-  target: "eaw9yqk3"
+  target: "e1j5nr4z3"
 } : 0)( true ? {
   name: "abcix4",
   styles: "top:0"
 } : 0);
 const RightStroke = /*#__PURE__*/emotion_styled_base_browser_esm(VerticalStroke,  true ? {
-  target: "eaw9yqk2"
+  target: "e1j5nr4z2"
 } : 0)( true ? {
   name: "1wf8jf",
   styles: "right:0"
 } : 0);
 const BottomStroke = /*#__PURE__*/emotion_styled_base_browser_esm(HorizontalStroke,  true ? {
-  target: "eaw9yqk1"
+  target: "e1j5nr4z1"
 } : 0)( true ? {
   name: "8tapst",
   styles: "bottom:0"
 } : 0);
 const LeftStroke = /*#__PURE__*/emotion_styled_base_browser_esm(VerticalStroke,  true ? {
-  target: "eaw9yqk0"
+  target: "e1j5nr4z0"
 } : 0)( true ? {
   name: "1ode3cm",
   styles: "left:0"
@@ -39846,6 +40377,32 @@ function box_control_useUniqueId(idProp) {
   const instanceId = (0,external_wp_compose_namespaceObject.useInstanceId)(BoxControl, 'inspector-box-control');
   return idProp || instanceId;
 }
+/**
+ * BoxControl components let users set values for Top, Right, Bottom, and Left.
+ * This can be used as an input control for values like `padding` or `margin`.
+ *
+ * ```jsx
+ * import { __experimentalBoxControl as BoxControl } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const Example = () => {
+ * 	const [ values, setValues ] = useState( {
+ * 		top: '50px',
+ * 		left: '10%',
+ * 		right: '10%',
+ * 		bottom: '50px',
+ * 	} );
+ *
+ * 	return (
+ * 		<BoxControl
+ * 			values={ values }
+ * 			onChange={ ( nextValues ) => setValues( nextValues ) }
+ * 		/>
+ * 	);
+ * };
+ * ```
+ */
+
 
 function BoxControl(_ref) {
   let {
@@ -39888,7 +40445,7 @@ function BoxControl(_ref) {
     setSide(getInitialSide(!isLinked, splitOnAxis));
   };
 
-  const handleOnFocus = (event, _ref2) => {
+  const handleOnFocus = (_event, _ref2) => {
     let {
       side: nextSide
     } = _ref2;
@@ -39930,7 +40487,7 @@ function BoxControl(_ref) {
     id: headingId
   }, label)), allowReset && (0,external_wp_element_namespaceObject.createElement)(flex_item_component, null, (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
     className: "component-box-control__reset-button",
-    isSecondary: true,
+    variant: "secondary",
     isSmall: true,
     onClick: handleOnReset,
     disabled: !isDirty
@@ -39947,6 +40504,8 @@ function BoxControl(_ref) {
   }))), !isLinked && !splitOnAxis && (0,external_wp_element_namespaceObject.createElement)(BoxInputControls, inputControlProps));
 }
 
+
+/* harmony default export */ var box_control = (BoxControl);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/button-group/index.js
 
@@ -41479,44 +42038,26 @@ const MINIMUM_DISTANCE_BETWEEN_INSERTER_AND_MARKER = (INSERT_POINT_WIDTH + GRADI
  * Internal dependencies
  */
 
-/**
- * Control point for the gradient bar.
- *
- * @typedef {Object} ControlPoint
- * @property {string} color    Color of the control point.
- * @property {number} position Integer position of the control point as a percentage.
- */
-
-/**
- * Color as parsed from the gradient by gradient-parser.
- *
- * @typedef {Object} Color
- * @property {string} r   Red component.
- * @property {string} g   Green component.
- * @property {string} b   Green component.
- * @property {string} [a] Optional alpha component.
- */
 
 /**
  * Clamps a number between 0 and 100.
  *
- * @param {number} value Value to clamp.
+ * @param value Value to clamp.
  *
- * @return {number} Value clamped between 0 and 100.
+ * @return Value clamped between 0 and 100.
  */
-
 function clampPercent(value) {
   return Math.max(0, Math.min(100, value));
 }
 /**
  * Check if a control point is overlapping with another.
  *
- * @param {ControlPoint[]} value        Array of control points.
- * @param {number}         initialIndex Index of the position to test.
- * @param {number}         newPosition  New position of the control point.
- * @param {number}         minDistance  Distance considered to be overlapping.
+ * @param value        Array of control points.
+ * @param initialIndex Index of the position to test.
+ * @param newPosition  New position of the control point.
+ * @param minDistance  Distance considered to be overlapping.
  *
- * @return {boolean} True if the point is overlapping.
+ * @return True if the point is overlapping.
  */
 
 function isOverlapping(value, initialIndex, newPosition) {
@@ -41534,11 +42075,11 @@ function isOverlapping(value, initialIndex, newPosition) {
 /**
  * Adds a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points   Array of control points.
- * @param {number}         position Position to insert the new point.
- * @param {Color}          color    Color to update the control point at index.
+ * @param points   Array of control points.
+ * @param position Position to insert the new point.
+ * @param color    Color to update the control point at index.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function addControlPoint(points, position, color) {
@@ -41554,25 +42095,25 @@ function addControlPoint(points, position, color) {
 /**
  * Removes a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points Array of control points.
- * @param {number}         index  Index to remove.
+ * @param points Array of control points.
+ * @param index  Index to remove.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function removeControlPoint(points, index) {
-  return points.filter((point, pointIndex) => {
+  return points.filter((_point, pointIndex) => {
     return pointIndex !== index;
   });
 }
 /**
  * Updates a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points   Array of control points.
- * @param {number}         index    Index to update.
- * @param {ControlPoint[]} newPoint New control point to replace the index.
+ * @param points   Array of control points.
+ * @param index    Index to update.
+ * @param newPoint New control point to replace the index.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function updateControlPoint(points, index, newPoint) {
@@ -41583,11 +42124,11 @@ function updateControlPoint(points, index, newPoint) {
 /**
  * Updates the position of a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points      Array of control points.
- * @param {number}         index       Index to update.
- * @param {number}         newPosition Position to move the control point at index.
+ * @param points      Array of control points.
+ * @param index       Index to update.
+ * @param newPosition Position to move the control point at index.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function updateControlPointPosition(points, index, newPosition) {
@@ -41603,11 +42144,11 @@ function updateControlPointPosition(points, index, newPosition) {
 /**
  * Updates the position of a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points   Array of control points.
- * @param {number}         index    Index to update.
- * @param {Color}          newColor Color to update the control point at index.
+ * @param points   Array of control points.
+ * @param index    Index to update.
+ * @param newColor Color to update the control point at index.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function updateControlPointColor(points, index, newColor) {
@@ -41619,11 +42160,11 @@ function updateControlPointColor(points, index, newColor) {
 /**
  * Updates the position of a control point from an array and returns the new array.
  *
- * @param {ControlPoint[]} points   Array of control points.
- * @param {number}         position Position of the color stop.
- * @param {string}         newColor Color to update the control point at index.
+ * @param points   Array of control points.
+ * @param position Position of the color stop.
+ * @param newColor Color to update the control point at index.
  *
- * @return {ControlPoint[]} New array of control points.
+ * @return New array of control points.
  */
 
 function updateControlPointColorByPosition(points, position, newColor) {
@@ -41633,10 +42174,10 @@ function updateControlPointColorByPosition(points, position, newColor) {
 /**
  * Gets the horizontal coordinate when dragging a control point with the mouse.
  *
- * @param {number}  mouseXCoordinate Horizontal coordinate of the mouse position.
- * @param {Element} containerElement Container for the gradient picker.
+ * @param mouseXcoordinate Horizontal coordinate of the mouse position.
+ * @param containerElement Container for the gradient picker.
  *
- * @return {number} Whole number percentage from the left.
+ * @return Whole number percentage from the left.
  */
 
 function getHorizontalRelativeGradientPosition(mouseXCoordinate, containerElement) {
@@ -41738,6 +42279,10 @@ function ControlPoints(_ref3) {
   const controlPointMoveState = (0,external_wp_element_namespaceObject.useRef)();
 
   const onMouseMove = event => {
+    if (controlPointMoveState.current === undefined || gradientPickerDomRef.current === null) {
+      return;
+    }
+
     const relativePosition = getHorizontalRelativeGradientPosition(event.clientX, gradientPickerDomRef.current);
     const {
       initialPosition,
@@ -41768,10 +42313,12 @@ function ControlPoints(_ref3) {
   cleanEventListenersRef.current = cleanEventListeners;
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     return () => {
-      cleanEventListenersRef.current();
+      var _cleanEventListenersR;
+
+      (_cleanEventListenersR = cleanEventListenersRef.current) === null || _cleanEventListenersR === void 0 ? void 0 : _cleanEventListenersR.call(cleanEventListenersRef);
     };
   }, []);
-  return controlPoints.map((point, index) => {
+  return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, controlPoints.map((point, index) => {
     const initialPosition = point === null || point === void 0 ? void 0 : point.position;
     return ignoreMarkerPosition !== initialPosition && (0,external_wp_element_namespaceObject.createElement)(GradientColorPickerDropdown, {
       isRenderedInSidebar: __experimentalIsRenderedInSidebar,
@@ -41854,7 +42401,7 @@ function ControlPoints(_ref3) {
         transform: 'translateX( -50% )'
       }
     });
-  });
+  }));
 }
 
 function InsertPoint(_ref6) {
@@ -41937,7 +42484,7 @@ ControlPoints.InsertPoint = InsertPoint;
 
 
 
-function customGradientBarReducer(state, action) {
+const customGradientBarReducer = (state, action) => {
   switch (action.type) {
     case 'MOVE_INSERTER':
       if (state.id === 'IDLE' || state.id === 'MOVING_INSERTER') {
@@ -41997,7 +42544,7 @@ function customGradientBarReducer(state, action) {
   }
 
   return state;
-}
+};
 
 const customGradientBarReducerInitialState = {
   id: 'IDLE'
@@ -42010,12 +42557,16 @@ function CustomGradientBar(_ref) {
     onChange,
     disableInserter = false,
     disableAlpha = false,
-    __experimentalIsRenderedInSidebar
+    __experimentalIsRenderedInSidebar = false
   } = _ref;
-  const gradientMarkersContainerDomRef = (0,external_wp_element_namespaceObject.useRef)();
+  const gradientMarkersContainerDomRef = (0,external_wp_element_namespaceObject.useRef)(null);
   const [gradientBarState, gradientBarStateDispatch] = (0,external_wp_element_namespaceObject.useReducer)(customGradientBarReducer, customGradientBarReducerInitialState);
 
   const onMouseEnterAndMove = event => {
+    if (!gradientMarkersContainerDomRef.current) {
+      return;
+    }
+
     const insertPosition = getHorizontalRelativeGradientPosition(event.clientX, gradientMarkersContainerDomRef.current); // If the insert point is close to an existing control point don't show it.
 
     if (controlPoints.some(_ref2 => {
@@ -42053,11 +42604,14 @@ function CustomGradientBar(_ref) {
     }),
     onMouseEnter: onMouseEnterAndMove,
     onMouseMove: onMouseEnterAndMove,
-    style: {
-      background
-    },
     onMouseLeave: onMouseLeave
   }, (0,external_wp_element_namespaceObject.createElement)("div", {
+    className: "components-custom-gradient-picker__gradient-bar-background",
+    style: {
+      background,
+      opacity: hasGradient ? 1 : 0.4
+    }
+  }), (0,external_wp_element_namespaceObject.createElement)("div", {
     ref: gradientMarkersContainerDomRef,
     className: "components-custom-gradient-picker__markers-container"
   }, !disableInserter && (isMovingInserter || isInsertingControlPoint) && (0,external_wp_element_namespaceObject.createElement)(control_points.InsertPoint, {
@@ -42108,7 +42662,7 @@ const DEFAULT_GRADIENT = 'linear-gradient(135deg, rgba(6, 147, 227, 1) 0%, rgb(1
 const DEFAULT_LINEAR_GRADIENT_ANGLE = 180;
 const HORIZONTAL_GRADIENT_ORIENTATION = {
   type: 'angular',
-  value: 90
+  value: '90'
 };
 const GRADIENT_OPTIONS = [{
   value: 'linear-gradient',
@@ -42133,6 +42687,9 @@ const DIRECTIONAL_ORIENTATION_ANGLE_MAP = {
 };
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/custom-gradient-picker/serializer.js
+/**
+ * External dependencies
+ */
 function serializeGradientColor(_ref) {
   let {
     type,
@@ -42172,7 +42729,7 @@ function serializeGradientColorStop(_ref2) {
   })} ${serializeGradientPosition(length)}`;
 }
 function serializeGradientOrientation(orientation) {
-  if (!orientation || orientation.type !== 'angular') {
+  if (Array.isArray(orientation) || !orientation || orientation.type !== 'angular') {
     return;
   }
 
@@ -42186,9 +42743,13 @@ function serializeGradient(_ref3) {
   } = _ref3;
   const serializedOrientation = serializeGradientOrientation(orientation);
   const serializedColorStops = colorStops.sort((colorStop1, colorStop2) => {
-    var _colorStop1$length$va, _colorStop1$length, _colorStop2$length$va, _colorStop2$length;
+    const getNumericStopValue = colorStop => {
+      var _colorStop$length;
 
-    return ((_colorStop1$length$va = colorStop1 === null || colorStop1 === void 0 ? void 0 : (_colorStop1$length = colorStop1.length) === null || _colorStop1$length === void 0 ? void 0 : _colorStop1$length.value) !== null && _colorStop1$length$va !== void 0 ? _colorStop1$length$va : 0) - ((_colorStop2$length$va = colorStop2 === null || colorStop2 === void 0 ? void 0 : (_colorStop2$length = colorStop2.length) === null || _colorStop2$length === void 0 ? void 0 : _colorStop2$length.value) !== null && _colorStop2$length$va !== void 0 ? _colorStop2$length$va : 0);
+      return (colorStop === null || colorStop === void 0 ? void 0 : (_colorStop$length = colorStop.length) === null || _colorStop$length === void 0 ? void 0 : _colorStop$length.value) === undefined ? 0 : parseInt(colorStop.length.value);
+    };
+
+    return getNumericStopValue(colorStop1) - getNumericStopValue(colorStop2);
   }).map(serializeGradientColorStop);
   return `${type}(${[serializedOrientation, ...serializedColorStops].filter(Boolean).join(',')})`;
 }
@@ -42225,18 +42786,23 @@ function getGradientAstWithDefault(value) {
   // gradientAST will contain the gradient AST as parsed by gradient-parser npm module.
   // More information of its structure available at https://www.npmjs.com/package/gradient-parser#ast.
   let gradientAST;
+  let hasGradient = !!value;
+  const valueToParse = value !== null && value !== void 0 ? value : DEFAULT_GRADIENT;
 
   try {
-    gradientAST = build_node.parse(value)[0];
-    gradientAST.value = value;
+    gradientAST = build_node.parse(valueToParse)[0];
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('wp.components.CustomGradientPicker failed to parse the gradient with error', error);
     gradientAST = build_node.parse(DEFAULT_GRADIENT)[0];
-    gradientAST.value = DEFAULT_GRADIENT;
+    hasGradient = false;
   }
 
-  if (((_gradientAST$orientat = gradientAST.orientation) === null || _gradientAST$orientat === void 0 ? void 0 : _gradientAST$orientat.type) === 'directional') {
-    gradientAST.orientation.type = 'angular';
-    gradientAST.orientation.value = DIRECTIONAL_ORIENTATION_ANGLE_MAP[gradientAST.orientation.value].toString();
+  if (!Array.isArray(gradientAST.orientation) && ((_gradientAST$orientat = gradientAST.orientation) === null || _gradientAST$orientat === void 0 ? void 0 : _gradientAST$orientat.type) === 'directional') {
+    gradientAST.orientation = {
+      type: 'angular',
+      value: DIRECTIONAL_ORIENTATION_ANGLE_MAP[gradientAST.orientation.value].toString()
+    };
   }
 
   if (gradientAST.colorStops.some(hasUnsupportedLength)) {
@@ -42246,14 +42812,16 @@ function getGradientAstWithDefault(value) {
     const step = 100 / (colorStops.length - 1);
     colorStops.forEach((stop, index) => {
       stop.length = {
-        value: step * index,
+        value: `${step * index}`,
         type: '%'
       };
     });
-    gradientAST.value = serializeGradient(gradientAST);
   }
 
-  return gradientAST;
+  return {
+    gradientAST,
+    hasGradient
+  };
 }
 function getGradientAstWithControlPoints(gradientAST, newControlPoints) {
   return { ...gradientAST,
@@ -42274,7 +42842,7 @@ function getGradientAstWithControlPoints(gradientAST, newControlPoints) {
           value: position === null || position === void 0 ? void 0 : position.toString()
         },
         type: a < 1 ? 'rgba' : 'rgb',
-        value: a < 1 ? [r, g, b, a] : [r, g, b]
+        value: a < 1 ? [`${r}`, `${g}`, `${b}`, `${a}`] : [`${r}`, `${g}`, `${b}`]
       };
     })
   };
@@ -42312,13 +42880,13 @@ function custom_gradient_picker_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return
  */
 
 const SelectWrapper = /*#__PURE__*/emotion_styled_base_browser_esm(flex_block_component,  true ? {
-  target: "e99xvul1"
+  target: "e10bzpgi1"
 } : 0)( true ? {
   name: "1gvx10y",
   styles: "flex-grow:5"
 } : 0);
 const AccessoryWrapper = /*#__PURE__*/emotion_styled_base_browser_esm(flex_block_component,  true ? {
-  target: "e99xvul0"
+  target: "e10bzpgi0"
 } : 0)( true ? {
   name: "1gvx10y",
   styles: "flex-grow:5"
@@ -42331,10 +42899,10 @@ const AccessoryWrapper = /*#__PURE__*/emotion_styled_base_browser_esm(flex_block
  * External dependencies
  */
 
+
 /**
  * WordPress dependencies
  */
-
 
 
 /**
@@ -42365,15 +42933,14 @@ const GradientAnglePicker = _ref => {
     onChange(serializeGradient({ ...gradientAST,
       orientation: {
         type: 'angular',
-        value: newAngle
+        value: `${newAngle}`
       }
     }));
   };
 
-  return (0,external_wp_element_namespaceObject.createElement)(AnglePickerControl, {
+  return (0,external_wp_element_namespaceObject.createElement)(angle_picker_control, {
     __nextHasNoMarginBottom: true,
     onChange: onAngleChange,
-    labelPosition: "top",
     value: hasGradient ? angle : ''
   });
 };
@@ -42390,9 +42957,7 @@ const GradientTypePicker = _ref2 => {
 
   const onSetLinearGradient = () => {
     onChange(serializeGradient({ ...gradientAST,
-      ...(gradientAST.orientation ? {} : {
-        orientation: HORIZONTAL_GRADIENT_ORIENTATION
-      }),
+      orientation: gradientAST.orientation ? undefined : HORIZONTAL_GRADIENT_ORIENTATION,
       type: 'linear-gradient'
     }));
   };
@@ -42425,9 +42990,31 @@ const GradientTypePicker = _ref2 => {
     onChange: handleOnChange,
     options: GRADIENT_OPTIONS,
     size: "__unstable-large",
-    value: hasGradient && type
+    value: hasGradient ? type : undefined
   });
 };
+/**
+ * CustomGradientPicker is a React component that renders a UI for specifying
+ * linear or radial gradients. Radial gradients are displayed in the picker as
+ * a slice of the gradient from the center to the outside.
+ *
+ * ```jsx
+ * import { CustomGradientPicker } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const MyCustomGradientPicker = () => {
+ *   const [ gradient, setGradient ] = useState();
+ *
+ *   return (
+ *     <CustomGradientPicker
+ *			value={ gradient }
+ *			onChange={ setGradient }
+ *     />
+ *   );
+ * };
+ * ```
+ */
+
 
 function CustomGradientPicker(_ref3) {
   let {
@@ -42435,20 +43022,27 @@ function CustomGradientPicker(_ref3) {
     __nextHasNoMargin = false,
     value,
     onChange,
-    __experimentalIsRenderedInSidebar
+    __experimentalIsRenderedInSidebar = false
   } = _ref3;
-  const gradientAST = getGradientAstWithDefault(value); // On radial gradients the bar should display a linear gradient.
+  const {
+    gradientAST,
+    hasGradient
+  } = getGradientAstWithDefault(value); // On radial gradients the bar should display a linear gradient.
   // On radial gradients the bar represents a slice of the gradient from the center until the outside.
   // On liner gradients the bar represents the color stops from left to right independently of the angle.
 
-  const background = getLinearGradientRepresentation(gradientAST);
-  const hasGradient = gradientAST.value !== DEFAULT_GRADIENT; // Control points color option may be hex from presets, custom colors will be rgb.
+  const background = getLinearGradientRepresentation(gradientAST); // Control points color option may be hex from presets, custom colors will be rgb.
   // The position should always be a percentage.
 
-  const controlPoints = gradientAST.colorStops.map(colorStop => ({
-    color: getStopCssColor(colorStop),
-    position: parseInt(colorStop.length.value)
-  }));
+  const controlPoints = gradientAST.colorStops.map(colorStop => {
+    return {
+      color: getStopCssColor(colorStop),
+      // Although it's already been checked by `hasUnsupportedLength` in `getGradientAstWithDefault`,
+      // TypeScript doesn't know that `colorStop.length` is not undefined here.
+      // @ts-expect-error
+      position: parseInt(colorStop.length.value)
+    };
+  });
 
   if (!__nextHasNoMargin) {
     external_wp_deprecated_default()('Outer margin styles for wp.components.CustomGradientPicker', {
@@ -42484,6 +43078,7 @@ function CustomGradientPicker(_ref3) {
     onChange: onChange
   }))));
 }
+/* harmony default export */ var custom_gradient_picker = (CustomGradientPicker);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/gradient-picker/index.js
 
@@ -42505,6 +43100,14 @@ function CustomGradientPicker(_ref3) {
 
 
 
+// The Multiple Origin Gradients have a `gradients` property (an array of
+// gradient objects), while Single Origin ones have a `gradient` property.
+const isMultipleOriginObject = obj => Array.isArray(obj.gradients) && !('gradient' in obj);
+
+const isMultipleOriginArray = arr => {
+  return arr.length > 0 && arr.every(gradientObj => isMultipleOriginObject(gradientObj));
+};
+
 function SingleOrigin(_ref) {
   let {
     className,
@@ -42520,7 +43123,7 @@ function SingleOrigin(_ref) {
         gradient,
         name
       } = _ref2;
-      return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.Option, {
+      return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.Option, {
         key: gradient,
         value: gradient,
         isSelected: value === gradient,
@@ -42537,7 +43140,7 @@ function SingleOrigin(_ref) {
       });
     });
   }, [gradients, value, onChange, clearGradient]);
-  return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker, {
+  return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker, {
     className: className,
     options: gradientOptions,
     actions: actions
@@ -42551,7 +43154,8 @@ function MultipleOrigin(_ref3) {
     gradients,
     onChange,
     value,
-    actions
+    actions,
+    headingLevel
   } = _ref3;
   return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
     spacing: 3,
@@ -42564,7 +43168,9 @@ function MultipleOrigin(_ref3) {
     return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
       spacing: 2,
       key: index
-    }, (0,external_wp_element_namespaceObject.createElement)(ColorHeading, null, name), (0,external_wp_element_namespaceObject.createElement)(SingleOrigin, extends_extends({
+    }, (0,external_wp_element_namespaceObject.createElement)(ColorHeading, {
+      level: headingLevel
+    }, name), (0,external_wp_element_namespaceObject.createElement)(SingleOrigin, extends_extends({
       clearGradient: clearGradient,
       gradients: gradientSet,
       onChange: gradient => onChange(gradient, index),
@@ -42575,20 +43181,72 @@ function MultipleOrigin(_ref3) {
   }));
 }
 
+function gradient_picker_Component(props) {
+  if (isMultipleOriginArray(props.gradients)) {
+    return (0,external_wp_element_namespaceObject.createElement)(MultipleOrigin, props);
+  }
+
+  return (0,external_wp_element_namespaceObject.createElement)(SingleOrigin, props);
+}
+/**
+ *  GradientPicker is a React component that renders a color gradient picker to
+ * define a multi step gradient. There's either a _linear_ or a _radial_ type
+ * available.
+ *
+ * ```jsx
+ *import { GradientPicker } from '@wordpress/components';
+ *import { useState } from '@wordpress/element';
+ *
+ *const myGradientPicker = () => {
+ *	const [ gradient, setGradient ] = useState( null );
+ *
+ *	return (
+ *		<GradientPicker
+ *			__nextHasNoMargin
+ *			value={ gradient }
+ *			onChange={ ( currentGradient ) => setGradient( currentGradient ) }
+ *			gradients={ [
+ *				{
+ *					name: 'JShine',
+ *					gradient:
+ *						'linear-gradient(135deg,#12c2e9 0%,#c471ed 50%,#f64f59 100%)',
+ *					slug: 'jshine',
+ *				},
+ *				{
+ *					name: 'Moonlit Asteroid',
+ *					gradient:
+ *						'linear-gradient(135deg,#0F2027 0%, #203A43 0%, #2c5364 100%)',
+ *					slug: 'moonlit-asteroid',
+ *				},
+ *				{
+ *					name: 'Rastafarie',
+ *					gradient:
+ *						'linear-gradient(135deg,#1E9600 0%, #FFF200 0%, #FF0000 100%)',
+ *					slug: 'rastafari',
+ *				},
+ *			] }
+ *		/>
+ *	);
+ *};
+ *```
+ *
+ */
+
+
 function GradientPicker(_ref5) {
   let {
     /** Start opting into the new margin-free styles that will become the default in a future version. */
     __nextHasNoMargin = false,
     className,
-    gradients,
+    gradients = [],
     onChange,
     value,
     clearable = true,
     disableCustomGradients = false,
-    __experimentalIsRenderedInSidebar
+    __experimentalIsRenderedInSidebar,
+    headingLevel = 2
   } = _ref5;
   const clearGradient = (0,external_wp_element_namespaceObject.useCallback)(() => onChange(undefined), [onChange]);
-  const Component = gradients !== null && gradients !== void 0 && gradients.length && gradients[0].gradients ? MultipleOrigin : SingleOrigin;
 
   if (!__nextHasNoMargin) {
     external_wp_deprecated_default()('Outer margin styles for wp.components.GradientPicker', {
@@ -42599,32 +43257,33 @@ function GradientPicker(_ref5) {
   }
 
   const deprecatedMarginSpacerProps = !__nextHasNoMargin ? {
-    marginTop: !(gradients !== null && gradients !== void 0 && gradients.length) ? 3 : undefined,
+    marginTop: !gradients.length ? 3 : undefined,
     marginBottom: !clearable ? 6 : 0
   } : {};
   return (// Outmost Spacer wrapper can be removed when deprecation period is over
     (0,external_wp_element_namespaceObject.createElement)(spacer_component, extends_extends({
       marginBottom: 0
     }, deprecatedMarginSpacerProps), (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
-      spacing: gradients !== null && gradients !== void 0 && gradients.length ? 4 : 0
-    }, !disableCustomGradients && (0,external_wp_element_namespaceObject.createElement)(CustomGradientPicker, {
+      spacing: gradients.length ? 4 : 0
+    }, !disableCustomGradients && (0,external_wp_element_namespaceObject.createElement)(custom_gradient_picker, {
       __nextHasNoMargin: true,
       __experimentalIsRenderedInSidebar: __experimentalIsRenderedInSidebar,
       value: value,
       onChange: onChange
-    }), ((gradients === null || gradients === void 0 ? void 0 : gradients.length) || clearable) && (0,external_wp_element_namespaceObject.createElement)(Component, {
+    }), (gradients.length || clearable) && (0,external_wp_element_namespaceObject.createElement)(gradient_picker_Component, {
       className: className,
-      clearable: clearable,
       clearGradient: clearGradient,
       gradients: gradients,
       onChange: onChange,
       value: value,
-      actions: clearable && !disableCustomGradients && (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.ButtonAction, {
+      actions: clearable && !disableCustomGradients && (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.ButtonAction, {
         onClick: clearGradient
-      }, (0,external_wp_i18n_namespaceObject.__)('Clear'))
+      }, (0,external_wp_i18n_namespaceObject.__)('Clear')),
+      headingLevel: headingLevel
     })))
   );
 }
+/* harmony default export */ var gradient_picker = (GradientPicker);
 
 ;// CONCATENATED MODULE: ./packages/icons/build-module/library/menu.js
 
@@ -42641,8 +43300,6 @@ const menu = (0,external_wp_element_namespaceObject.createElement)(external_wp_p
 }));
 /* harmony default export */ var library_menu = (menu);
 
-;// CONCATENATED MODULE: external ["wp","dom"]
-var external_wp_dom_namespaceObject = window["wp"]["dom"];
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigable-container/container.js
 
 
@@ -42981,12 +43638,16 @@ function DropdownMenu(dropdownMenuProps) {
         }
       };
 
+      const {
+        as: Toggle = build_module_button,
+        ...restToggleProps
+      } = toggleProps !== null && toggleProps !== void 0 ? toggleProps : {};
       const mergedToggleProps = mergeProps({
         className: classnames_default()('components-dropdown-menu__toggle', {
           'is-opened': isOpen
         })
-      }, toggleProps);
-      return (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({}, mergedToggleProps, {
+      }, restToggleProps);
+      return (0,external_wp_element_namespaceObject.createElement)(Toggle, extends_extends({}, mergedToggleProps, {
         icon: icon,
         onClick: event => {
           onToggle(event);
@@ -43068,7 +43729,7 @@ function palette_edit_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have
 
 
 
-const IndicatorStyled = /*#__PURE__*/emotion_styled_base_browser_esm(CircularOptionPicker.Option,  true ? {
+const IndicatorStyled = /*#__PURE__*/emotion_styled_base_browser_esm(circular_option_picker.Option,  true ? {
   target: "e5bw3229"
 } : 0)("width:", space(6), ";height:", space(6), ";pointer-events:none;" + ( true ? "" : 0));
 const NameInputControl = /*#__PURE__*/emotion_styled_base_browser_esm(input_control,  true ? {
@@ -43157,10 +43818,10 @@ function NameInput(_ref) {
  * It expects slugs to be in the format: slugPrefix + color- + number.
  * It then sets the id component of the new name based on the incremented id of the highest existing slug id.
  *
- * @param {string} elements   An array of color palette items.
- * @param {string} slugPrefix The slug prefix used to match the element slug.
+ * @param elements   An array of color palette items.
+ * @param slugPrefix The slug prefix used to match the element slug.
  *
- * @return {string} A unique name for a palette item.
+ * @return A unique name for a palette item.
  */
 
 
@@ -43201,18 +43862,22 @@ function ColorPickerPopover(_ref2) {
   }, !isGradient && (0,external_wp_element_namespaceObject.createElement)(LegacyAdapter, {
     color: element.color,
     enableAlpha: true,
-    onChange: newColor => onChange({ ...element,
-      color: newColor
-    })
+    onChange: newColor => {
+      onChange({ ...element,
+        color: newColor
+      });
+    }
   }), isGradient && (0,external_wp_element_namespaceObject.createElement)("div", {
     className: "components-palette-edit__popover-gradient-picker"
-  }, (0,external_wp_element_namespaceObject.createElement)(CustomGradientPicker, {
+  }, (0,external_wp_element_namespaceObject.createElement)(custom_gradient_picker, {
     __nextHasNoMargin: true,
     __experimentalIsRenderedInSidebar: true,
     value: element.gradient,
-    onChange: newGradient => onChange({ ...element,
-      gradient: newGradient
-    })
+    onChange: newGradient => {
+      onChange({ ...element,
+        gradient: newGradient
+      });
+    }
   })));
 }
 
@@ -43251,7 +43916,7 @@ function palette_edit_Option(_ref3) {
     value: element.name,
     onChange: nextName => onChange({ ...element,
       name: nextName,
-      slug: slugPrefix + (0,external_lodash_namespaceObject.kebabCase)(nextName)
+      slug: slugPrefix + paramCase(nextName !== null && nextName !== void 0 ? nextName : '')
     })
   }) : (0,external_wp_element_namespaceObject.createElement)(NameContainer, null, element.name)), isEditing && !canOnlyChangeValues && (0,external_wp_element_namespaceObject.createElement)(flex_item_component, null, (0,external_wp_element_namespaceObject.createElement)(RemoveButton, {
     isSmall: true,
@@ -43292,7 +43957,9 @@ function PaletteEditListView(_ref5) {
   }, [elements]);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     return () => {
-      if (elementsReference.current.some((element, index) => isTemporaryElement(slugPrefix, element, index))) {
+      var _elementsReference$cu;
+
+      if ((_elementsReference$cu = elementsReference.current) !== null && _elementsReference$cu !== void 0 && _elementsReference$cu.some(element => isTemporaryElement(slugPrefix, element))) {
         const newElements = elementsReference.current.filter(element => !isTemporaryElement(slugPrefix, element));
         onChange(newElements.length ? newElements : undefined);
       }
@@ -43346,12 +44013,34 @@ function PaletteEditListView(_ref5) {
 }
 
 const EMPTY_ARRAY = [];
+/**
+ * Allows editing a palette of colors or gradients.
+ *
+ * ```jsx
+ * import { PaletteEdit } from '@wordpress/components';
+ * const MyPaletteEdit = () => {
+ *   const [ controlledColors, setControlledColors ] = useState( colors );
+ *
+ *   return (
+ *     <PaletteEdit
+ *       colors={ controlledColors }
+ *       onChange={ ( newColors?: Color[] ) => {
+ *         setControlledColors( newColors );
+ *       } }
+ *       paletteLabel="Here is a label"
+ *     />
+ *   );
+ * };
+ * ```
+ */
+
 function PaletteEdit(_ref6) {
   let {
     gradients,
     colors = EMPTY_ARRAY,
     onChange,
     paletteLabel,
+    paletteLabelHeadingLevel = 2,
     emptyMessage,
     canOnlyChangeValues,
     canReset,
@@ -43361,12 +44050,12 @@ function PaletteEdit(_ref6) {
   const elements = isGradient ? gradients : colors;
   const [isEditing, setIsEditing] = (0,external_wp_element_namespaceObject.useState)(false);
   const [editingElement, setEditingElement] = (0,external_wp_element_namespaceObject.useState)(null);
-  const isAdding = isEditing && editingElement && elements[editingElement] && !elements[editingElement].slug;
+  const isAdding = isEditing && !!editingElement && elements[editingElement] && !elements[editingElement].slug;
   const elementsLength = elements.length;
   const hasElements = elementsLength > 0;
   const debounceOnChange = (0,external_wp_compose_namespaceObject.useDebounce)(onChange, 100);
   const onSelectPaletteItem = (0,external_wp_element_namespaceObject.useCallback)((value, newEditingElementIndex) => {
-    const selectedElement = elements[newEditingElementIndex];
+    const selectedElement = newEditingElementIndex === undefined ? undefined : elements[newEditingElementIndex];
     const key = isGradient ? 'gradient' : 'color'; // Ensures that the index returned matches a known element value.
 
     if (!!selectedElement && selectedElement[key] === value) {
@@ -43375,7 +44064,9 @@ function PaletteEdit(_ref6) {
       setIsEditing(true);
     }
   }, [isGradient, elements]);
-  return (0,external_wp_element_namespaceObject.createElement)(PaletteEditStyles, null, (0,external_wp_element_namespaceObject.createElement)(PaletteHStackHeader, null, (0,external_wp_element_namespaceObject.createElement)(PaletteHeading, null, paletteLabel), (0,external_wp_element_namespaceObject.createElement)(PaletteActionsContainer, null, hasElements && isEditing && (0,external_wp_element_namespaceObject.createElement)(DoneButton, {
+  return (0,external_wp_element_namespaceObject.createElement)(PaletteEditStyles, null, (0,external_wp_element_namespaceObject.createElement)(PaletteHStackHeader, null, (0,external_wp_element_namespaceObject.createElement)(PaletteHeading, {
+    level: paletteLabelHeadingLevel
+  }, paletteLabel), (0,external_wp_element_namespaceObject.createElement)(PaletteActionsContainer, null, hasElements && isEditing && (0,external_wp_element_namespaceObject.createElement)(DoneButton, {
     isSmall: true,
     onClick: () => {
       setIsEditing(false);
@@ -43388,14 +44079,21 @@ function PaletteEdit(_ref6) {
     label: isGradient ? (0,external_wp_i18n_namespaceObject.__)('Add gradient') : (0,external_wp_i18n_namespaceObject.__)('Add color'),
     onClick: () => {
       const tempOptionName = getNameForPosition(elements, slugPrefix);
-      onChange([...elements, { ...(isGradient ? {
-          gradient: DEFAULT_GRADIENT
-        } : {
-          color: DEFAULT_COLOR
-        }),
-        name: tempOptionName,
-        slug: slugPrefix + (0,external_lodash_namespaceObject.kebabCase)(tempOptionName)
-      }]);
+
+      if (!!gradients) {
+        onChange([...gradients, {
+          gradient: DEFAULT_GRADIENT,
+          name: tempOptionName,
+          slug: slugPrefix + paramCase(tempOptionName)
+        }]);
+      } else {
+        onChange([...colors, {
+          color: DEFAULT_COLOR,
+          name: tempOptionName,
+          slug: slugPrefix + paramCase(tempOptionName)
+        }]);
+      }
+
       setIsEditing(true);
       setEditingElement(elements.length);
     }
@@ -43437,7 +44135,8 @@ function PaletteEdit(_ref6) {
     }, isGradient ? (0,external_wp_i18n_namespaceObject.__)('Reset gradient') : (0,external_wp_i18n_namespaceObject.__)('Reset colors'))));
   }))), hasElements && (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, isEditing && (0,external_wp_element_namespaceObject.createElement)(PaletteEditListView, {
     canOnlyChangeValues: canOnlyChangeValues,
-    elements: elements,
+    elements: elements // @ts-expect-error TODO: Don't know how to resolve
+    ,
     onChange: onChange,
     editingElement: editingElement,
     setEditingElement: setEditingElement,
@@ -43447,7 +44146,8 @@ function PaletteEdit(_ref6) {
     isGradient: isGradient,
     onClose: () => setEditingElement(null),
     onChange: newElement => {
-      debounceOnChange(elements.map((currentElement, currentIndex) => {
+      debounceOnChange( // @ts-expect-error TODO: Don't know how to resolve
+      elements.map((currentElement, currentIndex) => {
         if (currentIndex === editingElement) {
           return newElement;
         }
@@ -43455,8 +44155,8 @@ function PaletteEdit(_ref6) {
         return currentElement;
       }));
     },
-    element: elements[editingElement]
-  }), !isEditing && (isGradient ? (0,external_wp_element_namespaceObject.createElement)(GradientPicker, {
+    element: elements[editingElement !== null && editingElement !== void 0 ? editingElement : -1]
+  }), !isEditing && (isGradient ? (0,external_wp_element_namespaceObject.createElement)(gradient_picker, {
     __nextHasNoMargin: true,
     gradients: gradients,
     onChange: onSelectPaletteItem,
@@ -43469,6 +44169,7 @@ function PaletteEdit(_ref6) {
     disableCustomColors: true
   }))), !hasElements && emptyMessage);
 }
+/* harmony default export */ var palette_edit = (PaletteEdit);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/combobox-control/styles.js
 
@@ -43757,23 +44458,74 @@ function SuggestionsList(_ref) {
 const combobox_control_noop = () => {};
 
 const DetectOutside = with_focus_outside(class extends external_wp_element_namespaceObject.Component {
+  // @ts-expect-error - TODO: Should be resolved when `withFocusOutside` is refactored to TypeScript
   handleFocusOutside(event) {
+    // @ts-expect-error - TODO: Should be resolved when `withFocusOutside` is refactored to TypeScript
     this.props.onFocusOutside(event);
   }
 
   render() {
+    // @ts-expect-error - TODO: Should be resolved when `withFocusOutside` is refactored to TypeScript
     return this.props.children;
   }
 
 });
 
+const getIndexOfMatchingSuggestion = (selectedSuggestion, matchingSuggestions) => selectedSuggestion === null ? -1 : matchingSuggestions.indexOf(selectedSuggestion);
+/**
+ * `ComboboxControl` is an enhanced version of a [`SelectControl`](../select-control/README.md) with the addition of
+ * being able to search for options using a search input.
+ *
+ * ```jsx
+ * import { ComboboxControl } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const options = [
+ * 	{
+ * 		value: 'small',
+ * 		label: 'Small',
+ * 	},
+ * 	{
+ * 		value: 'normal',
+ * 		label: 'Normal',
+ * 	},
+ * 	{
+ * 		value: 'large',
+ * 		label: 'Large',
+ * 	},
+ * ];
+ *
+ * function MyComboboxControl() {
+ * 	const [ fontSize, setFontSize ] = useState();
+ * 	const [ filteredOptions, setFilteredOptions ] = useState( options );
+ * 	return (
+ * 		<ComboboxControl
+ * 			label="Font Size"
+ * 			value={ fontSize }
+ * 			onChange={ setFontSize }
+ * 			options={ filteredOptions }
+ * 			onFilterValueChange={ ( inputValue ) =>
+ * 				setFilteredOptions(
+ * 					options.filter( ( option ) =>
+ * 						option.label
+ * 							.toLowerCase()
+ * 							.startsWith( inputValue.toLowerCase() )
+ * 					)
+ * 				)
+ * 			}
+ * 		/>
+ * 	);
+ * }
+ * ```
+ */
+
+
 function ComboboxControl(_ref) {
   var _currentOption$label;
 
   let {
-    /** Start opting into the new margin-free styles that will become the default in a future version. */
     __nextHasNoMarginBottom = false,
-    __next36pxDefaultSize,
+    __next36pxDefaultSize = false,
     value: valueProp,
     label,
     options,
@@ -43802,7 +44554,7 @@ function ComboboxControl(_ref) {
   const [isExpanded, setIsExpanded] = (0,external_wp_element_namespaceObject.useState)(false);
   const [inputHasFocus, setInputHasFocus] = (0,external_wp_element_namespaceObject.useState)(false);
   const [inputValue, setInputValue] = (0,external_wp_element_namespaceObject.useState)('');
-  const inputContainer = (0,external_wp_element_namespaceObject.useRef)();
+  const inputContainer = (0,external_wp_element_namespaceObject.useRef)(null);
   const matchingSuggestions = (0,external_wp_element_namespaceObject.useMemo)(() => {
     const startsWithMatch = [];
     const containsMatch = [];
@@ -43829,7 +44581,7 @@ function ComboboxControl(_ref) {
 
   const handleArrowNavigation = function () {
     let offset = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    const index = matchingSuggestions.indexOf(selectedSuggestion);
+    const index = getIndexOfMatchingSuggestion(selectedSuggestion, matchingSuggestions);
     let nextIndex = index + offset;
 
     if (nextIndex < 0) {
@@ -43913,14 +44665,16 @@ function ComboboxControl(_ref) {
   };
 
   const handleOnReset = () => {
+    var _inputContainer$curre;
+
     setValue(null);
-    inputContainer.current.focus();
+    (_inputContainer$curre = inputContainer.current) === null || _inputContainer$curre === void 0 ? void 0 : _inputContainer$curre.focus();
   }; // Update current selections when the filter input changes.
 
 
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     const hasMatchingSuggestions = matchingSuggestions.length > 0;
-    const hasSelectedMatchingSuggestions = matchingSuggestions.indexOf(selectedSuggestion) > 0;
+    const hasSelectedMatchingSuggestions = getIndexOfMatchingSuggestion(selectedSuggestion, matchingSuggestions) > 0;
 
     if (hasMatchingSuggestions && !hasSelectedMatchingSuggestions) {
       // If the current selection isn't present in the list of suggestions, then automatically select the first item from the list of suggestions.
@@ -43948,14 +44702,13 @@ function ComboboxControl(_ref) {
   }, (0,external_wp_element_namespaceObject.createElement)(base_control, {
     __nextHasNoMarginBottom: __nextHasNoMarginBottom,
     className: classnames_default()(className, 'components-combobox-control'),
-    tabIndex: "-1",
     label: label,
     id: `components-form-token-input-${instanceId}`,
     hideLabelFromVision: hideLabelFromVision,
     help: help
   }, (0,external_wp_element_namespaceObject.createElement)("div", {
     className: "components-combobox-control__suggestions-container",
-    tabIndex: "-1",
+    tabIndex: -1,
     onKeyDown: onKeyDown
   }, (0,external_wp_element_namespaceObject.createElement)(InputWrapperFlex, {
     __next36pxDefaultSize: __next36pxDefaultSize
@@ -43967,7 +44720,7 @@ function ComboboxControl(_ref) {
     onFocus: onFocus,
     onBlur: onBlur,
     isExpanded: isExpanded,
-    selectedSuggestionIndex: matchingSuggestions.indexOf(selectedSuggestion),
+    selectedSuggestionIndex: getIndexOfMatchingSuggestion(selectedSuggestion, matchingSuggestions),
     onChange: onInputChange
   })), allowReset && (0,external_wp_element_namespaceObject.createElement)(flex_item_component, null, (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
     className: "components-combobox-control__reset",
@@ -43976,13 +44729,17 @@ function ComboboxControl(_ref) {
     onClick: handleOnReset,
     label: (0,external_wp_i18n_namespaceObject.__)('Reset')
   }))), isExpanded && (0,external_wp_element_namespaceObject.createElement)(suggestions_list, {
-    instanceId: instanceId,
+    instanceId: instanceId // The empty string for `value` here is not actually used, but is
+    // just a quick way to satisfy the TypeScript requirements of SuggestionsList.
+    // See: https://github.com/WordPress/gutenberg/pull/47581/files#r1091089330
+    ,
     match: {
-      label: inputValue
+      label: inputValue,
+      value: ''
     },
     displayTransform: suggestion => suggestion.label,
     suggestions: matchingSuggestions,
-    selectedIndex: matchingSuggestions.indexOf(selectedSuggestion),
+    selectedIndex: getIndexOfMatchingSuggestion(selectedSuggestion, matchingSuggestions),
     onHover: setSelectedSuggestion,
     onSelect: onSuggestionSelected,
     scrollIntoView: true,
@@ -44073,6 +44830,7 @@ function showApp() {
 
 
 
+
 /**
  * Internal dependencies
  */
@@ -44117,7 +44875,24 @@ function UnforwardedModal(props, forwardedRef) {
   const constrainedTabbingRef = (0,external_wp_compose_namespaceObject.useConstrainedTabbing)();
   const focusReturnRef = (0,external_wp_compose_namespaceObject.useFocusReturn)();
   const focusOutsideProps = (0,external_wp_compose_namespaceObject.__experimentalUseFocusOutside)(onRequestClose);
+  const contentRef = (0,external_wp_element_namespaceObject.useRef)(null);
+  const childrenContainerRef = (0,external_wp_element_namespaceObject.useRef)(null);
   const [hasScrolledContent, setHasScrolledContent] = (0,external_wp_element_namespaceObject.useState)(false);
+  const [hasScrollableContent, setHasScrollableContent] = (0,external_wp_element_namespaceObject.useState)(false); // Determines whether the Modal content is scrollable and updates the state.
+
+  const isContentScrollable = (0,external_wp_element_namespaceObject.useCallback)(() => {
+    if (!contentRef.current) {
+      return;
+    }
+
+    const closestScrollContainer = (0,external_wp_dom_namespaceObject.getScrollContainer)(contentRef.current);
+
+    if (contentRef.current === closestScrollContainer) {
+      setHasScrollableContent(true);
+    } else {
+      setHasScrollableContent(false);
+    }
+  }, [contentRef]);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     openModalCount++;
 
@@ -44134,7 +44909,20 @@ function UnforwardedModal(props, forwardedRef) {
         showApp();
       }
     };
-  }, [bodyOpenClassName]);
+  }, [bodyOpenClassName]); // Calls the isContentScrollable callback when the Modal children container resizes.
+
+  (0,external_wp_element_namespaceObject.useLayoutEffect)(() => {
+    if (!window.ResizeObserver || !childrenContainerRef.current) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(isContentScrollable);
+    resizeObserver.observe(childrenContainerRef.current);
+    isContentScrollable();
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [isContentScrollable, childrenContainerRef]);
 
   function handleEscapeKeyDown(event) {
     if ( // Ignore keydowns from IMEs
@@ -44188,10 +44976,14 @@ function UnforwardedModal(props, forwardedRef) {
   }), (0,external_wp_element_namespaceObject.createElement)("div", {
     className: classnames_default()('components-modal__content', {
       'hide-header': __experimentalHideHeader,
+      'is-scrollable': hasScrollableContent,
       'has-scrolled-content': hasScrolledContent
     }),
     role: "document",
-    onScroll: onContentContainerScroll
+    onScroll: onContentContainerScroll,
+    ref: contentRef,
+    "aria-label": hasScrollableContent ? (0,external_wp_i18n_namespaceObject.__)('Scrollable section') : undefined,
+    tabIndex: hasScrollableContent ? 0 : undefined
   }, !__experimentalHideHeader && (0,external_wp_element_namespaceObject.createElement)("div", {
     className: "components-modal__header"
   }, (0,external_wp_element_namespaceObject.createElement)("div", {
@@ -44205,8 +44997,10 @@ function UnforwardedModal(props, forwardedRef) {
   }, title)), isDismissible && (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
     onClick: onRequestClose,
     icon: library_close,
-    label: closeButtonLabel || (0,external_wp_i18n_namespaceObject.__)('Close dialog')
-  })), children)))), document.body);
+    label: closeButtonLabel || (0,external_wp_i18n_namespaceObject.__)('Close')
+  })), (0,external_wp_element_namespaceObject.createElement)("div", {
+    ref: childrenContainerRef
+  }, children))))), document.body);
 }
 /**
  * Modals give users information and choices related to a task they’re trying to
@@ -48679,6 +49473,11 @@ function CustomSelectControl(props) {
     className: "components-custom-select-control__item-icon"
   })))));
 }
+function StableCustomSelectControl(props) {
+  return (0,external_wp_element_namespaceObject.createElement)(CustomSelectControl, extends_extends({}, props, {
+    __experimentalShowSelectedHint: false
+  }));
+}
 
 ;// CONCATENATED MODULE: ./node_modules/use-lilius/build/index.es.js
 
@@ -52780,7 +53579,7 @@ const DayButton = /*#__PURE__*/emotion_styled_base_browser_esm(build_module_butt
  * Like date-fn's toDate, but tries to guess the format when a string is
  * given.
  *
- * @param  input Value to turn into a date.
+ * @param input Value to turn into a date.
  */
 
 function inputToDate(input) {
@@ -52802,10 +53601,10 @@ const TIMEZONELESS_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
  */
 
 
+
 /**
  * WordPress dependencies
  */
-
 
 
 
@@ -53402,7 +54201,7 @@ function from12hTo24h(hours, isPm) {
  * given width. For example, the hours and minutes inputs are padded to 2 so
  * that '4' appears as '04'.
  *
- * @param  pad How many digits the value should be.
+ * @param pad How many digits the value should be.
  */
 
 
@@ -53878,15 +54677,16 @@ const DateTimePicker = (0,external_wp_element_namespaceObject.forwardRef)(Unforw
  */
 
 /**
+ * Internal dependencies
+ */
+
+/**
  * Finds the correct size object from the provided sizes
  * table by size slug (eg: `medium`)
  *
- * @param {Array}  sizes containing objects for each size definition.
- * @param {string} slug  a string representation of the size (eg: `medium`).
- *
- * @return {Object} the matching size definition.
+ * @param sizes containing objects for each size definition.
+ * @param slug  a string representation of the size (eg: `medium`).
  */
-
 const findSizeBySlug = (sizes, slug) => sizes.find(size => slug === size.slug);
 /* harmony default export */ var dimension_control_sizes = ([{
   name: (0,external_wp_i18n_namespaceObject._x)('None', 'Size of a UI element'),
@@ -53923,6 +54723,31 @@ const findSizeBySlug = (sizes, slug) => sizes.find(size => slug === size.slug);
 
 
 
+
+
+/**
+ * `DimensionControl` is a component designed to provide a UI to control spacing and/or dimensions.
+ *
+ * This feature is still experimental. “Experimental” means this is an early implementation subject to drastic and breaking changes.
+ *
+ * ```jsx
+ * import { useState } from 'react';
+ * import { __experimentalDimensionControl as DimensionControl } from '@wordpress/components';
+ *
+ * export default function MyCustomDimensionControl() {
+ * 	const [ paddingSize, setPaddingSize ] = useState( '' );
+ *
+ * 	return (
+ * 		<DimensionControl
+ * 			label={ 'Padding' }
+ * 			icon={ 'desktop' }
+ * 			onChange={ ( value ) => setPaddingSize( value ) }
+ * 			value={ paddingSize }
+ * 		/>
+ * 	);
+ * }
+ * ```
+ */
 function DimensionControl(props) {
   const {
     label,
@@ -53937,7 +54762,7 @@ function DimensionControl(props) {
     const theSize = findSizeBySlug(sizes, val);
 
     if (!theSize || value === theSize.slug) {
-      onChange(undefined);
+      onChange === null || onChange === void 0 ? void 0 : onChange(undefined);
     } else if (typeof onChange === 'function') {
       onChange(theSize.slug);
     }
@@ -53957,7 +54782,7 @@ function DimensionControl(props) {
     return [{
       label: (0,external_wp_i18n_namespaceObject.__)('Default'),
       value: ''
-    }].concat(options);
+    }, ...options];
   };
 
   const selectLabel = (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, icon && (0,external_wp_element_namespaceObject.createElement)(build_module_icon, {
@@ -54141,7 +54966,7 @@ function Draggable(_ref) {
   /**
    * Removes the element clone, resets cursor, and removes drag listener.
    *
-   * @param  event The non-custom DragEvent.
+   * @param event The non-custom DragEvent.
    */
 
   function end(event) {
@@ -54160,7 +54985,7 @@ function Draggable(_ref) {
    * - Sets transfer data.
    * - Adds dragover listener.
    *
-   * @param  event The non-custom DragEvent.
+   * @param event The non-custom DragEvent.
    */
 
 
@@ -54432,24 +55257,21 @@ function DropZoneComponent(_ref) {
   let children;
   const backdrop = {
     hidden: {
-      scaleY: 0,
       opacity: 0
     },
     show: {
-      scaleY: 1,
       opacity: 1,
       transition: {
         type: 'tween',
         duration: 0.2,
-        delay: 0.1,
-        delayChildren: 0.2
+        delay: 0,
+        delayChildren: 0.1
       }
     },
     exit: {
-      scaleY: 1,
       opacity: 0,
       transition: {
-        duration: 0.3,
+        duration: 0.2,
         delayChildren: 0
       }
     }
@@ -54457,11 +55279,14 @@ function DropZoneComponent(_ref) {
   const foreground = {
     hidden: {
       opacity: 0,
-      scale: 0.75
+      scale: 0.9
     },
     show: {
       opacity: 1,
-      scale: 1
+      scale: 1,
+      transition: {
+        duration: 0.1
+      }
     },
     exit: {
       opacity: 0,
@@ -54542,6 +55367,10 @@ const swatch = (0,external_wp_element_namespaceObject.createElement)(external_wp
  */
 
 
+/**
+ * Internal dependencies
+ */
+
 colord_k([names]);
 /**
  * Object representation for a color.
@@ -54555,9 +55384,9 @@ colord_k([names]);
 /**
  * Calculate the brightest and darkest values from a color palette.
  *
- * @param {Object[]} palette Color palette for the theme.
+ * @param palette Color palette for the theme.
  *
- * @return {string[]} Tuple of the darkest color and brightest color.
+ * @return Tuple of the darkest color and brightest color.
  */
 
 function getDefaultColors(palette) {
@@ -54575,9 +55404,11 @@ function getDefaultColors(palette) {
     let [min, max] = _ref2;
     return [current.brightness <= min.brightness ? current : min, current.brightness >= max.brightness ? current : max];
   }, [{
-    brightness: 1
+    brightness: 1,
+    color: ''
   }, {
-    brightness: 0
+    brightness: 0,
+    color: ''
   }]).map(_ref3 => {
     let {
       color
@@ -54588,10 +55419,10 @@ function getDefaultColors(palette) {
 /**
  * Generate a duotone gradient from a list of colors.
  *
- * @param {string[]} colors CSS color strings.
- * @param {string}   angle  CSS gradient angle.
+ * @param colors CSS color strings.
+ * @param angle  CSS gradient angle.
  *
- * @return {string} CSS gradient string for the duotone swatch.
+ * @return  CSS gradient string for the duotone swatch.
  */
 
 function getGradientFromCSSColors() {
@@ -54604,9 +55435,9 @@ function getGradientFromCSSColors() {
 /**
  * Convert a color array to an array of color stops.
  *
- * @param {string[]} colors CSS colors array
+ * @param colors CSS colors array
  *
- * @return {Object[]} Color stop information.
+ * @return Color stop information.
  */
 
 function getColorStopsFromColors(colors) {
@@ -54618,9 +55449,9 @@ function getColorStopsFromColors(colors) {
 /**
  * Convert a color stop array to an array colors.
  *
- * @param {Object[]} colorStops Color stop information.
+ * @param colorStops Color stop information.
  *
- * @return {string[]} CSS colors array.
+ * @return CSS colors array.
  */
 
 function getColorsFromColorStops() {
@@ -54661,7 +55492,7 @@ function DuotoneSwatch(_ref) {
 
 /* harmony default export */ var duotone_swatch = (DuotoneSwatch);
 
-;// CONCATENATED MODULE: ./packages/components/build-module/color-list-picker/index.js
+;// CONCATENATED MODULE: ./packages/components/build-module/duotone-picker/color-list-picker/index.js
 
 
 /**
@@ -54793,6 +55624,39 @@ function CustomDuotoneBar(_ref) {
 
 
 
+/**
+ * ```jsx
+ * import { DuotonePicker, DuotoneSwatch } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const DUOTONE_PALETTE = [
+ * 	{ colors: [ '#8c00b7', '#fcff41' ], name: 'Purple and yellow', slug: 'purple-yellow' },
+ * 	{ colors: [ '#000097', '#ff4747' ], name: 'Blue and red', slug: 'blue-red' },
+ * ];
+ *
+ * const COLOR_PALETTE = [
+ * 	{ color: '#ff4747', name: 'Red', slug: 'red' },
+ * 	{ color: '#fcff41', name: 'Yellow', slug: 'yellow' },
+ * 	{ color: '#000097', name: 'Blue', slug: 'blue' },
+ * 	{ color: '#8c00b7', name: 'Purple', slug: 'purple' },
+ * ];
+ *
+ * const Example = () => {
+ * 	const [ duotone, setDuotone ] = useState( [ '#000000', '#ffffff' ] );
+ * 	return (
+ * 		<>
+ * 			<DuotonePicker
+ * 				duotonePalette={ DUOTONE_PALETTE }
+ * 				colorPalette={ COLOR_PALETTE }
+ * 				value={ duotone }
+ * 				onChange={ setDuotone }
+ * 			/>
+ * 			<DuotoneSwatch values={ duotone } />
+ * 		</>
+ * 	);
+ * };
+ * ```
+ */
 function DuotonePicker(_ref) {
   let {
     clearable = true,
@@ -54806,7 +55670,7 @@ function DuotonePicker(_ref) {
   } = _ref;
   const [defaultDark, defaultLight] = (0,external_wp_element_namespaceObject.useMemo)(() => getDefaultColors(colorPalette), [colorPalette]);
   const isUnset = value === 'unset';
-  const unsetOption = (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.Option, {
+  const unsetOption = (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.Option, {
     key: "unset",
     value: "unset",
     isSelected: isUnset,
@@ -54831,7 +55695,7 @@ function DuotonePicker(_ref) {
     const label = name ? (0,external_wp_i18n_namespaceObject.sprintf)( // translators: %s: The name of the option e.g: "Dark grayscale".
     (0,external_wp_i18n_namespaceObject.__)('Duotone: %s'), name) : tooltipText;
     const isSelected = es6_default()(colors, value);
-    return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.Option, {
+    return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.Option, {
       key: slug,
       value: colors,
       isSelected: isSelected,
@@ -54843,9 +55707,9 @@ function DuotonePicker(_ref) {
       }
     });
   });
-  return (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker, {
+  return (0,external_wp_element_namespaceObject.createElement)(circular_option_picker, {
     options: unsetable ? [unsetOption, ...options] : options,
-    actions: !!clearable && (0,external_wp_element_namespaceObject.createElement)(CircularOptionPicker.ButtonAction, {
+    actions: !!clearable && (0,external_wp_element_namespaceObject.createElement)(circular_option_picker.ButtonAction, {
       onClick: () => onChange(undefined)
     }, (0,external_wp_i18n_namespaceObject.__)('Clear'))
   }, (0,external_wp_element_namespaceObject.createElement)(spacer_component, {
@@ -54870,7 +55734,10 @@ function DuotonePicker(_ref) {
         newColors[1] = defaultLight;
       }
 
-      const newValue = newColors.length >= 2 ? newColors : undefined;
+      const newValue = newColors.length >= 2 ? newColors : undefined; // @ts-expect-error TODO: The color arrays for a DuotonePicker should be a tuple of two colors,
+      // but it's currently typed as a string[].
+      // See also https://github.com/WordPress/gutenberg/pull/49060#discussion_r1136951035
+
       onChange(newValue);
     }
   }))));
@@ -55007,7 +55874,7 @@ const VIDEO_EXTENSIONS = ['avi', 'mpg', 'mpeg', 'mov', 'mp4', 'm4v', 'ogg', 'ogv
 /**
  * Gets the extension of a file name.
  *
- * @param  filename The file name.
+ * @param filename The file name.
  * @return  The extension of the file name.
  */
 
@@ -55019,7 +55886,7 @@ function getExtension() {
 /**
  * Checks if a file is a video.
  *
- * @param  filename The file name.
+ * @param filename The file name.
  * @return Whether the file is a video.
  */
 
@@ -55031,7 +55898,7 @@ function isVideoType() {
 /**
  * Transforms a fraction value to a percentage value.
  *
- * @param  fraction The fraction value.
+ * @param fraction The fraction value.
  * @return A percentage value.
  */
 
@@ -55673,7 +56540,7 @@ const settings = (0,external_wp_element_namespaceObject.createElement)(external_
  * Some themes use css vars for their font sizes, so until we
  * have the way of calculating them don't display them.
  *
- * @param  value The value that is checked.
+ * @param value The value that is checked.
  * @return Whether the value is a simple css value.
  */
 
@@ -55685,7 +56552,7 @@ function isSimpleCssValue(value) {
  * If all of the given font sizes have the same unit (e.g. 'px'), return that
  * unit. Otherwise return null.
  *
- * @param  fontSizes List of font sizes.
+ * @param fontSizes List of font sizes.
  * @return The common unit, or null.
  */
 
@@ -56850,6 +57717,7 @@ const UnforwardedFontSizePicker = (props, ref) => {
     disableCustomFontSizes = false,
     onChange,
     size = 'default',
+    units: unitsProp,
     value,
     withSlider = false,
     withReset = true
@@ -56864,7 +57732,7 @@ const UnforwardedFontSizePicker = (props, ref) => {
   }
 
   const units = useCustomUnits({
-    availableUnits: ['px', 'em', 'rem']
+    availableUnits: unitsProp || ['px', 'em', 'rem']
   });
   const shouldUseSelectControl = fontSizes.length > 5;
   const selectedFontSize = fontSizes.find(fontSize => fontSize.size === value);
@@ -57210,7 +58078,7 @@ function Token(_ref) {
   }, transformedValue)), (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
     className: "components-form-token-field__remove-token",
     icon: close_small,
-    onClick: !disabled && onClick,
+    onClick: !disabled ? onClick : undefined,
     label: messages.remove,
     "aria-describedby": `components-form-token-field__token-text-${instanceId}`
   }));
@@ -57270,6 +58138,7 @@ const TokensAndInputWrapperFlex = /*#__PURE__*/emotion_styled_base_browser_esm(f
 
 
 
+
 const form_token_field_identity = value => value;
 /**
  * A `FormTokenField` is a field similar to the tags and categories fields in the interim editor chrome,
@@ -57313,7 +58182,8 @@ function FormTokenField(props) {
     __experimentalValidateInput = () => true,
     __experimentalShowHowTo = true,
     __next36pxDefaultSize = false,
-    __experimentalAutoSelectFirstMatch = false
+    __experimentalAutoSelectFirstMatch = false,
+    __nextHasNoMarginBottom = false
   } = props;
   const instanceId = (0,external_wp_compose_namespaceObject.useInstanceId)(FormTokenField); // We reset to these initial values again in the onBlur
 
@@ -57387,7 +58257,7 @@ function FormTokenField(props) {
   }
 
   function onBlur() {
-    if (inputHasValidValue()) {
+    if (inputHasValidValue() && __experimentalValidateInput(incompleteTokenValue)) {
       setIsActive(false);
     } else {
       // Reset to initial state
@@ -57878,9 +58748,12 @@ function FormTokenField(props) {
     onHover: onSuggestionHovered,
     onSelect: onSuggestionSelected,
     __experimentalRenderItem: __experimentalRenderItem
-  })), __experimentalShowHowTo && (0,external_wp_element_namespaceObject.createElement)("p", {
+  })), !__nextHasNoMarginBottom && (0,external_wp_element_namespaceObject.createElement)(spacer_component, {
+    marginBottom: 2
+  }), __experimentalShowHowTo && (0,external_wp_element_namespaceObject.createElement)(StyledHelp, {
     id: `components-form-token-suggestions-howto-${instanceId}`,
-    className: "components-form-token-field__help"
+    className: "components-form-token-field__help",
+    __nextHasNoMarginBottom: __nextHasNoMarginBottom
   }, tokenizeOnSpace ? (0,external_wp_i18n_namespaceObject.__)('Separate with commas, spaces, or the Enter key.') : (0,external_wp_i18n_namespaceObject.__)('Separate with commas or the Enter key.')));
   /* eslint-enable jsx-a11y/no-static-element-interactions */
 }
@@ -57972,16 +58845,49 @@ function PageControl(_ref) {
 
 
 
+
+/**
+ * `Guide` is a React component that renders a _user guide_ in a modal. The guide consists of several pages which the user can step through one by one. The guide is finished when the modal is closed or when the user clicks _Finish_ on the last page of the guide.
+ *
+ * ```jsx
+ * function MyTutorial() {
+ * 	const [ isOpen, setIsOpen ] = useState( true );
+ *
+ * 	if ( ! isOpen ) {
+ * 		return null;
+ * 	}
+ *
+ * 	return (
+ * 		<Guide
+ * 			onFinish={ () => setIsOpen( false ) }
+ * 			pages={ [
+ * 				{
+ * 					content: <p>Welcome to the ACME Store!</p>,
+ * 				},
+ * 				{
+ * 					image: <img src="https://acmestore.com/add-to-cart.png" />,
+ * 					content: (
+ * 						<p>
+ * 							Click <i>Add to Cart</i> to buy a product.
+ * 						</p>
+ * 					),
+ * 				},
+ * 			] }
+ * 		/>
+ * 	);
+ * }
+ * ```
+ */
 function Guide(_ref) {
   let {
     children,
     className,
     contentLabel,
-    finishButtonText,
+    finishButtonText = (0,external_wp_i18n_namespaceObject.__)('Finish'),
     onFinish,
     pages = []
   } = _ref;
-  const guideContainer = (0,external_wp_element_namespaceObject.useRef)();
+  const guideContainer = (0,external_wp_element_namespaceObject.useRef)(null);
   const [currentPage, setCurrentPage] = (0,external_wp_element_namespaceObject.useState)(0);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     if (external_wp_element_namespaceObject.Children.count(children)) {
@@ -57995,16 +58901,18 @@ function Guide(_ref) {
     // Each time we change the current page, start from the first element of the page.
     // This also solves any focus loss that can happen.
     if (guideContainer.current) {
-      var _focus$tabbable$find, _focus$tabbable$find$;
+      var _;
 
-      (_focus$tabbable$find = external_wp_dom_namespaceObject.focus.tabbable.find(guideContainer.current)) === null || _focus$tabbable$find === void 0 ? void 0 : (_focus$tabbable$find$ = _focus$tabbable$find[0]) === null || _focus$tabbable$find$ === void 0 ? void 0 : _focus$tabbable$find$.focus();
+      (_ = external_wp_dom_namespaceObject.focus.tabbable.find(guideContainer.current)[0]) === null || _ === void 0 ? void 0 : _.focus();
     }
   }, [currentPage]);
 
   if (external_wp_element_namespaceObject.Children.count(children)) {
-    pages = external_wp_element_namespaceObject.Children.map(children, child => ({
+    var _Children$map;
+
+    pages = (_Children$map = external_wp_element_namespaceObject.Children.map(children, child => ({
       content: child
-    }));
+    }))) !== null && _Children$map !== void 0 ? _Children$map : [];
   }
 
   const canGoBack = currentPage > 0;
@@ -58061,8 +58969,10 @@ function Guide(_ref) {
   }, (0,external_wp_i18n_namespaceObject.__)('Next')), !canGoForward && (0,external_wp_element_namespaceObject.createElement)(build_module_button, {
     className: "components-guide__finish-button",
     onClick: onFinish
-  }, finishButtonText || (0,external_wp_i18n_namespaceObject.__)('Finish')))));
+  }, finishButtonText))));
 }
+
+/* harmony default export */ var guide = (Guide);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/guide/page.js
 
@@ -58071,6 +58981,10 @@ function Guide(_ref) {
  * WordPress dependencies
  */
 
+
+/**
+ * Internal dependencies
+ */
 
 function GuidePage(props) {
   (0,external_wp_element_namespaceObject.useEffect)(() => {
@@ -58085,7 +58999,10 @@ function GuidePage(props) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/button/deprecated.js
 
 
-// @ts-nocheck
+
+/**
+ * External dependencies
+ */
 
 /**
  * WordPress dependencies
@@ -58098,12 +59015,12 @@ function GuidePage(props) {
 
 
 
-function IconButton(_ref, ref) {
+function UnforwardedIconButton(_ref, ref) {
   let {
+    label,
     labelPosition,
     size,
     tooltip,
-    label,
     ...props
   } = _ref;
   external_wp_deprecated_default()('wp.components.IconButton', {
@@ -58120,7 +59037,7 @@ function IconButton(_ref, ref) {
   }));
 }
 
-/* harmony default export */ var deprecated = ((0,external_wp_element_namespaceObject.forwardRef)(IconButton));
+/* harmony default export */ var deprecated = ((0,external_wp_element_namespaceObject.forwardRef)(UnforwardedIconButton));
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/item-group/item/hook.js
 /**
@@ -58268,15 +59185,13 @@ const InputControlPrefixWrapper = contextConnect(UnconnectedInputControlPrefixWr
 
 
 /**
- * External dependencies
- */
-
-/**
  * WordPress dependencies
  */
 
 
-
+/**
+ * Internal dependencies
+ */
 
 function KeyboardShortcut(_ref) {
   let {
@@ -58293,6 +59208,37 @@ function KeyboardShortcut(_ref) {
   });
   return null;
 }
+/**
+ * `KeyboardShortcuts` is a component which handles keyboard sequences during the lifetime of the rendering element.
+ *
+ * When passed children, it will capture key events which occur on or within the children. If no children are passed, events are captured on the document.
+ *
+ * It uses the [Mousetrap](https://craig.is/killing/mice) library to implement keyboard sequence bindings.
+ *
+ * ```jsx
+ * import { KeyboardShortcuts } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const MyKeyboardShortcuts = () => {
+ * 	const [ isAllSelected, setIsAllSelected ] = useState( false );
+ * 	const selectAll = () => {
+ * 		setIsAllSelected( true );
+ * 	};
+ *
+ * 	return (
+ * 		<div>
+ * 			<KeyboardShortcuts
+ * 				shortcuts={ {
+ * 					'mod+a': selectAll,
+ * 				} }
+ * 			/>
+ * 			[cmd/ctrl + A] Combination pressed? { isAllSelected ? 'Yes' : 'No' }
+ * 		</div>
+ * 	);
+ * };
+ * ```
+ */
+
 
 function KeyboardShortcuts(_ref2) {
   let {
@@ -58301,19 +59247,22 @@ function KeyboardShortcuts(_ref2) {
     bindGlobal,
     eventName
   } = _ref2;
-  const target = (0,external_wp_element_namespaceObject.useRef)();
-  const element = (0,external_lodash_namespaceObject.map)(shortcuts, (callback, shortcut) => (0,external_wp_element_namespaceObject.createElement)(KeyboardShortcut, {
-    key: shortcut,
-    shortcut: shortcut,
-    callback: callback,
-    bindGlobal: bindGlobal,
-    eventName: eventName,
-    target: target
-  })); // Render as non-visual if there are no children pressed. Keyboard
+  const target = (0,external_wp_element_namespaceObject.useRef)(null);
+  const element = Object.entries(shortcuts !== null && shortcuts !== void 0 ? shortcuts : {}).map(_ref3 => {
+    let [shortcut, callback] = _ref3;
+    return (0,external_wp_element_namespaceObject.createElement)(KeyboardShortcut, {
+      key: shortcut,
+      shortcut: shortcut,
+      callback: callback,
+      bindGlobal: bindGlobal,
+      eventName: eventName,
+      target: target
+    });
+  }); // Render as non-visual if there are no children pressed. Keyboard
   // events will be bound to the document instead.
 
   if (!external_wp_element_namespaceObject.Children.count(children)) {
-    return element;
+    return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, element);
   }
 
   return (0,external_wp_element_namespaceObject.createElement)("div", {
@@ -58471,6 +59420,40 @@ function MenuItem(props, ref) {
 
 
 const menu_items_choice_noop = () => {};
+/**
+ * `MenuItemsChoice` functions similarly to a set of `MenuItem`s, but allows the user to select one option from a set of multiple choices.
+ *
+ *
+ * ```jsx
+ * import { MenuGroup, MenuItemsChoice } from '@wordpress/components';
+ * import { useState } from '@wordpress/element';
+ *
+ * const MyMenuItemsChoice = () => {
+ * 	const [ mode, setMode ] = useState( 'visual' );
+ * 	const choices = [
+ * 		{
+ * 			value: 'visual',
+ * 			label: 'Visual editor',
+ * 		},
+ * 		{
+ * 			value: 'text',
+ * 			label: 'Code editor',
+ * 		},
+ * 	];
+ *
+ * 	return (
+ * 		<MenuGroup label="Editor">
+ * 			<MenuItemsChoice
+ * 				choices={ choices }
+ * 				value={ mode }
+ * 				onSelect={ ( newMode ) => setMode( newMode ) }
+ * 			/>
+ * 		</MenuGroup>
+ * 	);
+ * };
+ * ```
+ */
+
 
 function MenuItemsChoice(_ref) {
   let {
@@ -58479,7 +59462,7 @@ function MenuItemsChoice(_ref) {
     onSelect,
     value
   } = _ref;
-  return choices.map(item => {
+  return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, choices.map(item => {
     const isSelected = value === item.value;
     return (0,external_wp_element_namespaceObject.createElement)(menu_item, {
       key: item.value,
@@ -58498,8 +59481,10 @@ function MenuItemsChoice(_ref) {
       onMouseLeave: () => onHover(null),
       "aria-label": item['aria-label']
     }, item.label);
-  });
+  }));
 }
+
+/* harmony default export */ var menu_items_choice = (MenuItemsChoice);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigable-container/tabbable.js
 
@@ -58573,23 +59558,26 @@ const SEARCH_FOCUS_DELAY = 100;
 
 const context_noop = () => {};
 
+const defaultIsEmpty = () => false;
+
+const defaultGetter = () => undefined;
+
 const NavigationContext = (0,external_wp_element_namespaceObject.createContext)({
   activeItem: undefined,
   activeMenu: ROOT_MENU,
   setActiveMenu: context_noop,
-  isMenuEmpty: context_noop,
   navigationTree: {
     items: {},
-    getItem: context_noop,
+    getItem: defaultGetter,
     addItem: context_noop,
     removeItem: context_noop,
     menus: {},
-    getMenu: context_noop,
+    getMenu: defaultGetter,
     addMenu: context_noop,
     removeMenu: context_noop,
     childMenu: {},
     traverseMenu: context_noop,
-    isMenuEmpty: context_noop
+    isMenuEmpty: defaultIsEmpty
   }
 });
 const useNavigationContext = () => (0,external_wp_element_namespaceObject.useContext)(NavigationContext);
@@ -58605,7 +59593,7 @@ const search = (0,external_wp_element_namespaceObject.createElement)(external_wp
   xmlns: "http://www.w3.org/2000/svg",
   viewBox: "0 0 24 24"
 }, (0,external_wp_element_namespaceObject.createElement)(external_wp_primitives_namespaceObject.Path, {
-  d: "M13.5 6C10.5 6 8 8.5 8 11.5c0 1.1.3 2.1.9 3l-3.4 3 1 1.1 3.4-2.9c1 .9 2.2 1.4 3.6 1.4 3 0 5.5-2.5 5.5-5.5C19 8.5 16.5 6 13.5 6zm0 9.5c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"
+  d: "M13 5c-3.3 0-6 2.7-6 6 0 1.4.5 2.7 1.3 3.7l-3.8 3.8 1.1 1.1 3.8-3.8c1 .8 2.3 1.3 3.7 1.3 3.3 0 6-2.7 6-6S16.3 5 13 5zm0 10.5c-2.5 0-4.5-2-4.5-4.5s2-4.5 4.5-4.5 4.5 2 4.5 4.5-2 4.5-4.5 4.5z"
 }));
 /* harmony default export */ var library_search = (search);
 
@@ -58749,53 +59737,53 @@ function navigation_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have t
 
 
 const NavigationUI = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ejwewyf11"
+  target: "eeiismy11"
 } : 0)("width:100%;box-sizing:border-box;padding:0 ", space(4), ";overflow:hidden;" + ( true ? "" : 0));
 const MenuUI = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ejwewyf10"
+  target: "eeiismy10"
 } : 0)("margin-top:", space(6), ";margin-bottom:", space(6), ";display:flex;flex-direction:column;ul{padding:0;margin:0;list-style:none;}.components-navigation__back-button{margin-bottom:", space(6), ";}.components-navigation__group+.components-navigation__group{margin-top:", space(6), ";}" + ( true ? "" : 0));
 const MenuBackButtonUI = /*#__PURE__*/emotion_styled_base_browser_esm(build_module_button,  true ? {
-  target: "ejwewyf9"
+  target: "eeiismy9"
 } : 0)( true ? {
   name: "26l0q2",
   styles: "&.is-tertiary{color:inherit;opacity:0.7;&:hover:not( :disabled ){opacity:1;box-shadow:none;color:inherit;}&:active:not( :disabled ){background:transparent;opacity:1;color:inherit;}}"
 } : 0);
 const MenuTitleUI = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ejwewyf8"
+  target: "eeiismy8"
 } : 0)( true ? {
   name: "1aubja5",
   styles: "overflow:hidden;width:100%"
 } : 0);
 const MenuTitleActionsUI = emotion_styled_base_browser_esm("span",  true ? {
-  target: "ejwewyf7"
+  target: "eeiismy7"
 } : 0)("height:", space(6), ";.components-button.is-small{color:inherit;opacity:0.7;margin-right:", space(1), ";padding:0;&:active:not( :disabled ){background:none;opacity:1;color:inherit;}&:hover:not( :disabled ){box-shadow:none;opacity:1;color:inherit;}}" + ( true ? "" : 0));
 const MenuTitleSearchUI = /*#__PURE__*/emotion_styled_base_browser_esm(search_control,  true ? {
-  target: "ejwewyf6"
+  target: "eeiismy6"
 } : 0)( true ? {
   name: "za3n3e",
   styles: "input[type='search'].components-search-control__input{margin:0;background:#303030;color:#fff;&:focus{background:#434343;color:#fff;}&::placeholder{color:rgba( 255, 255, 255, 0.6 );}}svg{fill:white;}.components-button.has-icon{padding:0;min-width:auto;}"
 } : 0);
 const GroupTitleUI = /*#__PURE__*/emotion_styled_base_browser_esm(heading_component,  true ? {
-  target: "ejwewyf5"
+  target: "eeiismy5"
 } : 0)("min-height:", space(12), ";align-items:center;color:inherit;display:flex;justify-content:space-between;margin-bottom:", space(2), ";padding:", () => (0,external_wp_i18n_namespaceObject.isRTL)() ? `${space(1)} ${space(4)} ${space(1)} ${space(2)}` : `${space(1)} ${space(2)} ${space(1)} ${space(4)}`, ";" + ( true ? "" : 0));
 const ItemBaseUI = emotion_styled_base_browser_esm("li",  true ? {
-  target: "ejwewyf4"
+  target: "eeiismy4"
 } : 0)("border-radius:2px;color:inherit;margin-bottom:0;>button,>a.components-button,>a{width:100%;color:inherit;opacity:0.7;padding:", space(2), " ", space(4), ";", rtl({
   textAlign: 'left'
 }, {
   textAlign: 'right'
 }), " &:hover,&:focus:not( [aria-disabled='true'] ):active,&:active:not( [aria-disabled='true'] ):active{color:inherit;opacity:1;}}&.is-active{background-color:", COLORS.ui.theme, ";color:", COLORS.white, ";>button,>a{color:", COLORS.white, ";opacity:1;}}>svg path{color:", COLORS.gray[600], ";}" + ( true ? "" : 0));
 const ItemUI = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ejwewyf3"
+  target: "eeiismy3"
 } : 0)("display:flex;align-items:center;height:auto;min-height:40px;margin:0;padding:", space(1.5), " ", space(4), ";font-weight:400;line-height:20px;width:100%;color:inherit;opacity:0.7;" + ( true ? "" : 0));
 const ItemIconUI = emotion_styled_base_browser_esm("span",  true ? {
-  target: "ejwewyf2"
+  target: "eeiismy2"
 } : 0)("display:flex;margin-right:", space(2), ";" + ( true ? "" : 0));
 const ItemBadgeUI = emotion_styled_base_browser_esm("span",  true ? {
-  target: "ejwewyf1"
+  target: "eeiismy1"
 } : 0)("margin-left:", () => (0,external_wp_i18n_namespaceObject.isRTL)() ? '0' : space(2), ";margin-right:", () => (0,external_wp_i18n_namespaceObject.isRTL)() ? space(2) : '0', ";display:inline-flex;padding:", space(1), " ", space(3), ";border-radius:2px;animation:fade-in 250ms ease-out;@keyframes fade-in{from{opacity:0;}to{opacity:1;}}", reduceMotion('animation'), ";" + ( true ? "" : 0));
 const ItemTitleUI = /*#__PURE__*/emotion_styled_base_browser_esm(text_component,  true ? {
-  target: "ejwewyf0"
+  target: "eeiismy0"
 } : 0)(() => (0,external_wp_i18n_namespaceObject.isRTL)() ? 'margin-left: auto;' : 'margin-right: auto;', " font-size:14px;line-height:20px;color:inherit;" + ( true ? "" : 0));
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/use-navigation-tree-nodes.js
@@ -58803,7 +59791,7 @@ const ItemTitleUI = /*#__PURE__*/emotion_styled_base_browser_esm(text_component,
  * WordPress dependencies
  */
 
-const useNavigationTreeNodes = () => {
+function useNavigationTreeNodes() {
   const [nodes, setNodes] = (0,external_wp_element_namespaceObject.useState)({});
 
   const getNode = key => nodes[key];
@@ -58834,7 +59822,7 @@ const useNavigationTreeNodes = () => {
     addNode,
     removeNode
   };
-};
+}
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/use-create-navigation-tree.js
 /**
@@ -58877,6 +59865,7 @@ const useCreateNavigationTree = () => {
     let current;
 
     while (queue.length > 0) {
+      // Type cast to string is safe because of the `length > 0` check above.
       current = getMenu(queue.shift());
 
       if (!current || visited.includes(current.menu)) {
@@ -58899,6 +59888,8 @@ const useCreateNavigationTree = () => {
         isEmpty = false;
         return false;
       }
+
+      return undefined;
     });
     return isEmpty;
   };
@@ -58914,6 +59905,10 @@ const useCreateNavigationTree = () => {
       setChildMenu(state => {
         const newState = { ...state
         };
+
+        if (!value.parentMenu) {
+          return newState;
+        }
 
         if (!newState[value.parentMenu]) {
           newState[value.parentMenu] = [];
@@ -58955,6 +59950,48 @@ const useCreateNavigationTree = () => {
 
 
 const navigation_noop = () => {};
+/**
+ * Render a navigation list with optional groupings and hierarchy.
+ *
+ * @example
+ * ```jsx
+ * import {
+ *   __experimentalNavigation as Navigation,
+ *   __experimentalNavigationGroup as NavigationGroup,
+ *   __experimentalNavigationItem as NavigationItem,
+ *   __experimentalNavigationMenu as NavigationMenu,
+ * } from '@wordpress/components';
+ *
+ * const MyNavigation = () => (
+ *   <Navigation>
+ *     <NavigationMenu title="Home">
+ *       <NavigationGroup title="Group 1">
+ *         <NavigationItem item="item-1" title="Item 1" />
+ *         <NavigationItem item="item-2" title="Item 2" />
+ *       </NavigationGroup>
+ *       <NavigationGroup title="Group 2">
+ *         <NavigationItem
+ *           item="item-3"
+ *           navigateToMenu="category"
+ *           title="Category"
+ *         />
+ *       </NavigationGroup>
+ *     </NavigationMenu>
+ *
+ *     <NavigationMenu
+ *       backButtonLabel="Home"
+ *       menu="category"
+ *       parentMenu="root"
+ *       title="Category"
+ *     >
+ *       <NavigationItem badge="1" item="child-1" title="Child 1" />
+ *       <NavigationItem item="child-2" title="Child 2" />
+ *     </NavigationMenu>
+ *   </Navigation>
+ * );
+ * ```
+ */
+
 
 function Navigation(_ref) {
   let {
@@ -59011,13 +60048,14 @@ function Navigation(_ref) {
     className: classes
   }, (0,external_wp_element_namespaceObject.createElement)("div", {
     key: menu,
-    className: classnames_default()({
+    className: animateClassName ? classnames_default()({
       [animateClassName]: isMounted.current && slideOrigin
-    })
+    }) : undefined
   }, (0,external_wp_element_namespaceObject.createElement)(NavigationContext.Provider, {
     value: context
   }, children)));
 }
+/* harmony default export */ var navigation = (Navigation);
 
 ;// CONCATENATED MODULE: ./packages/icons/build-module/library/chevron-right.js
 
@@ -59070,7 +60108,7 @@ const chevronLeft = (0,external_wp_element_namespaceObject.createElement)(extern
 
 
 
-function NavigationBackButton(_ref, ref) {
+function UnforwardedNavigationBackButton(_ref, ref) {
   var _navigationTree$getMe;
 
   let {
@@ -59085,7 +60123,7 @@ function NavigationBackButton(_ref, ref) {
     navigationTree
   } = useNavigationContext();
   const classes = classnames_default()('components-navigation__back-button', className);
-  const parentMenuTitle = (_navigationTree$getMe = navigationTree.getMenu(parentMenu)) === null || _navigationTree$getMe === void 0 ? void 0 : _navigationTree$getMe.title;
+  const parentMenuTitle = parentMenu !== undefined ? (_navigationTree$getMe = navigationTree.getMenu(parentMenu)) === null || _navigationTree$getMe === void 0 ? void 0 : _navigationTree$getMe.title : undefined;
 
   const handleOnClick = event => {
     if (typeof onClick === 'function') {
@@ -59111,11 +60149,16 @@ function NavigationBackButton(_ref, ref) {
   }), backButtonLabel || parentMenuTitle || (0,external_wp_i18n_namespaceObject.__)('Back'));
 }
 
-/* harmony default export */ var back_button = ((0,external_wp_element_namespaceObject.forwardRef)(NavigationBackButton));
+const NavigationBackButton = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedNavigationBackButton);
+/* harmony default export */ var back_button = (NavigationBackButton);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/group/context.js
 /**
  * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
  */
 
 const NavigationGroupContext = (0,external_wp_element_namespaceObject.createContext)({
@@ -59180,6 +60223,7 @@ function NavigationGroup(_ref) {
     role: "group"
   }, children)));
 }
+/* harmony default export */ var group = (NavigationGroup);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/item/base-content.js
 
@@ -59195,7 +60239,6 @@ function NavigationItemBaseContent(props) {
   } = props;
   return (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, title && (0,external_wp_element_namespaceObject.createElement)(ItemTitleUI, {
     className: "components-navigation__item-title",
-    variant: "body.small",
     as: "span"
   }, title), badge && (0,external_wp_element_namespaceObject.createElement)(ItemBadgeUI, {
     className: "components-navigation__item-badge"
@@ -59205,6 +60248,10 @@ function NavigationItemBaseContent(props) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/menu/context.js
 /**
  * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
  */
 
 const NavigationMenuContext = (0,external_wp_element_namespaceObject.createContext)({
@@ -59252,7 +60299,7 @@ const useNavigationTreeItem = (itemId, props) => {
   } = useNavigationMenuContext();
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     const isMenuActive = activeMenu === menu;
-    const isItemVisible = !search || normalizedSearch(props.title, search);
+    const isItemVisible = !search || props.title !== undefined && normalizedSearch(props.title, search);
     addItem(itemId, { ...props,
       group,
       menu,
@@ -59403,6 +60450,7 @@ function NavigationItem(props) {
     icon: navigationIcon
   })));
 }
+/* harmony default export */ var navigation_item = (NavigationItem);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigation/menu/use-navigation-tree-menu.js
 /**
@@ -59495,12 +60543,14 @@ function MenuTitleSearch(_ref) {
   const {
     menu
   } = useNavigationMenuContext();
-  const inputRef = (0,external_wp_element_namespaceObject.useRef)(); // Wait for the slide-in animation to complete before autofocusing the input.
+  const inputRef = (0,external_wp_element_namespaceObject.useRef)(null); // Wait for the slide-in animation to complete before autofocusing the input.
   // This prevents scrolling to the input during the animation.
 
   (0,external_wp_element_namespaceObject.useEffect)(() => {
     const delayedFocus = setTimeout(() => {
-      inputRef.current.focus();
+      var _inputRef$current;
+
+      (_inputRef$current = inputRef.current) === null || _inputRef$current === void 0 ? void 0 : _inputRef$current.focus();
     }, SEARCH_FOCUS_DELAY);
     return () => {
       clearTimeout(delayedFocus);
@@ -59520,16 +60570,16 @@ function MenuTitleSearch(_ref) {
   }, [items, search]);
 
   const onClose = () => {
-    onSearch('');
+    onSearch === null || onSearch === void 0 ? void 0 : onSearch('');
     onCloseSearch();
   };
 
-  function onKeyDown(event) {
+  const onKeyDown = event => {
     if (event.code === 'Escape' && !event.defaultPrevented) {
       event.preventDefault();
       onClose();
     }
-  }
+  };
 
   const inputId = `components-navigation__menu-title-search-${menu}`;
   const placeholder = (0,external_wp_i18n_namespaceObject.sprintf)(
@@ -59541,7 +60591,7 @@ function MenuTitleSearch(_ref) {
     autoComplete: "off",
     className: "components-navigation__menu-search-input",
     id: inputId,
-    onChange: value => onSearch(value),
+    onChange: value => onSearch === null || onSearch === void 0 ? void 0 : onSearch(value),
     onKeyDown: onKeyDown,
     placeholder: placeholder,
     onClose: onClose,
@@ -59584,7 +60634,7 @@ function NavigationMenuTitle(_ref) {
   const {
     menu
   } = useNavigationMenuContext();
-  const searchButtonRef = (0,external_wp_element_namespaceObject.useRef)();
+  const searchButtonRef = (0,external_wp_element_namespaceObject.useRef)(null);
 
   if (!title) {
     return null;
@@ -59595,7 +60645,9 @@ function NavigationMenuTitle(_ref) {
     // eslint-disable-next-line @wordpress/react-no-unsafe-timeout
 
     setTimeout(() => {
-      searchButtonRef.current.focus();
+      var _searchButtonRef$curr;
+
+      (_searchButtonRef$curr = searchButtonRef.current) === null || _searchButtonRef$curr === void 0 ? void 0 : _searchButtonRef$curr.focus();
     }, SEARCH_FOCUS_DELAY);
   };
 
@@ -59744,6 +60796,7 @@ function NavigationMenu(props) {
     search: search
   })))));
 }
+/* harmony default export */ var navigation_menu = (NavigationMenu);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigator/context.js
 /**
@@ -59757,9 +60810,466 @@ function NavigationMenu(props) {
 const initialContextValue = {
   location: {},
   goTo: () => {},
-  goBack: () => {}
+  goBack: () => {},
+  goToParent: () => {},
+  addScreen: () => {},
+  removeScreen: () => {},
+  params: {}
 };
 const NavigatorContext = (0,external_wp_element_namespaceObject.createContext)(initialContextValue);
+
+;// CONCATENATED MODULE: ./packages/components/node_modules/path-to-regexp/dist.es2015/index.js
+/**
+ * Tokenize input string.
+ */
+function lexer(str) {
+    var tokens = [];
+    var i = 0;
+    while (i < str.length) {
+        var char = str[i];
+        if (char === "*" || char === "+" || char === "?") {
+            tokens.push({ type: "MODIFIER", index: i, value: str[i++] });
+            continue;
+        }
+        if (char === "\\") {
+            tokens.push({ type: "ESCAPED_CHAR", index: i++, value: str[i++] });
+            continue;
+        }
+        if (char === "{") {
+            tokens.push({ type: "OPEN", index: i, value: str[i++] });
+            continue;
+        }
+        if (char === "}") {
+            tokens.push({ type: "CLOSE", index: i, value: str[i++] });
+            continue;
+        }
+        if (char === ":") {
+            var name = "";
+            var j = i + 1;
+            while (j < str.length) {
+                var code = str.charCodeAt(j);
+                if (
+                // `0-9`
+                (code >= 48 && code <= 57) ||
+                    // `A-Z`
+                    (code >= 65 && code <= 90) ||
+                    // `a-z`
+                    (code >= 97 && code <= 122) ||
+                    // `_`
+                    code === 95) {
+                    name += str[j++];
+                    continue;
+                }
+                break;
+            }
+            if (!name)
+                throw new TypeError("Missing parameter name at ".concat(i));
+            tokens.push({ type: "NAME", index: i, value: name });
+            i = j;
+            continue;
+        }
+        if (char === "(") {
+            var count = 1;
+            var pattern = "";
+            var j = i + 1;
+            if (str[j] === "?") {
+                throw new TypeError("Pattern cannot start with \"?\" at ".concat(j));
+            }
+            while (j < str.length) {
+                if (str[j] === "\\") {
+                    pattern += str[j++] + str[j++];
+                    continue;
+                }
+                if (str[j] === ")") {
+                    count--;
+                    if (count === 0) {
+                        j++;
+                        break;
+                    }
+                }
+                else if (str[j] === "(") {
+                    count++;
+                    if (str[j + 1] !== "?") {
+                        throw new TypeError("Capturing groups are not allowed at ".concat(j));
+                    }
+                }
+                pattern += str[j++];
+            }
+            if (count)
+                throw new TypeError("Unbalanced pattern at ".concat(i));
+            if (!pattern)
+                throw new TypeError("Missing pattern at ".concat(i));
+            tokens.push({ type: "PATTERN", index: i, value: pattern });
+            i = j;
+            continue;
+        }
+        tokens.push({ type: "CHAR", index: i, value: str[i++] });
+    }
+    tokens.push({ type: "END", index: i, value: "" });
+    return tokens;
+}
+/**
+ * Parse a string for the raw tokens.
+ */
+function dist_es2015_parse(str, options) {
+    if (options === void 0) { options = {}; }
+    var tokens = lexer(str);
+    var _a = options.prefixes, prefixes = _a === void 0 ? "./" : _a;
+    var defaultPattern = "[^".concat(escapeString(options.delimiter || "/#?"), "]+?");
+    var result = [];
+    var key = 0;
+    var i = 0;
+    var path = "";
+    var tryConsume = function (type) {
+        if (i < tokens.length && tokens[i].type === type)
+            return tokens[i++].value;
+    };
+    var mustConsume = function (type) {
+        var value = tryConsume(type);
+        if (value !== undefined)
+            return value;
+        var _a = tokens[i], nextType = _a.type, index = _a.index;
+        throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
+    };
+    var consumeText = function () {
+        var result = "";
+        var value;
+        while ((value = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR"))) {
+            result += value;
+        }
+        return result;
+    };
+    while (i < tokens.length) {
+        var char = tryConsume("CHAR");
+        var name = tryConsume("NAME");
+        var pattern = tryConsume("PATTERN");
+        if (name || pattern) {
+            var prefix = char || "";
+            if (prefixes.indexOf(prefix) === -1) {
+                path += prefix;
+                prefix = "";
+            }
+            if (path) {
+                result.push(path);
+                path = "";
+            }
+            result.push({
+                name: name || key++,
+                prefix: prefix,
+                suffix: "",
+                pattern: pattern || defaultPattern,
+                modifier: tryConsume("MODIFIER") || "",
+            });
+            continue;
+        }
+        var value = char || tryConsume("ESCAPED_CHAR");
+        if (value) {
+            path += value;
+            continue;
+        }
+        if (path) {
+            result.push(path);
+            path = "";
+        }
+        var open = tryConsume("OPEN");
+        if (open) {
+            var prefix = consumeText();
+            var name_1 = tryConsume("NAME") || "";
+            var pattern_1 = tryConsume("PATTERN") || "";
+            var suffix = consumeText();
+            mustConsume("CLOSE");
+            result.push({
+                name: name_1 || (pattern_1 ? key++ : ""),
+                pattern: name_1 && !pattern_1 ? defaultPattern : pattern_1,
+                prefix: prefix,
+                suffix: suffix,
+                modifier: tryConsume("MODIFIER") || "",
+            });
+            continue;
+        }
+        mustConsume("END");
+    }
+    return result;
+}
+/**
+ * Compile a string to a template function for the path.
+ */
+function dist_es2015_compile(str, options) {
+    return tokensToFunction(dist_es2015_parse(str, options), options);
+}
+/**
+ * Expose a method for transforming tokens into the path function.
+ */
+function tokensToFunction(tokens, options) {
+    if (options === void 0) { options = {}; }
+    var reFlags = flags(options);
+    var _a = options.encode, encode = _a === void 0 ? function (x) { return x; } : _a, _b = options.validate, validate = _b === void 0 ? true : _b;
+    // Compile all the tokens into regexps.
+    var matches = tokens.map(function (token) {
+        if (typeof token === "object") {
+            return new RegExp("^(?:".concat(token.pattern, ")$"), reFlags);
+        }
+    });
+    return function (data) {
+        var path = "";
+        for (var i = 0; i < tokens.length; i++) {
+            var token = tokens[i];
+            if (typeof token === "string") {
+                path += token;
+                continue;
+            }
+            var value = data ? data[token.name] : undefined;
+            var optional = token.modifier === "?" || token.modifier === "*";
+            var repeat = token.modifier === "*" || token.modifier === "+";
+            if (Array.isArray(value)) {
+                if (!repeat) {
+                    throw new TypeError("Expected \"".concat(token.name, "\" to not repeat, but got an array"));
+                }
+                if (value.length === 0) {
+                    if (optional)
+                        continue;
+                    throw new TypeError("Expected \"".concat(token.name, "\" to not be empty"));
+                }
+                for (var j = 0; j < value.length; j++) {
+                    var segment = encode(value[j], token);
+                    if (validate && !matches[i].test(segment)) {
+                        throw new TypeError("Expected all \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
+                    }
+                    path += token.prefix + segment + token.suffix;
+                }
+                continue;
+            }
+            if (typeof value === "string" || typeof value === "number") {
+                var segment = encode(String(value), token);
+                if (validate && !matches[i].test(segment)) {
+                    throw new TypeError("Expected \"".concat(token.name, "\" to match \"").concat(token.pattern, "\", but got \"").concat(segment, "\""));
+                }
+                path += token.prefix + segment + token.suffix;
+                continue;
+            }
+            if (optional)
+                continue;
+            var typeOfMessage = repeat ? "an array" : "a string";
+            throw new TypeError("Expected \"".concat(token.name, "\" to be ").concat(typeOfMessage));
+        }
+        return path;
+    };
+}
+/**
+ * Create path match function from `path-to-regexp` spec.
+ */
+function dist_es2015_match(str, options) {
+    var keys = [];
+    var re = pathToRegexp(str, keys, options);
+    return regexpToFunction(re, keys, options);
+}
+/**
+ * Create a path match function from `path-to-regexp` output.
+ */
+function regexpToFunction(re, keys, options) {
+    if (options === void 0) { options = {}; }
+    var _a = options.decode, decode = _a === void 0 ? function (x) { return x; } : _a;
+    return function (pathname) {
+        var m = re.exec(pathname);
+        if (!m)
+            return false;
+        var path = m[0], index = m.index;
+        var params = Object.create(null);
+        var _loop_1 = function (i) {
+            if (m[i] === undefined)
+                return "continue";
+            var key = keys[i - 1];
+            if (key.modifier === "*" || key.modifier === "+") {
+                params[key.name] = m[i].split(key.prefix + key.suffix).map(function (value) {
+                    return decode(value, key);
+                });
+            }
+            else {
+                params[key.name] = decode(m[i], key);
+            }
+        };
+        for (var i = 1; i < m.length; i++) {
+            _loop_1(i);
+        }
+        return { path: path, index: index, params: params };
+    };
+}
+/**
+ * Escape a regular expression string.
+ */
+function escapeString(str) {
+    return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
+}
+/**
+ * Get the flags for a regexp from the options.
+ */
+function flags(options) {
+    return options && options.sensitive ? "" : "i";
+}
+/**
+ * Pull out keys from a regexp.
+ */
+function regexpToRegexp(path, keys) {
+    if (!keys)
+        return path;
+    var groupsRegex = /\((?:\?<(.*?)>)?(?!\?)/g;
+    var index = 0;
+    var execResult = groupsRegex.exec(path.source);
+    while (execResult) {
+        keys.push({
+            // Use parenthesized substring match if available, index otherwise
+            name: execResult[1] || index++,
+            prefix: "",
+            suffix: "",
+            modifier: "",
+            pattern: "",
+        });
+        execResult = groupsRegex.exec(path.source);
+    }
+    return path;
+}
+/**
+ * Transform an array into a regexp.
+ */
+function arrayToRegexp(paths, keys, options) {
+    var parts = paths.map(function (path) { return pathToRegexp(path, keys, options).source; });
+    return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
+}
+/**
+ * Create a path regexp from string input.
+ */
+function stringToRegexp(path, keys, options) {
+    return tokensToRegexp(dist_es2015_parse(path, options), keys, options);
+}
+/**
+ * Expose a function for taking tokens and returning a RegExp.
+ */
+function tokensToRegexp(tokens, keys, options) {
+    if (options === void 0) { options = {}; }
+    var _a = options.strict, strict = _a === void 0 ? false : _a, _b = options.start, start = _b === void 0 ? true : _b, _c = options.end, end = _c === void 0 ? true : _c, _d = options.encode, encode = _d === void 0 ? function (x) { return x; } : _d, _e = options.delimiter, delimiter = _e === void 0 ? "/#?" : _e, _f = options.endsWith, endsWith = _f === void 0 ? "" : _f;
+    var endsWithRe = "[".concat(escapeString(endsWith), "]|$");
+    var delimiterRe = "[".concat(escapeString(delimiter), "]");
+    var route = start ? "^" : "";
+    // Iterate over the tokens and create our regexp string.
+    for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
+        var token = tokens_1[_i];
+        if (typeof token === "string") {
+            route += escapeString(encode(token));
+        }
+        else {
+            var prefix = escapeString(encode(token.prefix));
+            var suffix = escapeString(encode(token.suffix));
+            if (token.pattern) {
+                if (keys)
+                    keys.push(token);
+                if (prefix || suffix) {
+                    if (token.modifier === "+" || token.modifier === "*") {
+                        var mod = token.modifier === "*" ? "?" : "";
+                        route += "(?:".concat(prefix, "((?:").concat(token.pattern, ")(?:").concat(suffix).concat(prefix, "(?:").concat(token.pattern, "))*)").concat(suffix, ")").concat(mod);
+                    }
+                    else {
+                        route += "(?:".concat(prefix, "(").concat(token.pattern, ")").concat(suffix, ")").concat(token.modifier);
+                    }
+                }
+                else {
+                    if (token.modifier === "+" || token.modifier === "*") {
+                        route += "((?:".concat(token.pattern, ")").concat(token.modifier, ")");
+                    }
+                    else {
+                        route += "(".concat(token.pattern, ")").concat(token.modifier);
+                    }
+                }
+            }
+            else {
+                route += "(?:".concat(prefix).concat(suffix, ")").concat(token.modifier);
+            }
+        }
+    }
+    if (end) {
+        if (!strict)
+            route += "".concat(delimiterRe, "?");
+        route += !options.endsWith ? "$" : "(?=".concat(endsWithRe, ")");
+    }
+    else {
+        var endToken = tokens[tokens.length - 1];
+        var isEndDelimited = typeof endToken === "string"
+            ? delimiterRe.indexOf(endToken[endToken.length - 1]) > -1
+            : endToken === undefined;
+        if (!strict) {
+            route += "(?:".concat(delimiterRe, "(?=").concat(endsWithRe, "))?");
+        }
+        if (!isEndDelimited) {
+            route += "(?=".concat(delimiterRe, "|").concat(endsWithRe, ")");
+        }
+    }
+    return new RegExp(route, flags(options));
+}
+/**
+ * Normalize the given path string, returning a regular expression.
+ *
+ * An empty array can be passed in for the keys, which will hold the
+ * placeholder key descriptions. For example, using `/user/:id`, `keys` will
+ * contain `[{ name: 'id', delimiter: '/', optional: false, repeat: false }]`.
+ */
+function pathToRegexp(path, keys, options) {
+    if (path instanceof RegExp)
+        return regexpToRegexp(path, keys);
+    if (Array.isArray(path))
+        return arrayToRegexp(path, keys, options);
+    return stringToRegexp(path, keys, options);
+}
+
+;// CONCATENATED MODULE: ./packages/components/build-module/navigator/utils/router.js
+/**
+ * External dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+function matchPath(path, pattern) {
+  const matchingFunction = dist_es2015_match(pattern, {
+    decode: decodeURIComponent
+  });
+  return matchingFunction(path);
+}
+
+function patternMatch(path, screens) {
+  for (const screen of screens) {
+    const matched = matchPath(path, screen.path);
+
+    if (matched) {
+      return {
+        params: matched.params,
+        id: screen.id
+      };
+    }
+  }
+
+  return undefined;
+}
+function findParent(path, screens) {
+  if (!path.startsWith('/')) {
+    return undefined;
+  }
+
+  const pathParts = path.split('/');
+  let parentPath;
+
+  while (pathParts.length > 1 && parentPath === undefined) {
+    pathParts.pop();
+    const potentialParentPath = pathParts.join('/') === '' ? '/' : pathParts.join('/');
+
+    if (screens.find(screen => {
+      return matchPath(potentialParentPath, screen.path) !== false;
+    })) {
+      parentPath = potentialParentPath;
+    }
+  }
+
+  return parentPath;
+}
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/navigator/navigator-provider/component.js
 
@@ -59776,6 +61286,7 @@ function component_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have tried to 
  */
 
 
+
 /**
  * Internal dependencies
  */
@@ -59784,6 +61295,23 @@ function component_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You have tried to 
 
 
 
+
+const MAX_HISTORY_LENGTH = 50;
+
+function screensReducer() {
+  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  let action = arguments.length > 1 ? arguments[1] : undefined;
+
+  switch (action.type) {
+    case 'add':
+      return [...state, action.screen];
+
+    case 'remove':
+      return state.filter(s => s.id !== action.screen.id);
+  }
+
+  return state;
+}
 
 var component_ref =  true ? {
   name: "15bx5k",
@@ -59800,14 +61328,47 @@ function UnconnectedNavigatorProvider(props, forwardedRef) {
   const [locationHistory, setLocationHistory] = (0,external_wp_element_namespaceObject.useState)([{
     path: initialPath
   }]);
-  const goTo = (0,external_wp_element_namespaceObject.useCallback)(function (path) {
-    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    setLocationHistory(prevLocationHistory => [...prevLocationHistory, { ...options,
-      path,
-      isBack: false,
-      hasRestoredFocus: false
-    }]);
-  }, []);
+  const currentLocationHistory = (0,external_wp_element_namespaceObject.useRef)([]);
+  const [screens, dispatch] = (0,external_wp_element_namespaceObject.useReducer)(screensReducer, []);
+  const currentScreens = (0,external_wp_element_namespaceObject.useRef)([]);
+  (0,external_wp_element_namespaceObject.useEffect)(() => {
+    currentScreens.current = screens;
+  }, [screens]);
+  (0,external_wp_element_namespaceObject.useEffect)(() => {
+    currentLocationHistory.current = locationHistory;
+  }, [locationHistory]);
+  const currentMatch = (0,external_wp_element_namespaceObject.useRef)();
+  const matchedPath = (0,external_wp_element_namespaceObject.useMemo)(() => {
+    let currentPath;
+
+    if (locationHistory.length === 0 || (currentPath = locationHistory[locationHistory.length - 1].path) === undefined) {
+      currentMatch.current = undefined;
+      return undefined;
+    }
+
+    const resolvePath = path => {
+      const newMatch = patternMatch(path, screens); // If the new match is the same as the current match,
+      // return the previous one for performance reasons.
+
+      if (currentMatch.current && newMatch && external_wp_isShallowEqual_default()(newMatch.params, currentMatch.current.params) && newMatch.id === currentMatch.current.id) {
+        return currentMatch.current;
+      }
+
+      return newMatch;
+    };
+
+    const newMatch = resolvePath(currentPath);
+    currentMatch.current = newMatch;
+    return newMatch;
+  }, [screens, locationHistory]);
+  const addScreen = (0,external_wp_element_namespaceObject.useCallback)(screen => dispatch({
+    type: 'add',
+    screen
+  }), []);
+  const removeScreen = (0,external_wp_element_namespaceObject.useCallback)(screen => dispatch({
+    type: 'remove',
+    screen
+  }), []);
   const goBack = (0,external_wp_element_namespaceObject.useCallback)(() => {
     setLocationHistory(prevLocationHistory => {
       if (prevLocationHistory.length <= 1) {
@@ -59820,13 +61381,69 @@ function UnconnectedNavigatorProvider(props, forwardedRef) {
       }];
     });
   }, []);
+  const goTo = (0,external_wp_element_namespaceObject.useCallback)(function (path) {
+    let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const {
+      focusTargetSelector,
+      isBack = false,
+      skipFocus = false,
+      ...restOptions
+    } = options;
+    const isNavigatingToPreviousPath = isBack && currentLocationHistory.current.length > 1 && currentLocationHistory.current[currentLocationHistory.current.length - 2].path === path;
+
+    if (isNavigatingToPreviousPath) {
+      goBack();
+      return;
+    }
+
+    setLocationHistory(prevLocationHistory => {
+      const newLocation = { ...restOptions,
+        path,
+        isBack,
+        hasRestoredFocus: false,
+        skipFocus
+      };
+
+      if (prevLocationHistory.length < 1) {
+        return [newLocation];
+      }
+
+      return [...prevLocationHistory.slice(prevLocationHistory.length > MAX_HISTORY_LENGTH - 1 ? 1 : 0, -1), // Assign `focusTargetSelector` to the previous location in history
+      // (the one we just navigated from).
+      { ...prevLocationHistory[prevLocationHistory.length - 1],
+        focusTargetSelector
+      }, newLocation];
+    });
+  }, [goBack]);
+  const goToParent = (0,external_wp_element_namespaceObject.useCallback)(() => {
+    const currentPath = currentLocationHistory.current[currentLocationHistory.current.length - 1].path;
+
+    if (currentPath === undefined) {
+      return;
+    }
+
+    const parentPath = findParent(currentPath, currentScreens.current);
+
+    if (parentPath === undefined) {
+      return;
+    }
+
+    goTo(parentPath, {
+      isBack: true
+    });
+  }, [goTo]);
   const navigatorContextValue = (0,external_wp_element_namespaceObject.useMemo)(() => ({
     location: { ...locationHistory[locationHistory.length - 1],
       isInitial: locationHistory.length === 1
     },
+    params: matchedPath ? matchedPath.params : {},
+    match: matchedPath ? matchedPath.id : undefined,
     goTo,
-    goBack
-  }), [locationHistory, goTo, goBack]);
+    goBack,
+    goToParent,
+    addScreen,
+    removeScreen
+  }), [locationHistory, matchedPath, goTo, goBack, goToParent, addScreen, removeScreen]);
   const cx = useCx();
   const classes = (0,external_wp_element_namespaceObject.useMemo)( // Prevents horizontal overflow while animating screen transitions.
   () => cx(component_ref, className), [className, cx]);
@@ -59919,6 +61536,7 @@ var navigator_screen_component_ref =  true ? {
 } : 0;
 
 function UnconnectedNavigatorScreen(props, forwardedRef) {
+  const screenId = (0,external_wp_element_namespaceObject.useId)();
   const {
     children,
     className,
@@ -59927,11 +61545,21 @@ function UnconnectedNavigatorScreen(props, forwardedRef) {
   } = useContextSystem(props, 'NavigatorScreen');
   const prefersReducedMotion = (0,external_wp_compose_namespaceObject.useReducedMotion)();
   const {
-    location
+    location,
+    match,
+    addScreen,
+    removeScreen
   } = (0,external_wp_element_namespaceObject.useContext)(NavigatorContext);
-  const isMatch = location.path === (0,external_wp_escapeHtml_namespaceObject.escapeAttribute)(path);
+  const isMatch = match === screenId;
   const wrapperRef = (0,external_wp_element_namespaceObject.useRef)(null);
-  const previousLocation = (0,external_wp_compose_namespaceObject.usePrevious)(location);
+  (0,external_wp_element_namespaceObject.useEffect)(() => {
+    const screen = {
+      id: screenId,
+      path: (0,external_wp_escapeHtml_namespaceObject.escapeAttribute)(path)
+    };
+    addScreen(screen);
+    return () => removeScreen(screen);
+  }, [screenId, path, addScreen, removeScreen]);
   const cx = useCx();
   const classes = (0,external_wp_element_namespaceObject.useMemo)(() => cx(navigator_screen_component_ref, className), [className, cx]);
   const locationRef = (0,external_wp_element_namespaceObject.useRef)(location);
@@ -59946,7 +61574,8 @@ function UnconnectedNavigatorScreen(props, forwardedRef) {
     // - when the screen becomes visible
     // - if the wrapper ref has been assigned
     // - if focus hasn't already been restored for the current location
-    if (isInitialLocation || !isMatch || !wrapperRef.current || locationRef.current.hasRestoredFocus) {
+    // - if the `skipFocus` option is not set to `true`. This is useful when we trigger the navigation outside of NavigatorScreen.
+    if (isInitialLocation || !isMatch || !wrapperRef.current || locationRef.current.hasRestoredFocus || location.skipFocus) {
       return;
     }
 
@@ -59960,8 +61589,8 @@ function UnconnectedNavigatorScreen(props, forwardedRef) {
     let elementToFocus = null; // When navigating back, if a selector is provided, use it to look for the
     // target element (assumed to be a node inside the current NavigatorScreen)
 
-    if (location.isBack && previousLocation !== null && previousLocation !== void 0 && previousLocation.focusTargetSelector) {
-      elementToFocus = wrapperRef.current.querySelector(previousLocation.focusTargetSelector);
+    if (location.isBack && location !== null && location !== void 0 && location.focusTargetSelector) {
+      elementToFocus = wrapperRef.current.querySelector(location.focusTargetSelector);
     } // If the previous query didn't run or find any element to focus, fallback
     // to the first tabbable element in the screen (or the screen itself).
 
@@ -59973,7 +61602,7 @@ function UnconnectedNavigatorScreen(props, forwardedRef) {
 
     locationRef.current.hasRestoredFocus = true;
     elementToFocus.focus();
-  }, [isInitialLocation, isMatch, location.isBack, previousLocation === null || previousLocation === void 0 ? void 0 : previousLocation.focusTargetSelector]);
+  }, [isInitialLocation, isMatch, location.isBack, location.focusTargetSelector, location.skipFocus]);
   const mergedWrapperRef = (0,external_wp_compose_namespaceObject.useMergeRefs)([forwardedRef, wrapperRef]);
 
   if (!isMatch) {
@@ -59995,8 +61624,10 @@ function UnconnectedNavigatorScreen(props, forwardedRef) {
       ease: 'easeInOut'
     },
     x: 0
-  };
-  const initial = {
+  }; // Disable the initial animation if the screen is the very first screen to be
+  // rendered within the current `NavigatorProvider`.
+
+  const initial = location.isInitial && !location.isBack ? false : {
     opacity: 0,
     x: (0,external_wp_i18n_namespaceObject.isRTL)() && location.isBack || !(0,external_wp_i18n_namespaceObject.isRTL)() && !location.isBack ? 50 : -50
   };
@@ -60075,13 +61706,17 @@ const NavigatorScreen = contextConnect(UnconnectedNavigatorScreen, 'NavigatorScr
 function useNavigator() {
   const {
     location,
+    params,
     goTo,
-    goBack
+    goBack,
+    goToParent
   } = (0,external_wp_element_namespaceObject.useContext)(NavigatorContext);
   return {
     location,
     goTo,
-    goBack
+    goBack,
+    goToParent,
+    params
   };
 }
 
@@ -60205,16 +61840,24 @@ function useNavigatorBackButton(props) {
   const {
     onClick,
     as = build_module_button,
+    goToParent: goToParentProp = false,
     ...otherProps
   } = useContextSystem(props, 'NavigatorBackButton');
   const {
-    goBack
+    goBack,
+    goToParent
   } = use_navigator();
   const handleClick = (0,external_wp_element_namespaceObject.useCallback)(e => {
     e.preventDefault();
-    goBack();
+
+    if (goToParentProp) {
+      goToParent();
+    } else {
+      goBack();
+    }
+
     onClick === null || onClick === void 0 ? void 0 : onClick(e);
-  }, [goBack, onClick]);
+  }, [goToParentProp, goToParent, goBack, onClick]);
   return {
     as,
     onClick: handleClick,
@@ -60282,6 +61925,68 @@ function UnconnectedNavigatorBackButton(props, forwardedRef) {
 const NavigatorBackButton = contextConnect(UnconnectedNavigatorBackButton, 'NavigatorBackButton');
 /* harmony default export */ var navigator_back_button_component = (NavigatorBackButton);
 
+;// CONCATENATED MODULE: ./packages/components/build-module/navigator/navigator-to-parent-button/component.js
+
+
+
+/**
+ * External dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+
+function UnconnectedNavigatorToParentButton(props, forwardedRef) {
+  const navigatorToParentButtonProps = useNavigatorBackButton({ ...props,
+    goToParent: true
+  });
+  return (0,external_wp_element_namespaceObject.createElement)(component, extends_extends({
+    ref: forwardedRef
+  }, navigatorToParentButtonProps));
+}
+/*
+ * The `NavigatorToParentButton` component can be used to navigate to a screen and
+ * should be used in combination with the `NavigatorProvider`, the
+ * `NavigatorScreen` and the `NavigatorButton` components (or the `useNavigator`
+ * hook).
+ *
+ * @example
+ * ```jsx
+ * import {
+ *   __experimentalNavigatorProvider as NavigatorProvider,
+ *   __experimentalNavigatorScreen as NavigatorScreen,
+ *   __experimentalNavigatorButton as NavigatorButton,
+ *   __experimentalNavigatorToParentButton as NavigatorToParentButton,
+ * } from '@wordpress/components';
+ *
+ * const MyNavigation = () => (
+ *   <NavigatorProvider initialPath="/">
+ *     <NavigatorScreen path="/">
+ *       <p>This is the home screen.</p>
+ *        <NavigatorButton path="/child">
+ *          Navigate to child screen.
+ *       </NavigatorButton>
+ *     </NavigatorScreen>
+ *
+ *     <NavigatorScreen path="/child">
+ *       <p>This is the child screen.</p>
+ *       <NavigatorToParentButton>
+ *         Go to parent
+ *       </NavigatorToParentButton>
+ *     </NavigatorScreen>
+ *   </NavigatorProvider>
+ * );
+ * ```
+ */
+
+
+const NavigatorToParentButton = contextConnect(UnconnectedNavigatorToParentButton, 'NavigatorToParentButton');
+/* harmony default export */ var navigator_to_parent_button_component = (NavigatorToParentButton);
+
 ;// CONCATENATED MODULE: ./packages/components/build-module/notice/index.js
 
 
@@ -60302,15 +62007,11 @@ const NavigatorBackButton = contextConnect(UnconnectedNavigatorBackButton, 'Navi
  */
 
 
-/** @typedef {import('@wordpress/element').WPElement} WPElement */
 
 const notice_noop = () => {};
 /**
  * Custom hook which announces the message with the given politeness, if a
  * valid message is provided.
- *
- * @param {string|WPElement}     [message]  Message to announce.
- * @param {'polite'|'assertive'} politeness Politeness to announce.
  */
 
 
@@ -60322,15 +62023,6 @@ function useSpokenMessage(message, politeness) {
     }
   }, [spokenMessage, politeness]);
 }
-/**
- * Given a notice status, returns an assumed default politeness for the status.
- * Defaults to 'assertive'.
- *
- * @param {string} [status] Notice status.
- *
- * @return {'polite'|'assertive'} Notice politeness.
- */
-
 
 function getDefaultPoliteness(status) {
   switch (status) {
@@ -60344,6 +62036,18 @@ function getDefaultPoliteness(status) {
       return 'assertive';
   }
 }
+/**
+ * `Notice` is a component used to communicate feedback to the user.
+ *
+ *```jsx
+ * import { Notice } from `@wordpress/components`;
+ *
+ * const MyNotice = () => (
+ *   <Notice status="error">An unknown error occurred.</Notice>
+ * );
+ * ```
+ */
+
 
 function Notice(_ref) {
   let {
@@ -60366,7 +62070,7 @@ function Notice(_ref) {
     'is-dismissible': isDismissible
   });
 
-  if (__unstableHTML) {
+  if (__unstableHTML && typeof children === 'string') {
     children = (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.RawHTML, null, children);
   }
 
@@ -60438,15 +62142,30 @@ function Notice(_ref) {
 
 const list_noop = () => {};
 /**
- * Renders a list of notices.
+ * `NoticeList` is a component used to render a collection of notices.
  *
- * @param {Object}   $0           Props passed to the component.
- * @param {Array}    $0.notices   Array of notices to render.
- * @param {Function} $0.onRemove  Function called when a notice should be removed / dismissed.
- * @param {Object}   $0.className Name of the class used by the component.
- * @param {Object}   $0.children  Array of children to be rendered inside the notice list.
+ *```jsx
+ * import { Notice, NoticeList } from `@wordpress/components`;
  *
- * @return {Object} The rendered notices list.
+ * const MyNoticeList = () => {
+ *	const [ notices, setNotices ] = useState( [
+ *		{
+ *			id: 'second-notice',
+ *			content: 'second notice content',
+ *		},
+ *		{
+ *			id: 'fist-notice',
+ *			content: 'first notice content',
+ *		},
+ *	] );
+ *
+ *	const removeNotice = ( id ) => {
+ *		setNotices( notices.filter( ( notice ) => notice.id !== id ) );
+ *	};
+ *
+ *	return <NoticeList notices={ notices } onRemove={ removeNotice } />;
+ *};
+ *```
  */
 
 
@@ -60480,6 +62199,15 @@ function NoticeList(_ref) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/panel/header.js
 
 
+/**
+ * Internal dependencies
+ */
+
+/**
+ * `PanelHeader` renders the header for the `Panel`.
+ * This is used by the `Panel` component under the hood,
+ * so it does not typically need to be used.
+ */
 function PanelHeader(_ref) {
   let {
     label,
@@ -60510,7 +62238,7 @@ function PanelHeader(_ref) {
 
 
 
-function Panel(_ref, ref) {
+function UnforwardedPanel(_ref, ref) {
   let {
     header,
     className,
@@ -60524,8 +62252,26 @@ function Panel(_ref, ref) {
     label: header
   }), children);
 }
+/**
+ * `Panel` expands and collapses multiple sections of content.
+ *
+ * ```jsx
+ * import { Panel, PanelBody, PanelRow } from '@wordpress/components';
+ * import { more } from '@wordpress/icons';
+ *
+ * const MyPanel = () => (
+ * 	<Panel header="My Panel">
+ * 		<PanelBody title="My Block Settings" icon={ more } initialOpen={ true }>
+ * 			<PanelRow>My Panel Inputs and Labels</PanelRow>
+ * 		</PanelBody>
+ * 	</Panel>
+ * );
+ * ```
+ */
 
-/* harmony default export */ var panel = ((0,external_wp_element_namespaceObject.forwardRef)(Panel));
+
+const Panel = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedPanel);
+/* harmony default export */ var panel = (Panel);
 
 ;// CONCATENATED MODULE: ./packages/icons/build-module/library/chevron-up.js
 
@@ -60567,8 +62313,8 @@ const chevronUp = (0,external_wp_element_namespaceObject.createElement)(external
 
 const body_noop = () => {};
 
-function PanelBody(_ref, ref) {
-  let {
+function UnforwardedPanelBody(props, ref) {
+  const {
     buttonProps = {},
     children,
     className,
@@ -60578,11 +62324,12 @@ function PanelBody(_ref, ref) {
     opened,
     title,
     scrollAfterOpen = true
-  } = _ref;
+  } = props;
   const [isOpened, setIsOpened] = use_controlled_state(opened, {
-    initial: initialOpen === undefined ? true : initialOpen
+    initial: initialOpen === undefined ? true : initialOpen,
+    fallback: false
   });
-  const nodeRef = (0,external_wp_element_namespaceObject.useRef)(); // Defaults to 'smooth' scrolling
+  const nodeRef = (0,external_wp_element_namespaceObject.useRef)(null); // Defaults to 'smooth' scrolling
   // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
 
   const scrollBehavior = (0,external_wp_compose_namespaceObject.useReducedMotion)() ? 'auto' : 'smooth';
@@ -60622,20 +62369,20 @@ function PanelBody(_ref, ref) {
     ref: (0,external_wp_compose_namespaceObject.useMergeRefs)([nodeRef, ref])
   }, (0,external_wp_element_namespaceObject.createElement)(PanelBodyTitle, extends_extends({
     icon: icon,
-    isOpened: isOpened,
+    isOpened: Boolean(isOpened),
     onClick: handleOnToggle,
     title: title
   }, buttonProps)), typeof children === 'function' ? children({
-    opened: isOpened
+    opened: Boolean(isOpened)
   }) : isOpened && children);
 }
-const PanelBodyTitle = (0,external_wp_element_namespaceObject.forwardRef)((_ref2, ref) => {
+const PanelBodyTitle = (0,external_wp_element_namespaceObject.forwardRef)((_ref, ref) => {
   let {
     isOpened,
     icon,
     title,
     ...props
-  } = _ref2;
+  } = _ref;
   if (!title) return null;
   return (0,external_wp_element_namespaceObject.createElement)("h2", {
     className: "components-panel__body-title"
@@ -60654,9 +62401,8 @@ const PanelBodyTitle = (0,external_wp_element_namespaceObject.forwardRef)((_ref2
     size: 20
   })));
 });
-const body_ForwardedComponent = (0,external_wp_element_namespaceObject.forwardRef)(PanelBody);
-body_ForwardedComponent.displayName = 'PanelBody';
-/* harmony default export */ var body = (body_ForwardedComponent);
+const PanelBody = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedPanelBody);
+/* harmony default export */ var body = (PanelBody);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/panel/row.js
 
@@ -60671,7 +62417,7 @@ body_ForwardedComponent.displayName = 'PanelBody';
 
 
 
-const PanelRow = (_ref, ref) => {
+function UnforwardedPanelRow(_ref, ref) {
   let {
     className,
     children
@@ -60680,9 +62426,15 @@ const PanelRow = (_ref, ref) => {
     className: classnames_default()('components-panel__row', className),
     ref: ref
   }, children);
-};
+}
+/**
+ * `PanelRow` is a generic container for rows within a `PanelBody`.
+ * It is a flex container with a top margin for spacing.
+ */
 
-/* harmony default export */ var row = ((0,external_wp_element_namespaceObject.forwardRef)(PanelRow));
+
+const PanelRow = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedPanelRow);
+/* harmony default export */ var row = (PanelRow);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/placeholder/index.js
 
@@ -60774,30 +62526,47 @@ function Placeholder(props) {
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/query-controls/terms.js
 /**
- * External dependencies
+ * Internal dependencies
  */
-
+const ensureParentsAreDefined = terms => {
+  return terms.every(term => term.parent !== null);
+};
 /**
  * Returns terms in a tree form.
  *
- * @param {Array} flatTerms Array of terms in flat format.
+ * @param flatTerms Array of terms in flat format.
  *
- * @return {Array} Array of terms in tree format.
+ * @return Terms in tree format.
  */
 
-function buildTermsTree(flatTerms) {
-  const flatTermsWithParentAndChildren = flatTerms.map(term => {
-    return {
-      children: [],
-      parent: null,
-      ...term
-    };
-  });
-  const termsByParent = (0,external_lodash_namespaceObject.groupBy)(flatTermsWithParentAndChildren, 'parent');
 
-  if (termsByParent.null && termsByParent.null.length) {
+function buildTermsTree(flatTerms) {
+  const flatTermsWithParentAndChildren = flatTerms.map(term => ({
+    children: [],
+    parent: null,
+    ...term,
+    id: String(term.id)
+  })); // We use a custom type guard here to ensure that the parent property is
+  // defined on all terms. The type of the `parent` property is `number | null`
+  // and we need to ensure that it is `number`. This is because we use the
+  // `parent` property as a key in the `termsByParent` object.
+
+  if (!ensureParentsAreDefined(flatTermsWithParentAndChildren)) {
     return flatTermsWithParentAndChildren;
   }
+
+  const termsByParent = flatTermsWithParentAndChildren.reduce((acc, term) => {
+    const {
+      parent
+    } = term;
+
+    if (!acc[parent]) {
+      acc[parent] = [];
+    }
+
+    acc[parent].push(term);
+    return acc;
+  }, {});
 
   const fillWithChildren = terms => {
     return terms.map(term => {
@@ -60811,13 +62580,11 @@ function buildTermsTree(flatTerms) {
   return fillWithChildren(termsByParent['0'] || []);
 }
 
+;// CONCATENATED MODULE: external ["wp","htmlEntities"]
+var external_wp_htmlEntities_namespaceObject = window["wp"]["htmlEntities"];
 ;// CONCATENATED MODULE: ./packages/components/build-module/tree-select/index.js
 
 
-
-/**
- * External dependencies
- */
 
 /**
  * WordPress dependencies
@@ -60834,7 +62601,7 @@ function getSelectOptions(tree) {
   let level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   return tree.flatMap(treeNode => [{
     value: treeNode.id,
-    label: '\u00A0'.repeat(level * 3) + (0,external_lodash_namespaceObject.unescape)(treeNode.name)
+    label: '\u00A0'.repeat(level * 3) + (0,external_wp_htmlEntities_namespaceObject.decodeEntities)(treeNode.name)
   }, ...getSelectOptions(treeNode.children || [], level + 1)]);
 }
 /**
@@ -60911,6 +62678,34 @@ function TreeSelect(_ref) {
 }
 /* harmony default export */ var tree_select = (TreeSelect);
 
+;// CONCATENATED MODULE: ./packages/components/build-module/query-controls/author-select.js
+
+
+/**
+ * Internal dependencies
+ */
+
+
+function AuthorSelect(_ref) {
+  let {
+    label,
+    noOptionLabel,
+    authorList,
+    selectedAuthorId,
+    onChange: onChangeProp
+  } = _ref;
+  if (!authorList) return null;
+  const termsTree = buildTermsTree(authorList);
+  return (0,external_wp_element_namespaceObject.createElement)(tree_select, {
+    label,
+    noOptionLabel,
+    onChange: onChangeProp,
+    tree: termsTree,
+    selectedId: selectedAuthorId !== undefined ? String(selectedAuthorId) : undefined,
+    __nextHasNoMarginBottom: true
+  });
+}
+
 ;// CONCATENATED MODULE: ./packages/components/build-module/query-controls/category-select.js
 
 
@@ -60931,7 +62726,7 @@ function CategorySelect(_ref) {
     noOptionLabel,
     categoriesList,
     selectedCategoryId,
-    onChange,
+    onChange: onChangeProp,
     ...props
   } = _ref;
   const termsTree = (0,external_wp_element_namespaceObject.useMemo)(() => {
@@ -60940,37 +62735,12 @@ function CategorySelect(_ref) {
   return (0,external_wp_element_namespaceObject.createElement)(tree_select, extends_extends({
     label,
     noOptionLabel,
-    onChange,
+    onChange: onChangeProp,
     tree: termsTree,
-    selectedId: selectedCategoryId
-  }, props));
-}
-
-;// CONCATENATED MODULE: ./packages/components/build-module/query-controls/author-select.js
-
-
-/**
- * Internal dependencies
- */
-
-
-function AuthorSelect(_ref) {
-  let {
-    label,
-    noOptionLabel,
-    authorList,
-    selectedAuthorId,
-    onChange
-  } = _ref;
-  if (!authorList) return null;
-  const termsTree = buildTermsTree(authorList);
-  return (0,external_wp_element_namespaceObject.createElement)(tree_select, {
-    label,
-    noOptionLabel,
-    onChange,
-    tree: termsTree,
-    selectedId: selectedAuthorId
-  });
+    selectedId: selectedCategoryId !== undefined ? String(selectedCategoryId) : undefined
+  }, props, {
+    __nextHasNoMarginBottom: true
+  }));
 }
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/query-controls/index.js
@@ -60987,29 +62757,68 @@ function AuthorSelect(_ref) {
 
 
 
+
+
+
 const DEFAULT_MIN_ITEMS = 1;
 const DEFAULT_MAX_ITEMS = 100;
 const MAX_CATEGORIES_SUGGESTIONS = 20;
+
+function isSingleCategorySelection(props) {
+  return 'categoriesList' in props;
+}
+
+function isMultipleCategorySelection(props) {
+  return 'categorySuggestions' in props;
+}
+/**
+ * Controls to query for posts.
+ *
+ * ```jsx
+ * const MyQueryControls = () => (
+ *   <QueryControls
+ *     { ...{ maxItems, minItems, numberOfItems, order, orderBy } }
+ *     onOrderByChange={ ( newOrderBy ) => {
+ *       updateQuery( { orderBy: newOrderBy } )
+ *     }
+ *     onOrderChange={ ( newOrder ) => {
+ *       updateQuery( { order: newOrder } )
+ *     }
+ *     categoriesList={ categories }
+ *     selectedCategoryId={ category }
+ *     onCategoryChange={ ( newCategory ) => {
+ *       updateQuery( { category: newCategory } )
+ *     }
+ *     onNumberOfItemsChange={ ( newNumberOfItems ) => {
+ *       updateQuery( { numberOfItems: newNumberOfItems } )
+ *     } }
+ *   />
+ * );
+ * ```
+ */
+
+
 function QueryControls(_ref) {
   let {
     authorList,
     selectedAuthorId,
-    categoriesList,
-    selectedCategoryId,
-    categorySuggestions,
-    selectedCategories,
     numberOfItems,
     order,
     orderBy,
     maxItems = DEFAULT_MAX_ITEMS,
     minItems = DEFAULT_MIN_ITEMS,
-    onCategoryChange,
     onAuthorChange,
     onNumberOfItemsChange,
     onOrderChange,
-    onOrderByChange
+    onOrderByChange,
+    // Props for single OR multiple category selection are not destructured here,
+    // but instead are destructured inline where necessary.
+    ...props
   } = _ref;
-  return [onOrderChange && onOrderByChange && (0,external_wp_element_namespaceObject.createElement)(select_control, {
+  return (0,external_wp_element_namespaceObject.createElement)(v_stack_component, {
+    spacing: "4",
+    className: "components-query-controls"
+  }, [onOrderChange && onOrderByChange && (0,external_wp_element_namespaceObject.createElement)(select_control, {
     __nextHasNoMarginBottom: true,
     key: "query-controls-order-select",
     label: (0,external_wp_i18n_namespaceObject.__)('Order by'),
@@ -61030,6 +62839,10 @@ function QueryControls(_ref) {
       value: 'title/desc'
     }],
     onChange: value => {
+      if (typeof value !== 'string') {
+        return;
+      }
+
       const [newOrderBy, newOrder] = value.split('/');
 
       if (newOrder !== order) {
@@ -61040,22 +62853,27 @@ function QueryControls(_ref) {
         onOrderByChange(newOrderBy);
       }
     }
-  }), categoriesList && onCategoryChange && (0,external_wp_element_namespaceObject.createElement)(CategorySelect, {
+  }), isSingleCategorySelection(props) && props.categoriesList && props.onCategoryChange && (0,external_wp_element_namespaceObject.createElement)(CategorySelect, {
     key: "query-controls-category-select",
-    categoriesList: categoriesList,
+    categoriesList: props.categoriesList,
     label: (0,external_wp_i18n_namespaceObject.__)('Category'),
     noOptionLabel: (0,external_wp_i18n_namespaceObject.__)('All'),
-    selectedCategoryId: selectedCategoryId,
-    onChange: onCategoryChange
-  }), categorySuggestions && onCategoryChange && (0,external_wp_element_namespaceObject.createElement)(form_token_field, {
+    selectedCategoryId: props.selectedCategoryId,
+    onChange: props.onCategoryChange
+  }), isMultipleCategorySelection(props) && props.categorySuggestions && props.onCategoryChange && (0,external_wp_element_namespaceObject.createElement)(form_token_field, {
+    __nextHasNoMarginBottom: true,
     key: "query-controls-categories-select",
     label: (0,external_wp_i18n_namespaceObject.__)('Categories'),
-    value: selectedCategories && selectedCategories.map(item => ({
+    value: props.selectedCategories && props.selectedCategories.map(item => ({
       id: item.id,
+      // Keeping the fallback to `item.value` for legacy reasons,
+      // even if items of `selectedCategories` should not have a
+      // `value` property.
+      // @ts-expect-error
       value: item.name || item.value
     })),
-    suggestions: Object.keys(categorySuggestions),
-    onChange: onCategoryChange,
+    suggestions: Object.keys(props.categorySuggestions),
+    onChange: props.onCategoryChange,
     maxSuggestions: MAX_CATEGORIES_SUGGESTIONS
   }), onAuthorChange && (0,external_wp_element_namespaceObject.createElement)(AuthorSelect, {
     key: "query-controls-author-select",
@@ -61073,8 +62891,9 @@ function QueryControls(_ref) {
     min: minItems,
     max: maxItems,
     required: true
-  })];
+  })]);
 }
+/* harmony default export */ var query_controls = (QueryControls);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/radio-group/radio-context/index.js
 /**
@@ -62167,12 +63986,12 @@ const POSITIONS = {
  * Custom hook that manages resize listener events. It also provides a label
  * based on current resize width x height values.
  *
- * @param  props
- * @param  props.axis        Only shows the label corresponding to the axis.
- * @param  props.fadeTimeout Duration (ms) before deactivating the resize label.
- * @param  props.onResize    Callback when a resize occurs. Provides { width, height } callback.
- * @param  props.position    Adjusts label value.
- * @param  props.showPx      Whether to add `PX` to the label.
+ * @param props
+ * @param props.axis        Only shows the label corresponding to the axis.
+ * @param props.fadeTimeout Duration (ms) before deactivating the resize label.
+ * @param props.onResize    Callback when a resize occurs. Provides { width, height } callback.
+ * @param props.position    Adjusts label value.
+ * @param props.showPx      Whether to add `PX` to the label.
  *
  * @return Properties for hook.
  */
@@ -62299,14 +64118,14 @@ function useResizeLabel(_ref) {
 /**
  * Gets the resize label based on width and height values (as well as recent changes).
  *
- * @param  props
- * @param  props.axis     Only shows the label corresponding to the axis.
- * @param  props.height   Height value.
- * @param  props.moveX    Recent width (x axis) changes.
- * @param  props.moveY    Recent width (y axis) changes.
- * @param  props.position Adjusts label value.
- * @param  props.showPx   Whether to add `PX` to the label.
- * @param  props.width    Width value.
+ * @param props
+ * @param props.axis     Only shows the label corresponding to the axis.
+ * @param props.height   Height value.
+ * @param props.moveX    Recent width (x axis) changes.
+ * @param props.moveY    Recent width (y axis) changes.
+ * @param props.position Adjusts label value.
+ * @param props.showPx   Whether to add `PX` to the label.
+ * @param props.width    Width value.
  *
  * @return The rendered label.
  */
@@ -62381,24 +64200,24 @@ function resize_tooltip_styles_EMOTION_STRINGIFIED_CSS_ERROR_() { return "You ha
 
 
 const resize_tooltip_styles_Root = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ekdag503"
+  target: "e1wq7y4k3"
 } : 0)( true ? {
   name: "1cd7zoc",
   styles: "bottom:0;box-sizing:border-box;left:0;pointer-events:none;position:absolute;right:0;top:0"
 } : 0);
 const TooltipWrapper = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ekdag502"
+  target: "e1wq7y4k2"
 } : 0)( true ? {
   name: "ajymcs",
   styles: "align-items:center;box-sizing:border-box;display:inline-flex;justify-content:center;opacity:0;pointer-events:none;transition:opacity 120ms linear"
 } : 0);
 const resize_tooltip_styles_Tooltip = emotion_styled_base_browser_esm("div",  true ? {
-  target: "ekdag501"
-} : 0)("background:", COLORS.gray[900], ";border-radius:2px;box-sizing:border-box;font-size:12px;color:", COLORS.ui.textDark, ";padding:4px 8px;position:relative;" + ( true ? "" : 0)); // TODO: Resolve need to use &&& to increase specificity
+  target: "e1wq7y4k1"
+} : 0)("background:", COLORS.gray[900], ";border-radius:2px;box-sizing:border-box;font-family:", font('default.fontFamily'), ";font-size:12px;color:", COLORS.ui.textDark, ";padding:4px 8px;position:relative;" + ( true ? "" : 0)); // TODO: Resolve need to use &&& to increase specificity
 // https://github.com/WordPress/gutenberg/issues/18483
 
 const LabelText = /*#__PURE__*/emotion_styled_base_browser_esm(text_component,  true ? {
-  target: "ekdag500"
+  target: "e1wq7y4k0"
 } : 0)("&&&{color:", COLORS.ui.textDark, ";display:block;font-size:13px;line-height:1.4;white-space:nowrap;}" + ( true ? "" : 0));
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/resizable-box/resize-tooltip/label.js
@@ -62625,7 +64444,6 @@ const ResizableBox = (0,external_wp_element_namespaceObject.forwardRef)(Unforwar
  */
 
 
-
 /**
  * Internal dependencies
  */
@@ -62653,25 +64471,26 @@ function ResponsiveWrapper(_ref) {
     children,
     isInline = false
   } = _ref;
-  const [containerResizeListener, {
-    width: containerWidth
-  }] = (0,external_wp_compose_namespaceObject.useResizeObserver)();
 
   if (external_wp_element_namespaceObject.Children.count(children) !== 1) {
     return null;
   }
 
-  const imageStyle = {
-    paddingBottom: naturalWidth < (containerWidth !== null && containerWidth !== void 0 ? containerWidth : 0) ? naturalHeight : naturalHeight / naturalWidth * 100 + '%'
-  };
   const TagName = isInline ? 'span' : 'div';
+  let aspectRatio;
+
+  if (naturalWidth && naturalHeight) {
+    aspectRatio = `${naturalWidth} / ${naturalHeight}`;
+  }
+
   return (0,external_wp_element_namespaceObject.createElement)(TagName, {
     className: "components-responsive-wrapper"
-  }, containerResizeListener, (0,external_wp_element_namespaceObject.createElement)(TagName, {
-    style: imageStyle
-  }), (0,external_wp_element_namespaceObject.cloneElement)(children, {
-    className: classnames_default()('components-responsive-wrapper__content', children.props.className)
-  }));
+  }, (0,external_wp_element_namespaceObject.createElement)("div", null, (0,external_wp_element_namespaceObject.cloneElement)(children, {
+    className: classnames_default()('components-responsive-wrapper__content', children.props.className),
+    style: { ...children.props.style,
+      aspectRatio
+    }
+  })));
 }
 
 /* harmony default export */ var responsive_wrapper = (ResponsiveWrapper);
@@ -62954,8 +64773,8 @@ const NOTICE_TIMEOUT = 10000;
  * Custom hook which announces the message with the given politeness, if a
  * valid message is provided.
  *
- * @param  message    Message to announce.
- * @param  politeness Politeness to announce.
+ * @param message    Message to announce.
+ * @param politeness Politeness to announce.
  */
 
 function snackbar_useSpokenMessage(message, politeness) {
@@ -63348,7 +65167,7 @@ const TabButton = _ref => {
   } = _ref;
   return (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
     role: "tab",
-    tabIndex: selected ? null : -1,
+    tabIndex: selected ? undefined : -1,
     "aria-selected": selected,
     id: tabId,
     __experimentalIsFocusable: true
@@ -63423,17 +65242,45 @@ function TabPanel(_ref2) {
     } = _ref3;
     return name === selected;
   });
-  const selectedId = `${instanceId}-${(_selectedTab$name = selectedTab === null || selectedTab === void 0 ? void 0 : selectedTab.name) !== null && _selectedTab$name !== void 0 ? _selectedTab$name : 'none'}`;
-  (0,external_wp_element_namespaceObject.useEffect)(() => {
-    const firstEnabledTab = tabs.find(tab => !tab.disabled);
-    const initialTab = tabs.find(tab => tab.name === initialTabName);
+  const selectedId = `${instanceId}-${(_selectedTab$name = selectedTab === null || selectedTab === void 0 ? void 0 : selectedTab.name) !== null && _selectedTab$name !== void 0 ? _selectedTab$name : 'none'}`; // Handle selecting the initial tab.
 
-    if (!(selectedTab !== null && selectedTab !== void 0 && selectedTab.name) && firstEnabledTab) {
-      handleTabSelection(initialTab && !initialTab.disabled ? initialTab.name : firstEnabledTab.name);
-    } else if (selectedTab !== null && selectedTab !== void 0 && selectedTab.disabled && firstEnabledTab) {
+  (0,external_wp_element_namespaceObject.useLayoutEffect)(() => {
+    // If there's a selected tab, don't override it.
+    if (selectedTab) {
+      return;
+    }
+
+    const initialTab = tabs.find(tab => tab.name === initialTabName); // Wait for the denoted initial tab to be declared before making a
+    // selection. This ensures that if a tab is declared lazily it can
+    // still receive initial selection.
+
+    if (initialTabName && !initialTab) {
+      return;
+    }
+
+    if (initialTab && !initialTab.disabled) {
+      // Select the initial tab if it's not disabled.
+      handleTabSelection(initialTab.name);
+    } else {
+      // Fallback to the first enabled tab when the initial is disabled.
+      const firstEnabledTab = tabs.find(tab => !tab.disabled);
+      if (firstEnabledTab) handleTabSelection(firstEnabledTab.name);
+    }
+  }, [tabs, selectedTab, initialTabName, handleTabSelection]); // Handle the currently selected tab becoming disabled.
+
+  (0,external_wp_element_namespaceObject.useEffect)(() => {
+    // This effect only runs when the selected tab is defined and becomes disabled.
+    if (!(selectedTab !== null && selectedTab !== void 0 && selectedTab.disabled)) {
+      return;
+    }
+
+    const firstEnabledTab = tabs.find(tab => !tab.disabled); // If the currently selected tab becomes disabled, select the first enabled tab.
+    // (if there is one).
+
+    if (firstEnabledTab) {
       handleTabSelection(firstEnabledTab.name);
     }
-  }, [tabs, selectedTab === null || selectedTab === void 0 ? void 0 : selectedTab.name, selectedTab === null || selectedTab === void 0 ? void 0 : selectedTab.disabled, initialTabName, handleTabSelection]);
+  }, [tabs, selectedTab === null || selectedTab === void 0 ? void 0 : selectedTab.disabled, handleTabSelection]);
   return (0,external_wp_element_namespaceObject.createElement)("div", {
     className: className
   }, (0,external_wp_element_namespaceObject.createElement)(navigable_container_menu, {
@@ -63596,7 +65443,7 @@ const breakpoint = point => `@media (min-width: ${breakpoint_values[point]})`;
 
 
 
-const inputControl = /*#__PURE__*/emotion_react_browser_esm_css("font-family:", font('default.fontFamily'), ";padding:6px 8px;", inputStyleNeutral, ";font-size:", font('mobileTextMinFontSize'), ";line-height:normal;", breakpoint('small'), "{font-size:", font('default.fontSize'), ";line-height:normal;}&:focus{", inputStyleFocus, ";}&::-webkit-input-placeholder{color:", COLORS.ui.darkGrayPlaceholder, ";}&::-moz-placeholder{opacity:1;color:", COLORS.ui.darkGrayPlaceholder, ";}&:-ms-input-placeholder{color:", COLORS.ui.darkGrayPlaceholder, ";}.is-dark-theme &{&::-webkit-input-placeholder{color:", COLORS.ui.lightGrayPlaceholder, ";}&::-moz-placeholder{opacity:1;color:", COLORS.ui.lightGrayPlaceholder, ";}&:-ms-input-placeholder{color:", COLORS.ui.lightGrayPlaceholder, ";}}" + ( true ? "" : 0),  true ? "" : 0);
+const inputControl = /*#__PURE__*/emotion_react_browser_esm_css("display:block;font-family:", font('default.fontFamily'), ";padding:6px 8px;", inputStyleNeutral, ";font-size:", font('mobileTextMinFontSize'), ";line-height:normal;", breakpoint('small'), "{font-size:", font('default.fontSize'), ";line-height:normal;}&:focus{", inputStyleFocus, ";}&::-webkit-input-placeholder{color:", COLORS.ui.darkGrayPlaceholder, ";}&::-moz-placeholder{opacity:1;color:", COLORS.ui.darkGrayPlaceholder, ";}&:-ms-input-placeholder{color:", COLORS.ui.darkGrayPlaceholder, ";}.is-dark-theme &{&::-webkit-input-placeholder{color:", COLORS.ui.lightGrayPlaceholder, ";}&::-moz-placeholder{opacity:1;color:", COLORS.ui.lightGrayPlaceholder, ";}&:-ms-input-placeholder{color:", COLORS.ui.lightGrayPlaceholder, ";}}" + ( true ? "" : 0),  true ? "" : 0);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/textarea-control/styles/textarea-control-styles.js
 
@@ -64004,15 +65851,20 @@ var ToolbarItem = createComponent({
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-context/index.js
 /**
+ * External dependencies
+ */
+
+/**
  * WordPress dependencies
  */
 
-const ToolbarContext = (0,external_wp_element_namespaceObject.createContext)();
+const ToolbarContext = (0,external_wp_element_namespaceObject.createContext)(undefined);
 /* harmony default export */ var toolbar_context = (ToolbarContext);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-item/index.js
 
 
+// @ts-nocheck
 
 /**
  * External dependencies
@@ -64066,9 +65918,18 @@ function toolbar_item_ToolbarItem(_ref, ref) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-button/toolbar-button-container.js
 
 
-const ToolbarButtonContainer = props => (0,external_wp_element_namespaceObject.createElement)("div", {
-  className: props.className
-}, props.children);
+/**
+ * Internal dependencies
+ */
+const ToolbarButtonContainer = _ref => {
+  let {
+    children,
+    className
+  } = _ref;
+  return (0,external_wp_element_namespaceObject.createElement)("div", {
+    className: className
+  }, children);
+};
 
 /* harmony default export */ var toolbar_button_container = (ToolbarButtonContainer);
 
@@ -64080,10 +65941,10 @@ const ToolbarButtonContainer = props => (0,external_wp_element_namespaceObject.c
  * External dependencies
  */
 
+
 /**
  * WordPress dependencies
  */
-
 
 /**
  * Internal dependencies
@@ -64094,15 +65955,15 @@ const ToolbarButtonContainer = props => (0,external_wp_element_namespaceObject.c
 
 
 
-function ToolbarButton(_ref, ref) {
+function UnforwardedToolbarButton(_ref, ref) {
   let {
-    containerClassName,
-    className,
-    extraProps,
     children,
-    title,
+    className,
+    containerClassName,
+    extraProps,
     isActive,
     isDisabled,
+    title,
     ...props
   } = _ref;
   const accessibleToolbarState = (0,external_wp_element_namespaceObject.useContext)(toolbar_context);
@@ -64117,7 +65978,7 @@ function ToolbarButton(_ref, ref) {
       shortcut: props.shortcut,
       "data-subscript": props.subscript,
       onClick: event => {
-        event.stopPropagation();
+        event.stopPropagation(); // TODO: Possible bug; maybe use onClick instead of props.onClick.
 
         if (props.onClick) {
           props.onClick(event);
@@ -64137,19 +65998,44 @@ function ToolbarButton(_ref, ref) {
     className: classnames_default()('components-toolbar-button', className)
   }, extraProps, props, {
     ref: ref
-  }), toolbarItemProps => (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
+  }), // @ts-expect-error
+  toolbarItemProps => (0,external_wp_element_namespaceObject.createElement)(build_module_button, extends_extends({
     label: title,
     isPressed: isActive,
     disabled: isDisabled
   }, toolbarItemProps), children));
 }
+/**
+ * ToolbarButton can be used to add actions to a toolbar, usually inside a Toolbar
+ * or ToolbarGroup when used to create general interfaces.
+ *
+ * ```jsx
+ * import { Toolbar, ToolbarButton } from '@wordpress/components';
+ * import { edit } from '@wordpress/icons';
+ *
+ * function MyToolbar() {
+ *   return (
+ *		<Toolbar label="Options">
+ *			<ToolbarButton
+ *				icon={ edit }
+ *				label="Edit"
+ *				onClick={ () => alert( 'Editing' ) }
+ *			/>
+ *		</Toolbar>
+ *   );
+ * }
+ * ```
+ */
 
-/* harmony default export */ var toolbar_button = ((0,external_wp_element_namespaceObject.forwardRef)(ToolbarButton));
+
+const ToolbarButton = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedToolbarButton);
+/* harmony default export */ var toolbar_button = (ToolbarButton);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-group/toolbar-group-container.js
 
 
 
+// @ts-nocheck
 const ToolbarGroupContainer = _ref => {
   let {
     className,
@@ -64166,6 +66052,7 @@ const ToolbarGroupContainer = _ref => {
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-group/toolbar-group-collapsed.js
 
 
+// @ts-nocheck
 
 /**
  * WordPress dependencies
@@ -64208,6 +66095,7 @@ function ToolbarGroupCollapsed(_ref) {
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-group/index.js
 
 
+// @ts-nocheck
 
 /**
  * External dependencies
@@ -64398,10 +66286,10 @@ var Toolbar = createComponent({
  * External dependencies
  */
 
+
 /**
  * WordPress dependencies
  */
-
 
 
 /**
@@ -64410,7 +66298,7 @@ var Toolbar = createComponent({
 
 
 
-function ToolbarContainer(_ref, ref) {
+function UnforwardedToolbarContainer(_ref, ref) {
   let {
     label,
     ...props
@@ -64433,7 +66321,8 @@ function ToolbarContainer(_ref, ref) {
   );
 }
 
-/* harmony default export */ var toolbar_container = ((0,external_wp_element_namespaceObject.forwardRef)(ToolbarContainer));
+const ToolbarContainer = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedToolbarContainer);
+/* harmony default export */ var toolbar_container = (ToolbarContainer);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar/index.js
 
@@ -64443,10 +66332,10 @@ function ToolbarContainer(_ref, ref) {
  * External dependencies
  */
 
+
 /**
  * WordPress dependencies
  */
-
 
 
 /**
@@ -64455,18 +66344,8 @@ function ToolbarContainer(_ref, ref) {
 
 
 
-/**
- * Renders a toolbar.
- *
- * To add controls, simply pass `ToolbarButton` components as children.
- *
- * @param {Object} props             Component props.
- * @param {string} [props.className] Class to set on the container div.
- * @param {string} [props.label]     ARIA label for toolbar container.
- * @param {Object} ref               React Element ref.
- */
 
-function toolbar_Toolbar(_ref, ref) {
+function UnforwardedToolbar(_ref, ref) {
   let {
     className,
     label,
@@ -64492,12 +66371,35 @@ function toolbar_Toolbar(_ref, ref) {
     ref: ref
   }, props));
 }
+/**
+ * Renders a toolbar.
+ *
+ * To add controls, simply pass `ToolbarButton` components as children.
+ *
+ * ```jsx
+ * import { Toolbar, ToolbarButton } from '@wordpress/components';
+ * import { formatBold, formatItalic, link } from '@wordpress/icons';
+ *
+ * function MyToolbar() {
+ *   return (
+ *     <Toolbar label="Options">
+ *       <ToolbarButton icon={ formatBold } label="Bold" />
+ *       <ToolbarButton icon={ formatItalic } label="Italic" />
+ *       <ToolbarButton icon={ link } label="Link" />
+ *     </Toolbar>
+ *   );
+ * }
+ * ```
+ */
 
-/* harmony default export */ var toolbar = ((0,external_wp_element_namespaceObject.forwardRef)(toolbar_Toolbar));
+
+const toolbar_Toolbar = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedToolbar);
+/* harmony default export */ var toolbar = (toolbar_Toolbar);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/toolbar/toolbar-dropdown-menu/index.js
 
 
+// @ts-nocheck
 
 /**
  * WordPress dependencies
@@ -64618,6 +66520,8 @@ const ToolsPanelContext = (0,external_wp_element_namespaceObject.createContext)(
   registerPanelItem: tools_panel_context_noop,
   deregisterPanelItem: tools_panel_context_noop,
   flagItemCustomization: tools_panel_context_noop,
+  registerResetAllFilter: tools_panel_context_noop,
+  deregisterResetAllFilter: tools_panel_context_noop,
   areAllOptionalControlsHidden: true
 });
 const useToolsPanelContext = () => (0,external_wp_element_namespaceObject.useContext)(ToolsPanelContext);
@@ -64638,6 +66542,7 @@ const useToolsPanelContext = () => (0,external_wp_element_namespaceObject.useCon
 function useToolsPanelHeader(props) {
   const {
     className,
+    headingLevel = 2,
     ...otherProps
   } = useContextSystem(props, 'ToolsPanelHeader');
   const cx = useCx();
@@ -64664,6 +66569,7 @@ function useToolsPanelHeader(props) {
     dropdownMenuClassName,
     hasMenuItems,
     headingClassName,
+    headingLevel,
     menuItems,
     className: classes
   };
@@ -64786,6 +66692,7 @@ const component_ToolsPanelHeader = (props, forwardedRef) => {
     dropdownMenuClassName,
     hasMenuItems,
     headingClassName,
+    headingLevel = 2,
     label: labelText,
     menuItems,
     resetAll,
@@ -64810,7 +66717,7 @@ const component_ToolsPanelHeader = (props, forwardedRef) => {
   return (0,external_wp_element_namespaceObject.createElement)(h_stack_component, extends_extends({}, headerProps, {
     ref: forwardedRef
   }), (0,external_wp_element_namespaceObject.createElement)(heading_component, {
-    level: 2,
+    level: headingLevel,
     className: headingClassName
   }, labelText), hasMenuItems && (0,external_wp_element_namespaceObject.createElement)(dropdown_menu, {
     icon: dropDownMenuIcon,
@@ -64862,8 +66769,13 @@ const generateMenuItems = _ref => {
   let {
     panelItems,
     shouldReset,
-    currentMenuItems
+    currentMenuItems,
+    menuItemOrder
   } = _ref;
+  const newMenuItems = {
+    default: {},
+    optional: {}
+  };
   const menuItems = {
     default: {},
     optional: {}
@@ -64876,13 +66788,34 @@ const generateMenuItems = _ref => {
       isShownByDefault,
       label
     } = _ref2;
-    const group = isShownByDefault ? 'default' : 'optional'; // If a menu item for this label already exists, do not overwrite its value.
-    // This can cause default controls that have been flagged as customized to
-    // lose their value.
+    const group = isShownByDefault ? 'default' : 'optional'; // If a menu item for this label has already been flagged as customized
+    // (for default controls), or toggled on (for optional controls), do not
+    // overwrite its value as those controls would lose that state.
 
     const existingItemValue = currentMenuItems === null || currentMenuItems === void 0 ? void 0 : (_currentMenuItems$gro = currentMenuItems[group]) === null || _currentMenuItems$gro === void 0 ? void 0 : _currentMenuItems$gro[label];
-    const value = existingItemValue !== undefined ? existingItemValue : hasValue();
-    menuItems[group][label] = shouldReset ? false : value;
+    const value = existingItemValue ? existingItemValue : hasValue();
+    newMenuItems[group][label] = shouldReset ? false : value;
+  }); // Loop the known, previously registered items first to maintain menu order.
+
+  menuItemOrder.forEach(key => {
+    if (newMenuItems.default.hasOwnProperty(key)) {
+      menuItems.default[key] = newMenuItems.default[key];
+    }
+
+    if (newMenuItems.optional.hasOwnProperty(key)) {
+      menuItems.optional[key] = newMenuItems.optional[key];
+    }
+  }); // Loop newMenuItems object adding any that aren't in the known items order.
+
+  Object.keys(newMenuItems.default).forEach(key => {
+    if (!menuItems.default.hasOwnProperty(key)) {
+      menuItems.default[key] = newMenuItems.default[key];
+    }
+  });
+  Object.keys(newMenuItems.optional).forEach(key => {
+    if (!menuItems.optional.hasOwnProperty(key)) {
+      menuItems.optional[key] = newMenuItems.optional[key];
+    }
   });
   return menuItems;
 };
@@ -64892,10 +66825,11 @@ const isMenuItemTypeEmpty = obj => obj && Object.keys(obj).length === 0;
 function useToolsPanel(props) {
   const {
     className,
+    headingLevel = 2,
     resetAll,
     panelId,
-    hasInnerWrapper,
-    shouldRenderPlaceholderItems,
+    hasInnerWrapper = false,
+    shouldRenderPlaceholderItems = false,
     __experimentalFirstVisibleItemClass,
     __experimentalLastVisibleItemClass,
     ...otherProps
@@ -64913,7 +66847,10 @@ function useToolsPanel(props) {
   }, [wasResetting]); // Allow panel items to register themselves.
 
   const [panelItems, setPanelItems] = (0,external_wp_element_namespaceObject.useState)([]);
+  const [menuItemOrder, setMenuItemOrder] = (0,external_wp_element_namespaceObject.useState)([]);
+  const [resetAllFilters, setResetAllFilters] = (0,external_wp_element_namespaceObject.useState)([]);
   const registerPanelItem = (0,external_wp_element_namespaceObject.useCallback)(item => {
+    // Add item to panel items.
     setPanelItems(items => {
       const newItems = [...items]; // If an item with this label has already been registered, remove it
       // first. This can happen when an item is moved between the default
@@ -64926,8 +66863,17 @@ function useToolsPanel(props) {
       }
 
       return [...newItems, item];
+    }); // Track the initial order of item registration. This is used for
+    // maintaining menu item order later.
+
+    setMenuItemOrder(items => {
+      if (items.includes(item.label)) {
+        return items;
+      }
+
+      return [...items, item.label];
     });
-  }, [setPanelItems]); // Panels need to deregister on unmount to avoid orphans in menu state.
+  }, [setPanelItems, setMenuItemOrder]); // Panels need to deregister on unmount to avoid orphans in menu state.
   // This is an issue when panel items are being injected via SlotFills.
 
   const deregisterPanelItem = (0,external_wp_element_namespaceObject.useCallback)(label => {
@@ -64945,7 +66891,17 @@ function useToolsPanel(props) {
 
       return newItems;
     });
-  }, [setPanelItems]); // Manage and share display state of menu items representing child controls.
+  }, [setPanelItems]);
+  const registerResetAllFilter = (0,external_wp_element_namespaceObject.useCallback)(newFilter => {
+    setResetAllFilters(filters => {
+      return [...filters, newFilter];
+    });
+  }, [setResetAllFilters]);
+  const deregisterResetAllFilter = (0,external_wp_element_namespaceObject.useCallback)(filterToRemove => {
+    setResetAllFilters(filters => {
+      return filters.filter(filter => filter !== filterToRemove);
+    });
+  }, [setResetAllFilters]); // Manage and share display state of menu items representing child controls.
 
   const [menuItems, setMenuItems] = (0,external_wp_element_namespaceObject.useState)({
     default: {},
@@ -64957,11 +66913,12 @@ function useToolsPanel(props) {
       const items = generateMenuItems({
         panelItems,
         shouldReset: false,
-        currentMenuItems: prevState
+        currentMenuItems: prevState,
+        menuItemOrder
       });
       return items;
     });
-  }, [panelItems, setMenuItems]); // Force a menu item to be checked.
+  }, [panelItems, setMenuItems, menuItemOrder]); // Force a menu item to be checked.
   // This is intended for use with default panel items. They are displayed
   // separately to optional items and have different display states,
   // we need to update that when their value is customized.
@@ -65017,24 +66974,18 @@ function useToolsPanel(props) {
 
   const resetAllItems = (0,external_wp_element_namespaceObject.useCallback)(() => {
     if (typeof resetAll === 'function') {
-      isResetting.current = true; // Collect available reset filters from panel items.
-
-      const filters = [];
-      panelItems.forEach(item => {
-        if (item.resetAllFilter) {
-          filters.push(item.resetAllFilter);
-        }
-      });
-      resetAll(filters);
+      isResetting.current = true;
+      resetAll(resetAllFilters);
     } // Turn off display of all non-default items.
 
 
     const resetMenuItems = generateMenuItems({
       panelItems,
+      menuItemOrder,
       shouldReset: true
     });
     setMenuItems(resetMenuItems);
-  }, [panelItems, resetAll, setMenuItems]); // Assist ItemGroup styling when there are potentially hidden placeholder
+  }, [panelItems, resetAllFilters, resetAll, setMenuItems, menuItemOrder]); // Assist ItemGroup styling when there are potentially hidden placeholder
   // items by identifying first & last items that are toggled on for display.
 
   const getFirstVisibleItemLabel = items => {
@@ -65048,6 +66999,7 @@ function useToolsPanel(props) {
   const panelContext = (0,external_wp_element_namespaceObject.useMemo)(() => ({
     areAllOptionalControlsHidden,
     deregisterPanelItem,
+    deregisterResetAllFilter,
     firstDisplayedItem,
     flagItemCustomization,
     hasMenuItems: !!panelItems.length,
@@ -65056,11 +67008,13 @@ function useToolsPanel(props) {
     menuItems,
     panelId,
     registerPanelItem,
+    registerResetAllFilter,
     shouldRenderPlaceholderItems,
     __experimentalFirstVisibleItemClass,
     __experimentalLastVisibleItemClass
-  }), [areAllOptionalControlsHidden, deregisterPanelItem, firstDisplayedItem, flagItemCustomization, lastDisplayedItem, menuItems, panelId, panelItems, registerPanelItem, shouldRenderPlaceholderItems, __experimentalFirstVisibleItemClass, __experimentalLastVisibleItemClass]);
+  }), [areAllOptionalControlsHidden, deregisterPanelItem, deregisterResetAllFilter, firstDisplayedItem, flagItemCustomization, lastDisplayedItem, menuItems, panelId, panelItems, registerResetAllFilter, registerPanelItem, shouldRenderPlaceholderItems, __experimentalFirstVisibleItemClass, __experimentalLastVisibleItemClass]);
   return { ...otherProps,
+    headingLevel,
     panelContext,
     resetAllItems,
     toggleItem,
@@ -65085,13 +67039,14 @@ function useToolsPanel(props) {
 
 
 
-const component_ToolsPanel = (props, forwardedRef) => {
+const UnconnectedToolsPanel = (props, forwardedRef) => {
   const {
     children,
     label,
     panelContext,
     resetAllItems,
     toggleItem,
+    headingLevel,
     ...toolsPanelProps
   } = useToolsPanel(props);
   return (0,external_wp_element_namespaceObject.createElement)(grid_component, extends_extends({}, toolsPanelProps, {
@@ -65102,12 +67057,66 @@ const component_ToolsPanel = (props, forwardedRef) => {
   }, (0,external_wp_element_namespaceObject.createElement)(tools_panel_header_component, {
     label: label,
     resetAll: resetAllItems,
-    toggleItem: toggleItem
+    toggleItem: toggleItem,
+    headingLevel: headingLevel
   }), children));
 };
+/**
+ * The `ToolsPanel` is a container component that displays its children preceded
+ * by a header. The header includes a dropdown menu which is automatically
+ * generated from the panel's inner `ToolsPanelItems`.
+ *
+ * @example
+ * ```jsx
+ * import { __ } from '@wordpress/i18n';
+ * import {
+ *   __experimentalToolsPanel as ToolsPanel,
+ *   __experimentalToolsPanelItem as ToolsPanelItem,
+ *   __experimentalUnitControl as UnitControl
+ * } from '@wordpress/components';
+ *
+ * function Example() {
+ *   const [ height, setHeight ] = useState();
+ *   const [ width, setWidth ] = useState();
+ *
+ *   const resetAll = () => {
+ *     setHeight();
+ *     setWidth();
+ *   }
+ *
+ *   return (
+ *     <ToolsPanel label={ __( 'Dimensions' ) } resetAll={ resetAll }>
+ *       <ToolsPanelItem
+ *         hasValue={ () => !! height }
+ *         label={ __( 'Height' ) }
+ *         onDeselect={ () => setHeight() }
+ *       >
+ *         <UnitControl
+ *           label={ __( 'Height' ) }
+ *           onChange={ setHeight }
+ *           value={ height }
+ *         />
+ *       </ToolsPanelItem>
+ *       <ToolsPanelItem
+ *         hasValue={ () => !! width }
+ *         label={ __( 'Width' ) }
+ *         onDeselect={ () => setWidth() }
+ *       >
+ *         <UnitControl
+ *           label={ __( 'Width' ) }
+ *           onChange={ setWidth }
+ *           value={ width }
+ *         />
+ *       </ToolsPanelItem>
+ *     </ToolsPanel>
+ *   );
+ * }
+ * ```
+ */
 
-const ConnectedToolsPanel = contextConnect(component_ToolsPanel, 'ToolsPanel');
-/* harmony default export */ var tools_panel_component = (ConnectedToolsPanel);
+
+const component_ToolsPanel = contextConnect(UnconnectedToolsPanel, 'ToolsPanel');
+/* harmony default export */ var tools_panel_component = (component_ToolsPanel);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/tools-panel/tools-panel-item/hook.js
 /**
@@ -65123,16 +67132,19 @@ const ConnectedToolsPanel = contextConnect(component_ToolsPanel, 'ToolsPanel');
 
 
 
+
+const hook_noop = () => {};
+
 function useToolsPanelItem(props) {
   var _menuItems$menuGroup, _menuItems$menuGroup2, _menuItems$menuGroup3;
 
   const {
     className,
     hasValue,
-    isShownByDefault,
+    isShownByDefault = false,
     label,
     panelId,
-    resetAllFilter,
+    resetAllFilter = hook_noop,
     onDeselect,
     onSelect,
     ...otherProps
@@ -65140,6 +67152,8 @@ function useToolsPanelItem(props) {
   const {
     panelId: currentPanelId,
     menuItems,
+    registerResetAllFilter,
+    deregisterResetAllFilter,
     registerPanelItem,
     deregisterPanelItem,
     flagItemCustomization,
@@ -65162,7 +67176,6 @@ function useToolsPanelItem(props) {
         hasValue: hasValueCallback,
         isShownByDefault,
         label,
-        resetAllFilter: resetAllFilterCallback,
         panelId
       });
     }
@@ -65172,22 +67185,42 @@ function useToolsPanelItem(props) {
         deregisterPanelItem(label);
       }
     };
-  }, [currentPanelId, hasMatchingPanel, isShownByDefault, label, hasValueCallback, panelId, previousPanelId, resetAllFilterCallback, registerPanelItem, deregisterPanelItem]);
-  const isValueSet = hasValue();
-  const wasValueSet = (0,external_wp_compose_namespaceObject.usePrevious)(isValueSet); // If this item represents a default control it will need to notify the
-  // panel when a custom value has been set.
-
+  }, [currentPanelId, hasMatchingPanel, isShownByDefault, label, hasValueCallback, panelId, previousPanelId, registerPanelItem, deregisterPanelItem]);
   (0,external_wp_element_namespaceObject.useEffect)(() => {
-    if (isShownByDefault && isValueSet && !wasValueSet) {
-      flagItemCustomization(label);
+    if (hasMatchingPanel) {
+      registerResetAllFilter(resetAllFilterCallback);
     }
-  }, [isValueSet, wasValueSet, isShownByDefault, label, flagItemCustomization]); // Note: `label` is used as a key when building menu item state in
+
+    return () => {
+      if (hasMatchingPanel) {
+        deregisterResetAllFilter(resetAllFilterCallback);
+      }
+    };
+  }, [registerResetAllFilter, deregisterResetAllFilter, resetAllFilterCallback, hasMatchingPanel]); // Note: `label` is used as a key when building menu item state in
   // `ToolsPanel`.
 
   const menuGroup = isShownByDefault ? 'default' : 'optional';
   const isMenuItemChecked = menuItems === null || menuItems === void 0 ? void 0 : (_menuItems$menuGroup = menuItems[menuGroup]) === null || _menuItems$menuGroup === void 0 ? void 0 : _menuItems$menuGroup[label];
   const wasMenuItemChecked = (0,external_wp_compose_namespaceObject.usePrevious)(isMenuItemChecked);
-  const isRegistered = (menuItems === null || menuItems === void 0 ? void 0 : (_menuItems$menuGroup2 = menuItems[menuGroup]) === null || _menuItems$menuGroup2 === void 0 ? void 0 : _menuItems$menuGroup2[label]) !== undefined; // Determine if the panel item's corresponding menu is being toggled and
+  const isRegistered = (menuItems === null || menuItems === void 0 ? void 0 : (_menuItems$menuGroup2 = menuItems[menuGroup]) === null || _menuItems$menuGroup2 === void 0 ? void 0 : _menuItems$menuGroup2[label]) !== undefined;
+  const isValueSet = hasValue();
+  const wasValueSet = (0,external_wp_compose_namespaceObject.usePrevious)(isValueSet);
+  const newValueSet = isValueSet && !wasValueSet; // Notify the panel when an item's value has been set.
+  //
+  // 1. For default controls, this is so "reset" appears beside its menu item.
+  // 2. For optional controls, when the panel ID is `null`, it allows the
+  // panel to ensure the item is toggled on for display in the menu, given the
+  // value has been set external to the control.
+
+  (0,external_wp_element_namespaceObject.useEffect)(() => {
+    if (!newValueSet) {
+      return;
+    }
+
+    if (isShownByDefault || currentPanelId === null) {
+      flagItemCustomization(label, menuGroup);
+    }
+  }, [currentPanelId, newValueSet, isShownByDefault, menuGroup, label, flagItemCustomization]); // Determine if the panel item's corresponding menu is being toggled and
   // trigger appropriate callback if it is.
 
   (0,external_wp_element_namespaceObject.useEffect)(() => {
@@ -65241,7 +67274,7 @@ function useToolsPanelItem(props) {
 
 // This wraps controls to be conditionally displayed within a tools panel. It
 // prevents props being applied to HTML elements that would make them invalid.
-const component_ToolsPanelItem = (props, forwardedRef) => {
+const UnconnectedToolsPanelItem = (props, forwardedRef) => {
   const {
     children,
     isShown,
@@ -65260,8 +67293,8 @@ const component_ToolsPanelItem = (props, forwardedRef) => {
   }), children);
 };
 
-const ConnectedToolsPanelItem = contextConnect(component_ToolsPanelItem, 'ToolsPanelItem');
-/* harmony default export */ var tools_panel_item_component = (ConnectedToolsPanelItem);
+const component_ToolsPanelItem = contextConnect(UnconnectedToolsPanelItem, 'ToolsPanelItem');
+/* harmony default export */ var tools_panel_item_component = (component_ToolsPanelItem);
 
 ;// CONCATENATED MODULE: external ["wp","keycodes"]
 var external_wp_keycodes_namespaceObject = window["wp"]["keycodes"];
@@ -65270,7 +67303,7 @@ var external_wp_keycodes_namespaceObject = window["wp"]["keycodes"];
  * WordPress dependencies
  */
 
-const RovingTabIndexContext = (0,external_wp_element_namespaceObject.createContext)();
+const RovingTabIndexContext = (0,external_wp_element_namespaceObject.createContext)(undefined);
 const useRovingTabIndexContext = () => (0,external_wp_element_namespaceObject.useContext)(RovingTabIndexContext);
 const RovingTabIndexProvider = RovingTabIndexContext.Provider;
 
@@ -65290,9 +67323,6 @@ const RovingTabIndexProvider = RovingTabIndexContext.Provider;
  * Provider for adding roving tab index behaviors to tree grid structures.
  *
  * @see https://github.com/WordPress/gutenberg/blob/HEAD/packages/components/src/tree-grid/README.md
- *
- * @param {Object}    props          Component props.
- * @param {WPElement} props.children Children to be rendered
  */
 
 function RovingTabIndex(_ref) {
@@ -65327,24 +67357,19 @@ function RovingTabIndex(_ref) {
  */
 
 
+
 /**
  * Return focusables in a row element, excluding those from other branches
  * nested within the row.
  *
- * @param {Element} rowElement The DOM element representing the row.
+ * @param rowElement The DOM element representing the row.
  *
- * @return {?Array} The array of focusables in the row.
+ * @return The array of focusables in the row.
  */
-
 function getRowFocusables(rowElement) {
   const focusablesInRow = external_wp_dom_namespaceObject.focus.focusable.find(rowElement, {
     sequential: true
   });
-
-  if (!focusablesInRow || !focusablesInRow.length) {
-    return;
-  }
-
   return focusablesInRow.filter(focusable => {
     return focusable.closest('[role="row"]') === rowElement;
   });
@@ -65352,18 +67377,12 @@ function getRowFocusables(rowElement) {
 /**
  * Renders both a table and tbody element, used to create a tree hierarchy.
  *
- * @see https://github.com/WordPress/gutenberg/blob/HEAD/packages/components/src/tree-grid/README.md
- * @param {Object}    props                      Component props.
- * @param {WPElement} props.children             Children to be rendered.
- * @param {Function}  props.onExpandRow          Callback to fire when row is expanded.
- * @param {Function}  props.onCollapseRow        Callback to fire when row is collapsed.
- * @param {Function}  props.onFocusRow           Callback to fire when moving focus to a different row.
- * @param {string}    props.applicationAriaLabel Label to use for the application role.
- * @param {Object}    ref                        A ref to the underlying DOM table element.
  */
 
 
-function TreeGrid(_ref, ref) {
+function UnforwardedTreeGrid(_ref,
+/** A ref to the underlying DOM table element. */
+ref) {
   let {
     children,
     onExpandRow = () => {},
@@ -65396,12 +67415,17 @@ function TreeGrid(_ref, ref) {
       currentTarget: treeGridElement
     } = event;
 
-    if (!treeGridElement.contains(activeElement)) {
+    if (!activeElement || !treeGridElement.contains(activeElement)) {
       return;
     } // Calculate the columnIndex of the active element.
 
 
     const activeRow = activeElement.closest('[role="row"]');
+
+    if (!activeRow) {
+      return;
+    }
+
     const focusablesInRow = getRowFocusables(activeRow);
     const currentColumnIndex = focusablesInRow.indexOf(activeElement);
     const canExpandCollapse = 0 === currentColumnIndex;
@@ -65431,13 +67455,15 @@ function TreeGrid(_ref, ref) {
           } // If a row is focused, and it is collapsed, moves to the parent row (if there is one).
 
 
-          const level = Math.max(parseInt((_activeRow$getAttribu = activeRow === null || activeRow === void 0 ? void 0 : activeRow.getAttribute('aria-level')) !== null && _activeRow$getAttribu !== void 0 ? _activeRow$getAttribu : 1, 10) - 1, 1);
+          const level = Math.max(parseInt((_activeRow$getAttribu = activeRow === null || activeRow === void 0 ? void 0 : activeRow.getAttribute('aria-level')) !== null && _activeRow$getAttribu !== void 0 ? _activeRow$getAttribu : '1', 10) - 1, 1);
           const rows = Array.from(treeGridElement.querySelectorAll('[role="row"]'));
           let parentRow = activeRow;
           const currentRowIndex = rows.indexOf(activeRow);
 
           for (let i = currentRowIndex; i >= 0; i--) {
-            if (parseInt(rows[i].getAttribute('aria-level'), 10) === level) {
+            const ariaLevel = rows[i].getAttribute('aria-level');
+
+            if (ariaLevel !== null && parseInt(ariaLevel, 10) === level) {
               parentRow = rows[i];
               break;
             }
@@ -65579,8 +67605,72 @@ function TreeGrid(_ref, ref) {
   }), (0,external_wp_element_namespaceObject.createElement)("tbody", null, children))));
   /* eslint-enable jsx-a11y/no-noninteractive-element-to-interactive-role */
 }
+/**
+ * `TreeGrid` is used to create a tree hierarchy.
+ * It is not a visually styled component, but instead helps with adding
+ * keyboard navigation and roving tab index behaviors to tree grid structures.
+ *
+ * A tree grid is a hierarchical 2 dimensional UI component, for example it could be
+ * used to implement a file system browser.
+ *
+ * A tree grid allows the user to navigate using arrow keys.
+ * Up/down to navigate vertically across rows, and left/right to navigate horizontally
+ * between focusables in a row.
+ *
+ * The `TreeGrid` renders both a `table` and `tbody` element, and is intended to be used
+ * with `TreeGridRow` (`tr`) and `TreeGridCell` (`td`) to build out a grid.
+ *
+ * ```jsx
+ * function TreeMenu() {
+ * 	return (
+ * 		<TreeGrid>
+ * 			<TreeGridRow level={ 1 } positionInSet={ 1 } setSize={ 2 }>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onSelect } { ...props }>Select</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onMove } { ...props }>Move</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 			</TreeGridRow>
+ * 			<TreeGridRow level={ 1 } positionInSet={ 2 } setSize={ 2 }>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onSelect } { ...props }>Select</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onMove } { ...props }>Move</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 			</TreeGridRow>
+ * 			<TreeGridRow level={ 2 } positionInSet={ 1 } setSize={ 1 }>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onSelect } { ...props }>Select</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 				<TreeGridCell>
+ * 					{ ( props ) => (
+ * 						<Button onClick={ onMove } { ...props }>Move</Button>
+ * 					) }
+ * 				</TreeGridCell>
+ * 			</TreeGridRow>
+ * 		</TreeGrid>
+ * 	);
+ * }
+ * ```
+ *
+ * @see {@link https://www.w3.org/TR/wai-aria-practices/examples/treegrid/treegrid-1.html}
+ */
 
-/* harmony default export */ var tree_grid = ((0,external_wp_element_namespaceObject.forwardRef)(TreeGrid));
+
+const TreeGrid = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedTreeGrid);
+/* harmony default export */ var tree_grid = (TreeGrid);
 
 
 
@@ -65593,8 +67683,11 @@ function TreeGrid(_ref, ref) {
  * WordPress dependencies
  */
 
+/**
+ * Internal dependencies
+ */
 
-function TreeGridRow(_ref, ref) {
+function UnforwardedTreeGridRow(_ref, ref) {
   let {
     children,
     level,
@@ -65603,24 +67696,26 @@ function TreeGridRow(_ref, ref) {
     isExpanded,
     ...props
   } = _ref;
-  return (// Disable reason: Due to an error in the ARIA 1.1 specification, the
-    // aria-posinset and aria-setsize properties are not supported on row
-    // elements. This is being corrected in ARIA 1.2. Consequently, the
-    // linting rule fails when validating this markup.
-    //
-    // eslint-disable-next-line jsx-a11y/role-supports-aria-props
-    (0,external_wp_element_namespaceObject.createElement)("tr", extends_extends({}, props, {
-      ref: ref,
-      role: "row",
-      "aria-level": level,
-      "aria-posinset": positionInSet,
-      "aria-setsize": setSize,
-      "aria-expanded": isExpanded
-    }), children)
-  );
+  return (0,external_wp_element_namespaceObject.createElement)("tr", extends_extends({}, props, {
+    ref: ref,
+    role: "row",
+    "aria-level": level,
+    "aria-posinset": positionInSet,
+    "aria-setsize": setSize,
+    "aria-expanded": isExpanded
+  }), children);
 }
+/**
+ * `TreeGridRow` is used to create a tree hierarchy.
+ * It is not a visually styled component, but instead helps with adding
+ * keyboard navigation and roving tab index behaviors to tree grid structures.
+ *
+ * @see {@link https://www.w3.org/TR/wai-aria-practices/examples/treegrid/treegrid-1.html}
+ */
 
-/* harmony default export */ var tree_grid_row = ((0,external_wp_element_namespaceObject.forwardRef)(TreeGridRow));
+
+const TreeGridRow = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedTreeGridRow);
+/* harmony default export */ var tree_grid_row = (TreeGridRow);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/tree-grid/roving-tab-index-item.js
 
@@ -65634,14 +67729,15 @@ function TreeGridRow(_ref, ref) {
  */
 
 
-/* harmony default export */ var roving_tab_index_item = ((0,external_wp_element_namespaceObject.forwardRef)(function RovingTabIndexItem(_ref, forwardedRef) {
+const RovingTabIndexItem = (0,external_wp_element_namespaceObject.forwardRef)(function UnforwardedRovingTabIndexItem(_ref, forwardedRef) {
   let {
     children,
     as: Component,
     ...props
   } = _ref;
   const localRef = (0,external_wp_element_namespaceObject.useRef)();
-  const ref = forwardedRef || localRef;
+  const ref = forwardedRef || localRef; // @ts-expect-error - We actually want to throw an error if this is undefined.
+
   const {
     lastFocusedElement,
     setLastFocusedElement
@@ -65649,10 +67745,14 @@ function TreeGridRow(_ref, ref) {
   let tabIndex;
 
   if (lastFocusedElement) {
-    tabIndex = lastFocusedElement === ref.current ? 0 : -1;
+    tabIndex = lastFocusedElement === ( // TODO: The original implementation simply used `ref.current` here, assuming
+    // that a forwarded ref would always be an object, which is not necessarily true.
+    // This workaround maintains the original runtime behavior in a type-safe way,
+    // but should be revisited.
+    'current' in ref ? ref.current : undefined) ? 0 : -1;
   }
 
-  const onFocus = event => setLastFocusedElement(event.target);
+  const onFocus = event => setLastFocusedElement === null || setLastFocusedElement === void 0 ? void 0 : setLastFocusedElement(event.target);
 
   const allProps = {
     ref,
@@ -65665,8 +67765,10 @@ function TreeGridRow(_ref, ref) {
     return children(allProps);
   }
 
+  if (!Component) return null;
   return (0,external_wp_element_namespaceObject.createElement)(Component, allProps, children);
-}));
+});
+/* harmony default export */ var roving_tab_index_item = (RovingTabIndexItem);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/tree-grid/item.js
 
@@ -65681,7 +67783,8 @@ function TreeGridRow(_ref, ref) {
  */
 
 
-/* harmony default export */ var tree_grid_item = ((0,external_wp_element_namespaceObject.forwardRef)(function TreeGridItem(_ref, ref) {
+
+function UnforwardedTreeGridItem(_ref, ref) {
   let {
     children,
     ...props
@@ -65689,7 +67792,18 @@ function TreeGridRow(_ref, ref) {
   return (0,external_wp_element_namespaceObject.createElement)(roving_tab_index_item, extends_extends({
     ref: ref
   }, props), children);
-}));
+}
+/**
+ * `TreeGridItem` is used to create a tree hierarchy.
+ * It is not a visually styled component, but instead helps with adding
+ * keyboard navigation and roving tab index behaviors to tree grid structures.
+ *
+ * @see {@link https://www.w3.org/TR/wai-aria-practices/examples/treegrid/treegrid-1.html}
+ */
+
+
+const TreeGridItem = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedTreeGridItem);
+/* harmony default export */ var tree_grid_item = (TreeGridItem);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/tree-grid/cell.js
 
@@ -65704,7 +67818,8 @@ function TreeGridRow(_ref, ref) {
  */
 
 
-/* harmony default export */ var cell = ((0,external_wp_element_namespaceObject.forwardRef)(function TreeGridCell(_ref, ref) {
+
+function UnforwardedTreeGridCell(_ref, ref) {
   let {
     children,
     withoutGridItem = false,
@@ -65712,10 +67827,21 @@ function TreeGridRow(_ref, ref) {
   } = _ref;
   return (0,external_wp_element_namespaceObject.createElement)("td", extends_extends({}, props, {
     role: "gridcell"
-  }), withoutGridItem ? children : (0,external_wp_element_namespaceObject.createElement)(tree_grid_item, {
+  }), withoutGridItem ? (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, children) : (0,external_wp_element_namespaceObject.createElement)(tree_grid_item, {
     ref: ref
   }, children));
-}));
+}
+/**
+ * `TreeGridCell` is used to create a tree hierarchy.
+ * It is not a visually styled component, but instead helps with adding
+ * keyboard navigation and roving tab index behaviors to tree grid structures.
+ *
+ * @see {@link https://www.w3.org/TR/wai-aria-practices/examples/treegrid/treegrid-1.html}
+ */
+
+
+const TreeGridCell = (0,external_wp_element_namespaceObject.forwardRef)(UnforwardedTreeGridCell);
+/* harmony default export */ var cell = (TreeGridCell);
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/isolated-event-container/index.js
 
@@ -65932,11 +68058,13 @@ const defaultShortcuts = {
 };
 function useNavigateRegions() {
   let shortcuts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultShortcuts;
-  const ref = (0,external_wp_element_namespaceObject.useRef)();
+  const ref = (0,external_wp_element_namespaceObject.useRef)(null);
   const [isFocusingRegions, setIsFocusingRegions] = (0,external_wp_element_namespaceObject.useState)(false);
 
   function focusRegion(offset) {
-    const regions = Array.from(ref.current.querySelectorAll('[role="region"][tabindex="-1"]'));
+    var _ref$current$querySel, _ref$current, _ref$current2, _ref$current2$ownerDo, _ref$current2$ownerDo2;
+
+    const regions = Array.from((_ref$current$querySel = (_ref$current = ref.current) === null || _ref$current === void 0 ? void 0 : _ref$current.querySelectorAll('[role="region"][tabindex="-1"]')) !== null && _ref$current$querySel !== void 0 ? _ref$current$querySel : []);
 
     if (!regions.length) {
       return;
@@ -65944,7 +68072,8 @@ function useNavigateRegions() {
 
     let nextRegion = regions[0]; // Based off the current element, use closest to determine the wrapping region since this operates up the DOM. Also, match tabindex to avoid edge cases with regions we do not want.
 
-    const selectedIndex = regions.indexOf(ref.current.ownerDocument.activeElement.closest('[role="region"][tabindex="-1"]'));
+    const wrappingRegion = (_ref$current2 = ref.current) === null || _ref$current2 === void 0 ? void 0 : (_ref$current2$ownerDo = _ref$current2.ownerDocument) === null || _ref$current2$ownerDo === void 0 ? void 0 : (_ref$current2$ownerDo2 = _ref$current2$ownerDo.activeElement) === null || _ref$current2$ownerDo2 === void 0 ? void 0 : _ref$current2$ownerDo2.closest('[role="region"][tabindex="-1"]');
+    const selectedIndex = wrappingRegion ? regions.indexOf(wrappingRegion) : -1;
 
     if (selectedIndex !== -1) {
       let nextIndex = selectedIndex + offset;
@@ -65993,6 +68122,33 @@ function useNavigateRegions() {
 
   };
 }
+/**
+ * `navigateRegions` is a React [higher-order component](https://facebook.github.io/react/docs/higher-order-components.html)
+ * adding keyboard navigation to switch between the different DOM elements marked as "regions" (role="region").
+ * These regions should be focusable (By adding a tabIndex attribute for example). For better accessibility,
+ * these elements must be properly labelled to briefly describe the purpose of the content in the region.
+ * For more details, see "Landmark Roles" in the [WAI-ARIA specification](https://www.w3.org/TR/wai-aria/)
+ * and "Landmark Regions" in the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/practices/landmark-regions/).
+ *
+ * ```jsx
+ * import { navigateRegions } from '@wordpress/components';
+ *
+ * const MyComponentWithNavigateRegions = navigateRegions( () => (
+ * 	<div>
+ * 		<div role="region" tabIndex="-1" aria-label="Header">
+ * 			Header
+ * 		</div>
+ * 		<div role="region" tabIndex="-1" aria-label="Content">
+ * 			Content
+ * 		</div>
+ * 		<div role="region" tabIndex="-1" aria-label="Sidebar">
+ * 			Sidebar
+ * 		</div>
+ * 	</div>
+ * ) );
+ * ```
+ */
+
 /* harmony default export */ var navigate_regions = ((0,external_wp_compose_namespaceObject.createHigherOrderComponent)(Component => _ref3 => {
   let {
     shortcuts,
@@ -66006,6 +68162,15 @@ function useNavigateRegions() {
 
 /**
  * WordPress dependencies
+ */
+
+/**
+ * `withConstrainedTabbing` is a React [higher-order component](https://facebook.github.io/react/docs/higher-order-components.html)
+ * adding the ability to constrain keyboard navigation with the Tab key within a component.
+ * For accessibility reasons, some UI components need to constrain Tab navigation, for example
+ * modal dialogs or similar UI. Use of this component is recommended only in cases where a way to
+ * navigate away from the wrapped component is implemented by other means, usually by pressing
+ * the Escape key or using a specific UI control, e.g. a "Close" button.
  */
 
 const withConstrainedTabbing = (0,external_wp_compose_namespaceObject.createHigherOrderComponent)(WrappedComponent => function ComponentWithConstrainedTabbing(props) {
@@ -66033,8 +68198,8 @@ const withConstrainedTabbing = (0,external_wp_compose_namespaceObject.createHigh
 
 /* harmony default export */ var with_fallback_styles = (mapNodeToProps => (0,external_wp_compose_namespaceObject.createHigherOrderComponent)(WrappedComponent => {
   return class extends external_wp_element_namespaceObject.Component {
-    constructor() {
-      super(...arguments);
+    constructor(props) {
+      super(props);
       this.nodeRef = this.props.node;
       this.state = {
         fallbackStyles: undefined,
@@ -66105,9 +68270,35 @@ const ANIMATION_FRAME_PERIOD = 16;
  * to be mounted. When a filter is added or removed that matches the hook name,
  * the wrapped component re-renders.
  *
- * @param {string} hookName Hook name exposed to be used by filters.
+ * @param hookName Hook name exposed to be used by filters.
  *
- * @return {Function} Higher-order component factory.
+ * @return Higher-order component factory.
+ *
+ * ```jsx
+ * import { withFilters } from '@wordpress/components';
+ * import { addFilter } from '@wordpress/hooks';
+ *
+ * const MyComponent = ( { title } ) => <h1>{ title }</h1>;
+ *
+ * const ComponentToAppend = () => <div>Appended component</div>;
+ *
+ * function withComponentAppended( FilteredComponent ) {
+ * 	return ( props ) => (
+ * 		<>
+ * 			<FilteredComponent { ...props } />
+ * 			<ComponentToAppend />
+ * 		</>
+ * 	);
+ * }
+ *
+ * addFilter(
+ * 	'MyHookName',
+ * 	'my-plugin/with-component-appended',
+ * 	withComponentAppended
+ * );
+ *
+ * const MyComponentWithFilters = withFilters( 'MyHookName' )( MyComponent );
+ * ```
  */
 
 function withFilters(hookName) {
@@ -66117,8 +68308,6 @@ function withFilters(hookName) {
      * The component definition with current filters applied. Each instance
      * reuse this shared reference as an optimization to avoid excessive
      * calls to `applyFilters` when many instances exist.
-     *
-     * @type {?Component}
      */
 
     let FilteredComponent;
@@ -66134,8 +68323,8 @@ function withFilters(hookName) {
     }
 
     class FilteredComponentRenderer extends external_wp_element_namespaceObject.Component {
-      constructor() {
-        super(...arguments);
+      constructor(props) {
+        super(props);
         ensureFilteredComponent();
       }
 
@@ -66185,7 +68374,7 @@ function withFilters(hookName) {
      * mounted instance should re-render with the new filters having been
      * applied to the original component.
      *
-     * @param {string} updatedHookName Name of the hook that was updated.
+     * @param updatedHookName Name of the hook that was updated.
      */
 
     function onHooksUpdated(updatedHookName) {
@@ -66211,30 +68400,30 @@ function withFilters(hookName) {
  * Returns true if the given object is component-like. An object is component-
  * like if it is an instance of wp.element.Component, or is a function.
  *
- * @param {*} object Object to test.
+ * @param object Object to test.
  *
- * @return {boolean} Whether object is component-like.
+ * @return Whether object is component-like.
  */
 
 function isComponentLike(object) {
   return object instanceof external_wp_element_namespaceObject.Component || typeof object === 'function';
 }
+
 /**
  * Higher Order Component used to be used to wrap disposable elements like
  * sidebars, modals, dropdowns. When mounting the wrapped component, we track a
  * reference to the current active element so we know where to restore focus
  * when the component is unmounted.
  *
- * @param {(WPComponent|Object)} options The component to be enhanced with
- *                                       focus return behavior, or an object
- *                                       describing the component and the
- *                                       focus return characteristics.
+ * @param options The component to be enhanced with
+ *                focus return behavior, or an object
+ *                describing the component and the
+ *                focus return characteristics.
  *
- * @return {Function} Higher Order Component with the focus restauration behaviour.
+ * @return Higher Order Component with the focus restauration behaviour.
  */
-
-
-/* harmony default export */ var with_focus_return = ((0,external_wp_compose_namespaceObject.createHigherOrderComponent)(options => {
+/* harmony default export */ var with_focus_return = ((0,external_wp_compose_namespaceObject.createHigherOrderComponent)( // @ts-expect-error TODO: Reconcile with intended `createHigherOrderComponent` types
+options => {
   const HoC = function () {
     let {
       onFocusReturn
@@ -66288,23 +68477,40 @@ const with_focus_return_Provider = _ref => {
  */
 
 
+
 /**
  * Override the default edit UI to include notices if supported.
  *
- * @param {WPComponent} OriginalComponent Original component.
+ * Wrapping the original component with `withNotices` encapsulates the component
+ * with the additional props `noticeOperations` and `noticeUI`.
  *
- * @return {WPComponent} Wrapped component.
+ * ```jsx
+ * import { withNotices, Button } from '@wordpress/components';
+ *
+ * const MyComponentWithNotices = withNotices(
+ * 	( { noticeOperations, noticeUI } ) => {
+ * 		const addError = () =>
+ * 			noticeOperations.createErrorNotice( 'Error message' );
+ * 		return (
+ * 			<div>
+ * 				{ noticeUI }
+ * 				<Button variant="secondary" onClick={ addError }>
+ * 					Add error
+ * 				</Button>
+ * 			</div>
+ * 		);
+ * 	}
+ * );
+ * ```
+ *
+ * @param OriginalComponent Original component.
+ *
+ * @return Wrapped component.
  */
-
 /* harmony default export */ var with_notices = ((0,external_wp_compose_namespaceObject.createHigherOrderComponent)(OriginalComponent => {
   function Component(props, ref) {
     const [noticeList, setNoticeList] = (0,external_wp_element_namespaceObject.useState)([]);
     const noticeOperations = (0,external_wp_element_namespaceObject.useMemo)(() => {
-      /**
-       * Function passed down as a prop that adds a new notice.
-       *
-       * @param {Object} notice Notice to add.
-       */
       const createNotice = notice => {
         const noticeToAdd = notice.id ? notice : { ...notice,
           id: esm_browser_v4()
@@ -66314,31 +68520,16 @@ const with_focus_return_Provider = _ref => {
 
       return {
         createNotice,
-
-        /**
-         * Function passed as a prop that adds a new error notice.
-         *
-         * @param {string} msg Error message of the notice.
-         */
         createErrorNotice: msg => {
+          // @ts-expect-error TODO: Missing `id`, potentially a bug
           createNotice({
             status: 'error',
             content: msg
           });
         },
-
-        /**
-         * Removes a notice by id.
-         *
-         * @param {string} id Id of the notice to remove.
-         */
         removeNotice: id => {
           setNoticeList(current => current.filter(notice => notice.id !== id));
         },
-
-        /**
-         * Removes all notices
-         */
         removeAllNotices: () => {
           setNoticeList([]);
         }
@@ -66358,7 +68549,8 @@ const with_focus_return_Provider = _ref => {
     })) : (0,external_wp_element_namespaceObject.createElement)(OriginalComponent, propsOut);
   }
 
-  let isForwardRef;
+  let isForwardRef; // @ts-expect-error - `render` will only be present when OriginalComponent was wrapped with forwardRef().
+
   const {
     render
   } = OriginalComponent; // Returns a forwardRef if OriginalComponent appears to be a forwardRef.
@@ -66369,12 +68561,34 @@ const with_focus_return_Provider = _ref => {
   }
 
   return Component;
-}));
+}, 'withNotices'));
+
+;// CONCATENATED MODULE: external ["wp","privateApis"]
+var external_wp_privateApis_namespaceObject = window["wp"]["privateApis"];
+;// CONCATENATED MODULE: ./packages/components/build-module/private-apis.js
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+
+const {
+  lock,
+  unlock
+} = (0,external_wp_privateApis_namespaceObject.__dangerousOptInToUnstableAPIsOnlyForCoreModules)('I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.', '@wordpress/components');
+const privateApis = {};
+lock(privateApis, {
+  CustomSelectControl: CustomSelectControl,
+  __experimentalPopoverLegacyPositionToPlacement: positionToPlacement
+});
 
 ;// CONCATENATED MODULE: ./packages/components/build-module/index.js
 // Primitives.
  // Components.
-
 
 
 
@@ -66500,6 +68714,8 @@ const with_focus_return_Provider = _ref => {
 
 
 
+
+ // Private APIs.
 
 
 

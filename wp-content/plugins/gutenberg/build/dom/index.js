@@ -176,7 +176,7 @@ function isValidFocusableArea(element) {
  * Returns all focusable elements within a given context.
  *
  * @param {Element} context              Element in which to search.
- * @param {Object}  [options]
+ * @param {Object}  options
  * @param {boolean} [options.sequential] If set, only return elements that are
  *                                       sequentially focusable.
  *                                       Non-interactive elements with a
@@ -184,7 +184,7 @@ function isValidFocusableArea(element) {
  *                                       not sequentially focusable.
  *                                       https://html.spec.whatwg.org/multipage/interaction.html#the-tabindex-attribute
  *
- * @return {Element[]} Focusable elements.
+ * @return {HTMLElement[]} Focusable elements.
  */
 
 
@@ -512,7 +512,7 @@ function getRectangleFromRange(range) {
   //
   // See: https://stackoverflow.com/a/6847328/995445
 
-  if (!rect) {
+  if (!rect || rect.height === 0) {
     assertIsDefined(ownerDocument, 'ownerDocument');
     const padNode = ownerDocument.createTextNode('\u200b'); // Do not modify the live range.
 
@@ -730,7 +730,8 @@ function getComputedStyle(element) {
  */
 
 /**
- * Given a DOM node, finds the closest scrollable container node.
+ * Given a DOM node, finds the closest scrollable container node or the node
+ * itself, if scrollable.
  *
  * @param {Element | null} node Node from which to start.
  *

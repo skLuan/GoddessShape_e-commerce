@@ -5998,6 +5998,13 @@ __webpack_require__.d(selectors_namespaceObject, {
   "isMatchingSearchTerm": function() { return isMatchingSearchTerm; }
 });
 
+// NAMESPACE OBJECT: ./packages/blocks/build-module/store/private-selectors.js
+var private_selectors_namespaceObject = {};
+__webpack_require__.r(private_selectors_namespaceObject);
+__webpack_require__.d(private_selectors_namespaceObject, {
+  "getSupportedStyles": function() { return getSupportedStyles; }
+});
+
 // NAMESPACE OBJECT: ./packages/blocks/build-module/store/actions.js
 var actions_namespaceObject = {};
 __webpack_require__.r(actions_namespaceObject);
@@ -6157,13 +6164,22 @@ const __EXPERIMENTAL_STYLE_PROPERTY = {
     requiresOptOut: true,
     useEngine: true
   },
+  columnCount: {
+    value: ['typography', 'textColumns'],
+    support: ['typography', 'textColumns'],
+    useEngine: true
+  },
   filter: {
     value: ['filter', 'duotone'],
-    support: ['color', '__experimentalDuotone']
+    support: ['filter', 'duotone']
   },
   linkColor: {
     value: ['elements', 'link', 'color', 'text'],
     support: ['color', 'link']
+  },
+  captionColor: {
+    value: ['elements', 'caption', 'color', 'text'],
+    support: ['color', 'caption']
   },
   buttonColor: {
     value: ['elements', 'button', 'color', 'text'],
@@ -6807,6 +6823,13 @@ function unstable__bootstrapServerSideBlockDefinitions(definitions) {
 
       if (serverSideBlockDefinitions[blockName].ancestor === undefined && definitions[blockName].ancestor) {
         serverSideBlockDefinitions[blockName].ancestor = definitions[blockName].ancestor;
+      } // The `selectors` prop is not yet included in the server provided
+      // definitions. Polyfill it as well. This can be removed when the
+      // minimum supported WordPress is >= 6.3.
+
+
+      if (serverSideBlockDefinitions[blockName].selectors === undefined && definitions[blockName].selectors) {
+        serverSideBlockDefinitions[blockName].selectors = definitions[blockName].selectors;
       }
 
       continue;
@@ -6835,7 +6858,7 @@ function getBlockSettingsFromMetadata(_ref3) {
     textdomain,
     ...metadata
   } = _ref3;
-  const allowedFields = ['apiVersion', 'title', 'category', 'parent', 'ancestor', 'icon', 'description', 'keywords', 'attributes', 'providesContext', 'usesContext', 'supports', 'styles', 'example', 'variations'];
+  const allowedFields = ['apiVersion', 'title', 'category', 'parent', 'ancestor', 'icon', 'description', 'keywords', 'attributes', 'providesContext', 'usesContext', 'selectors', 'supports', 'styles', 'example', 'variations'];
   const settings = Object.fromEntries(Object.entries(metadata).filter(_ref4 => {
     let [key] = _ref4;
     return allowedFields.includes(key);
@@ -6858,7 +6881,7 @@ function getBlockSettingsFromMetadata(_ref3) {
  * behavior. Once registered, the block is made available as an option to any
  * editor interface where blocks are implemented.
  *
- * For more in-depth information on registering a custom block see the [Create a block tutorial](docs/how-to-guides/block-tutorial/README.md)
+ * For more in-depth information on registering a custom block see the [Create a block tutorial](/docs/getting-started/create-block/README.md)
  *
  * @param {string|Object} blockNameOrMetadata Block type name or its metadata.
  * @param {Object}        settings            Block settings.
@@ -6875,7 +6898,7 @@ function getBlockSettingsFromMetadata(_ref3) {
  * } );
  * ```
  *
- * @return {?WPBlockType} The block, if it has been successfully registered;
+ * @return {WPBlockType | undefined} The block, if it has been successfully registered;
  *                    otherwise `undefined`.
  */
 
@@ -6911,6 +6934,7 @@ function registerBlockType(blockNameOrMetadata, settings) {
     attributes: {},
     providesContext: {},
     usesContext: [],
+    selectors: {},
     supports: {},
     styles: [],
     variations: [],
@@ -7031,7 +7055,7 @@ function unregisterBlockCollection(namespace) {
  * };
  * ```
  *
- * @return {?WPBlockType} The previous block value, if it has been successfully
+ * @return {WPBlockType | undefined} The previous block value, if it has been successfully
  *                    unregistered; otherwise `undefined`.
  */
 
@@ -7119,6 +7143,10 @@ function setDefaultBlockName(name) {
 /**
  * Assigns name of block for handling block grouping interactions.
  *
+ * This function lets you select a different block to group other blocks in instead of the
+ * default `core/group` block. This function must be used in a component or when the DOM is fully
+ * loaded. See https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dom-ready/
+ *
  * @param {string} name Block name.
  *
  * @example
@@ -7129,7 +7157,7 @@ function setDefaultBlockName(name) {
  *
  *     return (
  *         <Button onClick={ () => setGroupingBlockName( 'core/columns' ) }>
- *             { __( 'Set the default block to Heading' ) }
+ *             { __( 'Wrap in columns' ) }
  *         </Button>
  *     );
  * };
@@ -7652,10 +7680,6 @@ const isPossibleTransformForSource = (transform, direction, blocks) => {
 
 
   if (!maybeCheckTransformIsMatch(transform, blocks)) {
-    return false;
-  }
-
-  if (transform.usingMobileTransformations && isWildcardBlockTransform(transform) && !isContainerGroupBlock(sourceBlock.name)) {
     return false;
   }
 
@@ -8510,7 +8534,7 @@ function categories() {
         });
 
         if (categoryToChange) {
-          return (0,external_lodash_namespaceObject.map)(state, category => {
+          return state.map(category => {
             if (category.slug === action.slug) {
               return { ...category,
                 ...action.category
@@ -9406,11 +9430,11 @@ function selectors_getGroupingBlockName(state) {
  */
 
 const selectors_getChildBlockNames = rememo((state, blockName) => {
-  return (0,external_lodash_namespaceObject.map)(selectors_getBlockTypes(state).filter(blockType => {
+  return selectors_getBlockTypes(state).filter(blockType => {
     var _blockType$parent;
 
     return (_blockType$parent = blockType.parent) === null || _blockType$parent === void 0 ? void 0 : _blockType$parent.includes(blockName);
-  }), _ref2 => {
+  }).map(_ref2 => {
     let {
       name
     } = _ref2;
@@ -9654,6 +9678,111 @@ const __experimentalHasContentRoleAttribute = rememo((state, blockTypeName) => {
   return [(_state$blockTypes$blo = state.blockTypes[blockTypeName]) === null || _state$blockTypes$blo === void 0 ? void 0 : _state$blockTypes$blo.attributes];
 });
 
+;// CONCATENATED MODULE: ./packages/blocks/build-module/store/private-selectors.js
+/**
+ * External dependencies
+ */
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+const ROOT_BLOCK_SUPPORTS = ['background', 'backgroundColor', 'color', 'linkColor', 'captionColor', 'buttonColor', 'headingColor', 'fontFamily', 'fontSize', 'fontStyle', 'fontWeight', 'lineHeight', 'padding', 'contentSize', 'wideSize', 'blockGap', 'textDecoration', 'textTransform', 'letterSpacing'];
+/**
+ * Filters the list of supported styles for a given element.
+ *
+ * @param {string[]}         blockSupports list of supported styles.
+ * @param {string|undefined} name          block name.
+ * @param {string|undefined} element       element name.
+ *
+ * @return {string[]} filtered list of supported styles.
+ */
+
+function filterElementBlockSupports(blockSupports, name, element) {
+  return blockSupports.filter(support => {
+    if (support === 'fontSize' && element === 'heading') {
+      return false;
+    } // This is only available for links
+
+
+    if (support === 'textDecoration' && !name && element !== 'link') {
+      return false;
+    } // This is only available for heading
+
+
+    if (support === 'textTransform' && !name && !['heading', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(element)) {
+      return false;
+    } // This is only available for headings
+
+
+    if (support === 'letterSpacing' && !name && !['heading', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(element)) {
+      return false;
+    } // Text columns is only available for blocks.
+
+
+    if (support === 'textColumns' && !name) {
+      return false;
+    }
+
+    return true;
+  });
+}
+/**
+ * Returns the list of supported styles for a given block name and element.
+ */
+
+
+const getSupportedStyles = rememo((state, name, element) => {
+  var _blockType$supports, _blockType$supports$s, _blockType$supports2, _blockType$supports2$, _blockType$supports3, _blockType$supports3$, _blockType$supports3$2, _blockType$supports3$3, _blockType$supports4;
+
+  if (!name) {
+    return filterElementBlockSupports(ROOT_BLOCK_SUPPORTS, name, element);
+  }
+
+  const blockType = selectors_getBlockType(state, name);
+
+  if (!blockType) {
+    return [];
+  }
+
+  const supportKeys = []; // Check for blockGap support.
+  // Block spacing support doesn't map directly to a single style property, so needs to be handled separately.
+  // Also, only allow `blockGap` support if serialization has not been skipped, to be sure global spacing can be applied.
+
+  if (blockType !== null && blockType !== void 0 && (_blockType$supports = blockType.supports) !== null && _blockType$supports !== void 0 && (_blockType$supports$s = _blockType$supports.spacing) !== null && _blockType$supports$s !== void 0 && _blockType$supports$s.blockGap && (blockType === null || blockType === void 0 ? void 0 : (_blockType$supports2 = blockType.supports) === null || _blockType$supports2 === void 0 ? void 0 : (_blockType$supports2$ = _blockType$supports2.spacing) === null || _blockType$supports2$ === void 0 ? void 0 : _blockType$supports2$.__experimentalSkipSerialization) !== true && !(blockType !== null && blockType !== void 0 && (_blockType$supports3 = blockType.supports) !== null && _blockType$supports3 !== void 0 && (_blockType$supports3$ = _blockType$supports3.spacing) !== null && _blockType$supports3$ !== void 0 && (_blockType$supports3$2 = _blockType$supports3$.__experimentalSkipSerialization) !== null && _blockType$supports3$2 !== void 0 && (_blockType$supports3$3 = _blockType$supports3$2.some) !== null && _blockType$supports3$3 !== void 0 && _blockType$supports3$3.call(_blockType$supports3$2, spacingType => spacingType === 'blockGap'))) {
+    supportKeys.push('blockGap');
+  } // check for shadow support
+
+
+  if (blockType !== null && blockType !== void 0 && (_blockType$supports4 = blockType.supports) !== null && _blockType$supports4 !== void 0 && _blockType$supports4.shadow) {
+    supportKeys.push('shadow');
+  }
+
+  Object.keys(__EXPERIMENTAL_STYLE_PROPERTY).forEach(styleName => {
+    if (!__EXPERIMENTAL_STYLE_PROPERTY[styleName].support) {
+      return;
+    } // Opting out means that, for certain support keys like background color,
+    // blocks have to explicitly set the support value false. If the key is
+    // unset, we still enable it.
+
+
+    if (__EXPERIMENTAL_STYLE_PROPERTY[styleName].requiresOptOut) {
+      if (__EXPERIMENTAL_STYLE_PROPERTY[styleName].support[0] in blockType.supports && (0,external_lodash_namespaceObject.get)(blockType.supports, __EXPERIMENTAL_STYLE_PROPERTY[styleName].support) !== false) {
+        supportKeys.push(styleName);
+        return;
+      }
+    }
+
+    if ((0,external_lodash_namespaceObject.get)(blockType.supports, __EXPERIMENTAL_STYLE_PROPERTY[styleName].support, false)) {
+      supportKeys.push(styleName);
+    }
+  });
+  return filterElementBlockSupports(supportKeys, name, element);
+}, (state, name) => [state.blockTypes[name]]);
+
 ;// CONCATENATED MODULE: ./node_modules/is-plain-object/dist/is-plain-object.mjs
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
@@ -9750,7 +9879,7 @@ function isFunction(maybeFunc) {
  * @param {Object}      thunkArgs        Argument object for the thunk middleware.
  * @param {Function}    thunkArgs.select Function to select from the store.
  *
- * @return {?WPBlockType} The block, if it has been successfully registered; otherwise `undefined`.
+ * @return {WPBlockType | undefined} The block, if it has been successfully registered; otherwise `undefined`.
  */
 
 
@@ -10163,6 +10292,18 @@ function removeBlockCollection(namespace) {
 ;// CONCATENATED MODULE: ./packages/blocks/build-module/store/constants.js
 const STORE_NAME = 'core/blocks';
 
+;// CONCATENATED MODULE: external ["wp","privateApis"]
+var external_wp_privateApis_namespaceObject = window["wp"]["privateApis"];
+;// CONCATENATED MODULE: ./packages/blocks/build-module/private-apis.js
+/**
+ * WordPress dependencies
+ */
+
+const {
+  lock,
+  unlock
+} = (0,external_wp_privateApis_namespaceObject.__dangerousOptInToUnstableAPIsOnlyForCoreModules)('I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.', '@wordpress/blocks');
+
 ;// CONCATENATED MODULE: ./packages/blocks/build-module/store/index.js
 /**
  * WordPress dependencies
@@ -10171,6 +10312,8 @@ const STORE_NAME = 'core/blocks';
 /**
  * Internal dependencies
  */
+
+
 
 
 
@@ -10190,6 +10333,7 @@ const store = (0,external_wp_data_namespaceObject.createReduxStore)(STORE_NAME, 
   actions: actions_namespaceObject
 });
 (0,external_wp_data_namespaceObject.register)(store);
+unlock(store).registerPrivateSelectors(private_selectors_namespaceObject);
 
 ;// CONCATENATED MODULE: external ["wp","blockSerializationDefaultParser"]
 var external_wp_blockSerializationDefaultParser_namespaceObject = window["wp"]["blockSerializationDefaultParser"];
@@ -11493,7 +11637,7 @@ class DecodeEntityParser {
    *
    * @param {string} entity Entity fragment discovered in HTML.
    *
-   * @return {?string} Entity substitute value.
+   * @return {string | undefined} Entity substitute value.
    */
   parse(entity) {
     if (isValidCharacterReference(entity)) {
@@ -11749,7 +11893,7 @@ const isEqualTokensOfType = {
  *
  * @param {Object[]} tokens Set of tokens to search.
  *
- * @return {Object} Next non-whitespace token.
+ * @return {Object | undefined} Next non-whitespace token.
  */
 
 function getNextNonWhitespaceToken(tokens) {
@@ -13041,7 +13185,10 @@ function applyBlockDeprecatedVersions(block, rawBlock, blockType) {
       isEligible = stubFalse
     } = deprecatedDefinitions[i];
 
-    if (block.isValid && !isEligible(parsedAttributes, block.innerBlocks)) {
+    if (block.isValid && !isEligible(parsedAttributes, block.innerBlocks, {
+      blockNode: rawBlock,
+      block
+    })) {
       continue;
     } // Block type properties which could impact either serialization or
     // parsing are not considered in the deprecated block type by default,
@@ -13269,7 +13416,7 @@ function applyBlockValidation(unvalidatedBlock, blockType) {
  * @param {WPRawBlock}   rawBlock The raw block object.
  * @param {ParseOptions} options  Extra options for handling block parsing.
  *
- * @return {WPBlock} Fully parsed block.
+ * @return {WPBlock | undefined} Fully parsed block.
  */
 
 

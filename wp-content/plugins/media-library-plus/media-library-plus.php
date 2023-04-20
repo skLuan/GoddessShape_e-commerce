@@ -3,7 +3,7 @@
 Plugin Name: Media Library Folders
 Plugin URI: http://maxgalleria.com
 Description: Gives you the ability to adds folders and move files in the WordPress Media Library.
-Version: 8.0.4
+Version: 8.0.6
 Author: Max Foundry
 Author URI: http://maxfoundry.com
 
@@ -29,6 +29,7 @@ class MGMediaLibraryFolders {
   public $disable_scaling;
   public $current_user_can_upload;
   public $current_user_manage_options;
+  public $sync_skip_webp;
 
   public function __construct() {
     
@@ -43,6 +44,7 @@ class MGMediaLibraryFolders {
     $this->uploads_folder_name = get_option(MAXGALLERIA_MEDIA_LIBRARY_UPLOAD_FOLDER_NAME, "uploads");      
     $this->uploads_folder_name_length = strlen($this->uploads_folder_name);
     $this->uploads_folder_ID = get_option(MAXGALLERIA_MEDIA_LIBRARY_UPLOAD_FOLDER_ID, 0);
+    $this->sync_skip_webp = get_option(MLFP_SKIP_WEBP_FILES, 'off');    
         
     //convert theme mods into an array
     $theme_mods = get_theme_mods();
@@ -57,7 +59,7 @@ class MGMediaLibraryFolders {
   
 	public function set_global_constants() {	
 		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_KEY', 'maxgalleria_media_library_version');
-		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_NUM', '8.0.4');
+		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_NUM', '8.0.6');
 		define('MAXGALLERIA_MEDIA_LIBRARY_IGNORE_NOTICE', 'maxgalleria_media_library_ignore_notice');
 		define('MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
     if(!defined('MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_DIR'))
@@ -113,6 +115,8 @@ class MGMediaLibraryFolders {
 		  define("MAXGALLERIA_MLF_SORT_TYPE", "mlf_sort_order_type");		
 		if(!defined('MAXGALLERIA_POSTMETA_INDEX'))    
       define('MAXGALLERIA_POSTMETA_INDEX', 'mgmlp-index');
+		if(!defined('MLFP_SKIP_WEBP_FILES'))    
+      define("MLFP_SKIP_WEBP_FILES", "mlfp-skip-webp-files");
 
 		// Bring in all the actions and filters
 		require_once 'includes/maxgalleria-media-library-hooks.php';    
@@ -575,8 +579,6 @@ public function get_parent_by_name($sub_folder) {
     if ( !wp_verify_nonce( $_POST['nonce'], MAXGALLERIA_MEDIA_LIBRARY_NONCE)) {
       exit(__('missing nonce!','maxgalleria-media-library'));
     }
-    
-    $uploads_path = wp_upload_dir();
     
     if ((isset($_POST['folder_id'])) && (strlen(trim($_POST['folder_id'])) > 0))
       $folder_id = trim(sanitize_text_field($_POST['folder_id']));
@@ -2797,11 +2799,11 @@ AND pm.meta_key = '_wp_attached_file'", $file_id);
     
 		global $blog_id, $is_IIS;
 		$skip_path = "";
-    $uploads_path = wp_upload_dir();
+    //$uploads_path = wp_upload_dir();
     $message = __('Added','maxgalleria-media-library');
     $first = true;
     
-    if(!$uploads_path['error']) {
+    if(!$this->upload_dir['error']) {
       
       $uploads_folder = get_option(MAXGALLERIA_MEDIA_LIBRARY_UPLOAD_FOLDER_NAME, "uploads");      
       $uploads_folder_id = get_option(MAXGALLERIA_MEDIA_LIBRARY_UPLOAD_FOLDER_ID );
@@ -2810,8 +2812,8 @@ AND pm.meta_key = '_wp_attached_file'", $file_id);
 			$folders_to_hide = explode("\n", file_get_contents( MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_DIR .'/folders_to_hide.txt'));
       
       //find the uploads folder
-      $uploads_url = $uploads_path['baseurl'];
-			$upload_path = $uploads_path['basedir'];
+      $uploads_url = $this->upload_dir['baseurl'];
+			$upload_path = $this->upload_dir['basedir'];
       $folder_found = false;
 			
 			//not sure if this is still needed
@@ -2936,7 +2938,7 @@ AND pm.meta_key = '_wp_attached_file'", $file_id);
       }  
     } 
     else {
-      $message = esc_html("error: " . $uploads_path['error']);
+      $message = esc_html("error: " . $this->upload_dir['error']);
       if(!$noecho)
         echo $message . "<br>";
     }
@@ -3386,17 +3388,18 @@ and meta_key = '_wp_attached_file'";
               <li><span><?php esc_html_e('Export the media library from one Wordpress site and import it into another','maxgalleria-media-library') ?></span></li>
               <li><span><?php esc_html_e('Front End Upload to a Specific Folder','maxgalleria-media-library') ?></span></li>							
               <li><span><?php esc_html_e('Bulk Move of media files','maxgalleria-media-library') ?></span></li>							
+              <li><span><?php esc_html_e('Organize Nextgen Galleries','maxgalleria-media-library') ?></span></li>
             </ul>
           </div>
           <div class="width-50">
             <ul>
-              <li><span><?php esc_html_e('Organize Nextgen Galleries','maxgalleria-media-library') ?></span></li>
               <li><span><?php esc_html_e('Supports Advanced Custom Fields','maxgalleria-media-library') ?></span></li>
               <li><span><?php esc_html_e('Multisite Supported','maxgalleria-media-library') ?></span></li>
               <li><span><?php esc_html_e('Category Interchangability with Enhanced Media Library','maxgalleria-media-library') ?></span></li>							
               <li><span><?php esc_html_e('Embed PDF files in a page via a shortcode and Embed PDF file shortcode generator','maxgalleria-media-library') ?></span></li>							
               <li><span><?php esc_html_e('Media Library Maintenance and Bulk File Import','maxgalleria-media-library') ?></span></li>							
               <li><span><?php esc_html_e('Jetpack and the Wordpress Gallery Shortcode Generator','maxgalleria-media-library') ?></span></li>
+              <li><span><?php esc_html_e('Block Direct Access for Selected Files','maxgalleria-media-library') ?></span></li>
             </ul>
           </div>
           <div class="mlf-clearfix"></div>
@@ -3572,6 +3575,26 @@ and meta_key = '_wp_attached_file'";
         <div class="row">
           <div class="width-100">
             <h4>
+             <?php esc_html_e('Block Direct Access for Selected Files','maxgalleria-media-library') ?>
+            </h4>
+            <p>
+              <?php esc_html_e('Select the files to be protected','maxgalleria-media-library') ?>
+            </p>
+            <p>
+              <?php esc_html_e('Generate and configure download links for protected files','maxgalleria-media-library') ?> 
+            </p>
+            <img class="img-responsive" src="<?php echo esc_url(MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_URL . "/images/assets/block-direct-access.png") ?>" alt="img" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="option">
+      <div class="container">
+        <div class="row">
+          <div class="width-100">
+            <h4>
              <?php esc_html_e('Frontend Upload','maxgalleria-media-library') ?>
             </h4>
             <p>
@@ -3712,6 +3735,8 @@ and meta_key = '_wp_attached_file'";
       $meta_index = get_option( MAXGALLERIA_POSTMETA_INDEX, 'off');        
       $this->disable_scaling = get_option( MAXGALLERIA_DISABLE_SCALLING, 'off');
       $images_pre_page = get_option(MAXGALLERIA_MLP_ITEMS_PRE_PAGE, '500');
+      $this->sync_skip_webp = get_option(MLFP_SKIP_WEBP_FILES, 'off');    
+      
       if($images_pre_page == '')
         $images_pre_page = 100;
     ?>
@@ -3728,7 +3753,11 @@ and meta_key = '_wp_attached_file'";
 		<p>
 			<input type="checkbox" name="meta_index" id="meta_index" value="" <?php checked($meta_index, 'on') ?>>
 			<label><?php  _e('Add an index to the postmeta table. <em>Recommend for sites with a high number of media files. Uncheck to remove the index.</em>', 'maxgalleria-media-library'); ?></label>			
-		</p>                
+		</p>
+    <p>
+			<input type="checkbox" name="skip_webp" id="skip_webp" value="" <?php checked($this->sync_skip_webp, 'on') ?>>
+			<label><?php  _e('Skip WEBP images when syncing media library files. <em>For sites where WEBP files are automatically generated.</em>', 'maxgalleria-media-library'); ?></label>			      
+    </p>
 		<p>
       <a class="button-primary" id="mlfp-update-settings"><?php esc_html_e('Update Settings','maxgalleria-media-library'); ?></a>			
 		</p>
@@ -3744,13 +3773,14 @@ and meta_key = '_wp_attached_file'";
 			var images_per_page = jQuery("#images-pre-page").val();
 			var scaling_status = jQuery("#disable_scaling").is(":checked");
       var meta_index = jQuery("#meta_index").is(":checked");      
-      
+      var skip_webp = jQuery("#skip_webp").is(":checked");      
+            
 			jQuery("#saving-message").html('');
 			
 			jQuery.ajax({
 				type: "POST",
 				async: true,
-				data: { action: "mlfp_set_scaling", scaling_status: scaling_status, images_per_page: images_per_page, meta_index: meta_index, nonce: mgmlp_ajax.nonce },
+				data: { action: "mlfp_set_scaling", scaling_status: scaling_status, images_per_page: images_per_page, meta_index: meta_index, skip_webp: skip_webp, nonce: mgmlp_ajax.nonce },
 				url: mgmlp_ajax.ajaxurl,
 				dataType: "html",
 				success: function (data) { 
@@ -3884,8 +3914,7 @@ and meta_key = '_wp_attached_file'";
         'href' => array(),
         'id' => array()
       )    
-    );                  
-    
+    );                      
 
 		?>
 
@@ -4505,29 +4534,44 @@ where folder_id = $folder_id";
       $images_per_page = "";
     
 		if ((isset($_POST['meta_index'])) && (strlen(trim($_POST['meta_index'])) > 0))
-      $meta_index = trim(stripslashes(strip_tags($_POST['meta_index'])));
+      $meta_index = trim(sanitize_text_field($_POST['meta_index']));
     else
       $meta_index = "";    
-    
-    if($scaling_status == 'true')
-      update_option(MAXGALLERIA_DISABLE_SCALLING, 'on', true);
+
+		if ((isset($_POST['skip_webp'])) && (strlen(trim($_POST['skip_webp'])) > 0))
+      $skip_webp = trim(sanitize_text_field($_POST['skip_webp']));
     else
-      update_option(MAXGALLERIA_DISABLE_SCALLING, 'off', true);
-      
+      $skip_webp = "";    
+    
+    $this->mlf_option_true_update(MAXGALLERIA_DISABLE_SCALLING, $scaling_status);        
+          
 		update_option(MAXGALLERIA_MLP_ITEMS_PRE_PAGE, $images_per_page, true);
     
     if($meta_index == 'true') {
-      $this->add_postmeta_index();
-      update_option(MAXGALLERIA_POSTMETA_INDEX, 'on', true);
+      if(get_option(MAXGALLERIA_POSTMETA_INDEX) == 'off') {
+        $this->add_postmeta_index();
+        update_option(MAXGALLERIA_POSTMETA_INDEX, 'on', true);
+      }  
     } else {
-      $this->remove_postmeta_index();
-      update_option(MAXGALLERIA_POSTMETA_INDEX, 'off', true);
+      if(get_option(MAXGALLERIA_POSTMETA_INDEX) == 'on') {
+        $this->remove_postmeta_index();
+        update_option(MAXGALLERIA_POSTMETA_INDEX, 'off', true);
+      }
     }
-    
+                
+    $this->mlf_option_true_update(MLFP_SKIP_WEBP_FILES, $skip_webp);    
       
     echo esc_html__('The settings were updated.','maxgalleria-media-library');
 		die();
 	}
+  
+  public function mlf_option_true_update($option_id, $option_value) {
+    if($option_value == 'true') {
+      update_option($option_id, 'on', true);
+    } else {
+      update_option($option_id, 'off', true);
+    }    
+  }
   
   public function add_postmeta_index() {
     
@@ -4608,30 +4652,32 @@ and meta_key = '_wp_attached_file'";
     foreach ($folder_contents as $file_path) {
       			
 			if($file_path !== '.DS_Store' && $file_path !== '.htaccess') {
-				$new_attachment = $folder_path . DIRECTORY_SEPARATOR . $file_path;
-				if(!strpos($new_attachment, '-uai-')) {  // skip thumbnails created by the Uncode theme
-          if(!strpos($new_attachment, '-scaled.')) {  // skip scaled images
-            if(!strpos($new_attachment, '-pdf.jpg')) {  // skip pdf thumbnails
-              if(!is_dir($new_attachment)) {
-                if($this->is_base_file($file_path, $folder_contents)) {				
-                  if(!$this->search_folder_attachments($file_path, $attachments)) {
+				$new_attachment = $folder_path . DIRECTORY_SEPARATOR . $file_path;                
+        if(!$this->is_webp($new_attachment) || ($this->is_webp($new_attachment) && $this->sync_skip_webp == 'off')) {  
+          if(!strpos($new_attachment, '-uai-')) {  // skip thumbnails created by the Uncode theme
+            if(!strpos($new_attachment, '-scaled.')) {  // skip scaled images
+              if(!strpos($new_attachment, '-pdf.jpg')) {  // skip pdf thumbnails
+                if(!is_dir($new_attachment)) {
+                  if($this->is_base_file($file_path, $folder_contents)) {				
+                    if(!$this->search_folder_attachments($file_path, $attachments)) {
 
-                    $old_attachment_name = $new_attachment;
-                    $new_attachment = pathinfo($new_attachment, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . sanitize_file_name(pathinfo($new_attachment, PATHINFO_FILENAME) . "." . strtolower(pathinfo($new_attachment, PATHINFO_EXTENSION)));
+                      $old_attachment_name = $new_attachment;
+                      $new_attachment = pathinfo($new_attachment, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . sanitize_file_name(pathinfo($new_attachment, PATHINFO_FILENAME) . "." . strtolower(pathinfo($new_attachment, PATHINFO_EXTENSION)));
 
-                    if(rename($old_attachment_name, $new_attachment)) {	
-                      $files_to_add[] = basename($new_attachment);
-                      $files_count++;
-                    } else {
-                      $files_to_add[] = basename($old_attachment_name);
-                      $files_count++;
-                    }
-                  }	
-                }
-              } 
+                      if(rename($old_attachment_name, $new_attachment)) {	
+                        $files_to_add[] = basename($new_attachment);
+                        $files_count++;
+                      } else {
+                        $files_to_add[] = basename($old_attachment_name);
+                        $files_count++;
+                      }
+                    }	
+                  }
+                } 
+              }
             }
           }
-				}
+        }
 			}		
 		}
     
@@ -4643,6 +4689,13 @@ and meta_key = '_wp_attached_file'";
     else
       return '2'; // check next folder
    		
+  }
+  
+  public function is_webp($new_attachment ) {
+    if(strpos($new_attachment, '.webp') !== false)
+      return true;
+    else
+      return false;
   }
   
   public function mlfp_run_sync_process() {

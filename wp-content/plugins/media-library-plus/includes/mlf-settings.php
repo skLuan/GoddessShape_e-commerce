@@ -27,6 +27,7 @@
         <p><strong><?php esc_html_e('Number of images to display.', 'maxgalleria-media-library'); ?></strong> <?php esc_html_e('This option sets the number of images displayed in the Folders and Files page. By default, it is set at 500 images but it can be changed to a higher or lower amount.', 'maxgalleria-media-library' ); ?></p>
         <p><strong><?php esc_html_e('Disable large image scaling.', 'maxgalleria-media-library'); ?></strong> <?php esc_html_e('By default, WordPress will scale down very large images so they will take up less space and load faster. Checking this option will turn this feature off.', 'maxgalleria-media-library' ); ?></p>
         <p><strong><?php _e("Add an index to the postmeta table","maxgalleria-media-library")?></strong>, <?php _e("For sites with a large number of media files, check this option to create a new index fro the postmeta table to speed by the loading of the Media Library Folders Pro page.","maxgalleria-media-library")?></p>
+        <p><strong><?php _e("Skip .webp images when syncing media library files","maxgalleria-media-library")?></strong>, <?php _e("For sites that automatically generate .webp versions of their image files, check this option to prevent the .webp files from being added to the media library when syncing.","maxgalleria-media-library")?></p>
                         
       </div>
     </div>    

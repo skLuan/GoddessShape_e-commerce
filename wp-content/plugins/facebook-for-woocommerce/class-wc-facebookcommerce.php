@@ -103,6 +103,9 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 	/** @var WooCommerce\Facebook\Utilities\Heartbeat */
 	public $heartbeat;
 
+	/** @var WooCommerce\Facebook\ExternalVersionUpdate */
+	private $external_version_update;
+
 	/**
 	 * The Debug tools instance.
 	 *
@@ -168,6 +171,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 			$this->product_sets_sync_handler = new WooCommerce\Facebook\ProductSets\Sync();
 			$this->commerce_handler          = new WooCommerce\Facebook\Commerce();
 			$this->fb_categories             = new WooCommerce\Facebook\Products\FBCategories();
+			$this->external_version_update   = new WooCommerce\Facebook\ExternalVersionUpdate\Update();
 
 			if ( wp_doing_ajax() ) {
 				$this->ajax = new WooCommerce\Facebook\AJAX();
@@ -199,7 +203,7 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 
 			// load admin handlers, before admin_init
 			if ( is_admin() ) {
-				$this->admin_settings = new WooCommerce\Facebook\Admin\Settings();
+				$this->admin_settings = new WooCommerce\Facebook\Admin\Settings( $this->connection_handler->is_connected() );
 			}
 		}
 	}
@@ -830,4 +834,3 @@ class WC_Facebookcommerce extends WooCommerce\Facebook\Framework\Plugin {
 function facebook_for_woocommerce() {
 	return \WC_Facebookcommerce::instance();
 }
-
