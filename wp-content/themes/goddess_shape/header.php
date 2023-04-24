@@ -14,7 +14,7 @@
             <div class="swiper-container my-slider2">
                 <div class="swiper-wrapper2">
                     <div class="swiper-slide2">
-                        <p class="whitespace-nowrap text-lg font-bold text-black-gs">Free shipping on orders $99+</p>
+                        <p class="whitespace-nowrap text-lg font-bold text-black-gs"><?= __('Free shipping on orders', 'goddess') ?> $99+</p>
                     </div>
                     <!-- <div class="swiper-slide2">
                         <p>Contenido del carrusel 2</p>

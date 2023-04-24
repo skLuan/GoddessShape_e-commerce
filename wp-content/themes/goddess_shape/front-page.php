@@ -11,7 +11,7 @@ $blog_permalink = get_permalink(get_option('page_for_posts'));
 <section id="home_our_products" class="buttons-container">
     <!-- titulo nuestros productos -->
     <div class="flex flex-col text-center bg-transparent">
-        <h2 class="flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft">Our Products</h2>
+        <h2 class="flex justify-center font-champagne_limousines text-2xl pt-6 mb-2 leading-5 w-full font-bold text-red-soft"><?= __('Our Products','goddess') ?></h2>
     </div>
     <!-- boton all HOME -->
     <div class="flex w-full justify-center text-center pb-4 lg:hidden pt-5">

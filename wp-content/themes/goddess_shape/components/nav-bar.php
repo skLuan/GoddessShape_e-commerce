@@ -46,9 +46,7 @@ if (is_shop() || is_product() || is_product_category()) {$navShadow = '';}
 
             </div>
             <div class="flex font-semibold space-x-2 pr-4 lg:pr-0 items-center mr-5" id="language" href="#language">
-                <p class="font-champagne_limousines">Es </p>
-                <p class="font-champagne_limousines">/</p>
-                <p class="font-champagne_limousines text-gray-400 lg:text-black-gs">En</p>
+                            <?= do_shortcode('[language-switcher]') ?>
             </div>
         </div>
         <div class="aviso transition opacity-0" id="aviso">Do you need help? <br> Write us to assist you!</div>

@@ -1,6 +1,10 @@
 <?php
 
 define('IMAGE', get_stylesheet_directory_uri( ).'/assets/img/');
+function my_theme_load_theme_textdomain()
+{
+    load_theme_textdomain('goddess');
+}
 function init_template()
 {
     add_theme_support('post-thumbnails');
@@ -35,6 +39,8 @@ function init_template()
     wp_enqueue_script('swipers', get_stylesheet_directory_uri() . '/assets/js/swipers.js', ['main'], '1.8.1', 'all');
 }
 add_action('after_setup_theme', 'init_template');
+add_action('after_setup_theme', 'my_theme_load_theme_textdomain');
+
 add_action('gs_cart_buton', 'woocommerce_template_single_add_to_cart');
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
 

@@ -2,17 +2,15 @@
 <section class="relative flex flex-col w-full bg-white pb-14 mt-20" id="faq">
     <div class="z-20">
         <div class="flex flex-col text-center ">
-            <h1 class="font-champagne_limousines text-2xl text-red-soft leading-5 w-full font-semibold h-30 mt-6">FAQ</h1>
+            <h1 class="font-champagne_limousines text-2xl text-red-soft leading-5 w-full font-semibold h-30 mt-6"><?= __('FAQ', 'goddess') ?></h1>
         </div>
         <!-- -------------------------------------------------------------- Question -->
         <div class="flex flex-col items-center justify-around bg-white-true mt-3 py-2 border border-y-secondary">
-            <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block">How to buy in Goddess Shape's store?</span>
+            <button class="flex text-red-soft font-semibold question "><span class="text-lg my-auto block"><?= __("How to buy in Goddess Shape's store?", 'goddess') ?></span>
                 <img class="flex" width="24px" src="<?= IMAGE ?>Home/arrow-faq.png" alt="">
             </button>
             <p class="hidden font-base lg:max-w-screen-sm font-normal text-lg pt-2 text-black-gs px-5">
-                To purchase a product on Goddess Shape, you must first browse the website and choose the product you wish to buy. You must make sure to select the correct size and color before adding it to the shopping cart. Then, you must follow the indicated steps to finalize the purchase, providing the necessary information for shipping and payment method. <br><br>
-                If you have any questions about the products or the online purchase, you can contact Goddess Shape's brand customer service through the green button (Whatsapp) found on the website, or through email or social networks. We will be happy to help you with whatever you need, answering your questions and guiding you through the buying process. <br><br>
-                If you prefer to buy the products in person, check through the green button what options you can be offered depending on the area where you are located.
+                <?= __("To purchase a product on Goddess Shape, you must first browse the website and choose the product you wish to buy. You must make sure to select the correct size and color before adding it to the shopping cart. Then, you must follow the indicated steps to finalize the purchase, providing the necessary information for shipping and payment method. \n If you have any questions about the products or the online purchase, you can contact Goddess Shape's brand customer service through the green button (Whatsapp) found on the website, or through email or social networks. We will be happy to help you with whatever you need, answering your questions and guiding you through the buying process. \n If you prefer to buy the products in person, check through the green button what options you can be offered depending on the area where you are located.", 'goddess') ?>
             </p>
         </div>
         <!-- -------------------------------------------------------------- CLOSE Question -->

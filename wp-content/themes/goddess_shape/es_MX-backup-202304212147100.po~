@@ -1,0 +1,52 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Goddess shape theme\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-21 21:43+0000\n"
+"PO-Revision-Date: 2023-04-21 21:45+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish (Mexico)\n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.4; wp-6.1.1\n"
+"X-Domain: goddess"
+
+#: components/product-cards/part-info.php:16
+msgid "Available in:"
+msgstr ""
+
+#: header.php:17
+msgid "Free shipping on orders"
+msgstr ""
+
+#. Name of the theme
+msgid "Goddess shape theme"
+msgstr ""
+
+#. URI of the theme
+msgid "https://wordpress.org/themes/twentytwentytwo/"
+msgstr ""
+
+#: components/loops/new-models.php:2
+msgid "New Arrivals"
+msgstr ""
+
+#: front-page.php:14
+msgid "Our Products"
+msgstr ""
+
+#: components/colections.php:6
+msgid "See collection"
+msgstr ""
+
+#. Author of the theme
+msgid "SkyRocket"
+msgstr ""
+
+#. Description of the theme
+msgid "This is the theme created to goddess shape brand"
+msgstr ""
