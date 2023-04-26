@@ -6,10 +6,10 @@ if (isset($args['class'])) $classes = $args['class'];
     <div class="flex flex-col w-[90%] lg:w-[90%] items-center py-2">
         <div class="flex flex-col items-center">
             <img class="flex h-16 lg:h-24" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/pagos.png" alt="">
-            <h2 class="flex font-champagne_limousinesfont-champagne_limousines text-red-semi font-bold text-2xl lg:text-3xl py-3 leading-5">Payments</h2>
+            <h2 class="flex font-champagne_limousinesfont-champagne_limousines text-red-semi font-bold text-2xl lg:text-3xl py-3 leading-5"><?= __('Payments', 'goddess') ?></h2>
         </div>
-        <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light items-center">Say goodbye to payment headaches!</h3>
-        <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light py-4">Our online store accepts a variety of payment methods, so you can purchase your favorite shapewear worry-free. Shop with confidence.</h3>
+        <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light items-center"><?= __('Say goodbye to payment headaches!', 'goddess') ?></h3>
+        <h3 class="flex font-champagne_limousines text-black-gs leading-5 text-xl lg:text-2xl font-light py-4"><?= __('Our online store accepts a variety of payment methods, so you can purchase your favorite shapewear worry-free. Shop with confidence.') ?></h3>
         <div class="grid grid-cols-2 lg:ml-0 my-4 h-30 w-full ">
             <img class="my-3 w-4/6 lg:w-1/2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/Klarna_logo-1.png" alt="">
             <img class="my-3 w-4/6 lg:w-1/2 lg:col-span-1 mx-auto" src="<?= get_stylesheet_directory_uri() ?>/assets/img/payments logos/logo-Paypal.png" alt="">
