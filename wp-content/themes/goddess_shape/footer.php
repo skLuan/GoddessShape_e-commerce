@@ -73,12 +73,12 @@
                     </a>
                 </div>
             </div>
-            <div class="flex flex-row my-4 mx-2 px-8 w-[70%]  items-center">
+            <div class="flex flex-row my-4 mx-2 px-8 w-[70%] items-center">
                 <?php
                 wp_nav_menu([
                     'theme_location' => 'footer_menu',
                     'container'      => false,
-                    'menu_class'     => 'grid grid-cols-2 gap-5 font-champagne_limousines text-red-semi text-2xl font-semibold justify-around',
+                    'menu_class'     => 'grid grid-cols-3 gap-5 font-champagne_limousines text-red-semi text-2xl font-semibold justify-around',
                     'menu_id'        => 'footer-Menu',
                     'add_li_class' => ''
                 ])
