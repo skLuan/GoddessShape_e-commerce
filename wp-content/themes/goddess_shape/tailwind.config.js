@@ -5,6 +5,7 @@ module.exports = {
     "./components/*.php",
     "./components/**/*.php",
     "./assets/js/main.js",
+    "./assets/js/singleColorManage.js",
     "./woocommerce/**/*.php",
   ],
   theme: {
