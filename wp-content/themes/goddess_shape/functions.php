@@ -51,6 +51,39 @@ if (is_product_category()) {
 }
 
 
+// Función para registrar el custom post type de preguntas frecuentes
+function registrar_post_type_preguntas_frecuentes()
+{
+    $labels = array(
+        'name'               => 'Preguntas Frecuentes',
+        'singular_name'      => 'Pregunta Frecuente',
+        'menu_name'          => 'Preguntas Frecuentes',
+        'name_admin_bar'     => 'Pregunta Frecuente',
+        'add_new'            => 'Agregar Nueva',
+        'add_new_item'       => 'Agregar Nueva Pregunta Frecuente',
+        'new_item'           => 'Nueva Pregunta Frecuente',
+        'edit_item'          => 'Editar Pregunta Frecuente',
+        'view_item'          => 'Ver Pregunta Frecuente',
+        'all_items'          => 'Todas las Preguntas Frecuentes',
+        'search_items'       => 'Buscar Preguntas Frecuentes',
+        'not_found'          => 'No se encontraron Preguntas Frecuentes.',
+        'not_found_in_trash' => 'No se encontraron Preguntas Frecuentes en la papelera.',
+    );
+
+    $args = array(
+        'labels'              => $labels,
+        'public'              => true,
+        'menu_position'       => 5,
+        'menu_icon'           => 'dashicons-editor-help',
+        'supports'            => array('title', 'editor'),
+        'rewrite'             => array('slug' => 'preguntas-frecuentes'),
+        'has_archive'         => true,
+        'block_editor'        => true,
+    );
+
+    register_post_type('preguntas_frecuentes', $args);
+}
+add_action('init', 'registrar_post_type_preguntas_frecuentes');
 
 
 

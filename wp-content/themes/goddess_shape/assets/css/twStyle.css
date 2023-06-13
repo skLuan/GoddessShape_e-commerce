@@ -189,7 +189,14 @@ form.woocommerce-ordering select.orderby option {
   }
 /* -------------------------------- CIERRE CHECKOUT CONTAINER */
 
+/* ------------ FAQS */
 
+.faq-text ul {
+  @apply list-disc;
+}
+.faq-text ul li {
+  @apply mt-2;
+}
 
 .woocommerce-product-attributes-item__value {
   @apply md:w-[30%] font-semibold;
@@ -306,9 +313,6 @@ form.woocommerce-ordering select.orderby option {
     background-position: -21%;
     background-attachment: fixed;
     background-repeat: no-repeat;
-  }
-  #order_review {
-
   }
 }
 
