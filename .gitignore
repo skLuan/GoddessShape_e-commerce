@@ -14,6 +14,8 @@ wp-content/*
 wp-content/themes/goddess_shape/assets/img/
 wp-content/themes/goddess_shape/assets/css/tailwind.css
 
+wp-content/themes/goddess_shape/es_MX-backup**
+wp-content/themes/goddess_shape/goddess-backup**
 # ignore these plugins
 wp-content/plugins/hello.php
 
@@ -27,3 +29,4 @@ node_modules/
 *.log
 *.sql
 *.sqlite
+*.save

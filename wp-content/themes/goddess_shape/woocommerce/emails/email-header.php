@@ -61,6 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										</tr>
 										<tr>
 											<td align="center" valign="top">
+<div class="" id="" style="padding-top:20px;"><picture><img width="300px" src="https://goddess-shape.com/wp-content/uploads/Logo.png" alt=""></picture></div>
 												<!-- Body -->
 												<table border="0" cellpadding="0" cellspacing="0" width="100%" id="template_body">
 													<tr>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Goddess shape theme\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-21 21:43+0000\n"
+"POT-Creation-Date: 2023-04-26 22:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,38 +16,186 @@ msgstr ""
 "X-Loco-Version: 2.6.4; wp-6.1.1\n"
 "X-Domain: goddess"
 
+#: components/customerGuide/delivery.php:17
+msgid "3-8 business days."
+msgstr ""
+
+#: components/customerGuide/delivery.php:18
+msgid "8-15 business days."
+msgstr ""
+
 #: components/product-cards/part-info.php:16
 msgid "Available in:"
+msgstr ""
+
+#: components/customerGuide/guide.php:34
+msgid "Between-leg fastener"
+msgstr ""
+
+#: components/customerGuide/delivery.php:15
+msgid "Delivery times"
+msgstr ""
+
+#: components/customerGuide/guide.php:44
+msgid "Discover how to take care of your shapewaer in our"
+msgstr ""
+
+#: components/customerGuide/delivery.php:18
+msgid "Enjoy free standard delivery and receive your order within"
+msgstr ""
+
+#: components/faq.php:5
+msgid "FAQ"
+msgstr ""
+
+#: components/customerGuide/guide.php:15
+msgid "Find your size in our clothes by following the"
+msgstr ""
+
+#: components/customerGuide/shop-info.php:12
+msgid "free shipping"
 msgstr ""
 
 #: header.php:17
 msgid "Free shipping on orders"
 msgstr ""
 
+#: components/customerGuide/guide.php:44
+msgid "Garment care guide"
+msgstr ""
+
+#: components/customerGuide/guide.php:14
+msgid "Garment Guide"
+msgstr ""
+
+#: components/customerGuide/delivery.php:17
+msgid ""
+"Get your shapewear in a flash with our prior delivery option! You can expect "
+"your order to arrive within"
+msgstr ""
+
+#: components/customerGuide/delivery.php:16
+msgid ""
+"Getting your perfect shapewear to you is our top priority! We offer two "
+"delivery options for your convenience:"
+msgstr ""
+
 #. Name of the theme
 msgid "Goddess shape theme"
+msgstr ""
+
+#: components/faq.php:9
+msgid "How to buy in Goddess Shape's store?"
 msgstr ""
 
 #. URI of the theme
 msgid "https://wordpress.org/themes/twentytwentytwo/"
 msgstr ""
 
+#: components/customerGuide/guide.php:15
+msgid "measurement chart."
+msgstr ""
+
+#: components/customerGuide/delivery.php:20
+msgid "Meet our policys"
+msgstr ""
+
 #: components/loops/new-models.php:2
 msgid "New Arrivals"
+msgstr ""
+
+#: components/customerGuide/shop-info.php:12
+msgid "on orders over $99, because we know you deserve the best."
 msgstr ""
 
 #: front-page.php:14
 msgid "Our Products"
 msgstr ""
 
+#: components/customerGuide/payments.php:9
+msgid "Payments"
+msgstr ""
+
+#: components/customerGuide/delivery.php:19
+msgid ""
+"Please keep in mind that the estimated shipping times are not guaranteed and "
+"may be subject to unforeseen delays. Don't hesitate to contact us if you "
+"have any questions about your delivery!"
+msgstr ""
+
+#: components/customerGuide/guide.php:25
+msgid "Powernet"
+msgstr ""
+
+#: components/customerGuide/guide.php:30
+msgid ""
+"Powernet is a type of high compression fabric used in clothing such as "
+"shapewear to shape and reduce body measurements. It is made of a resistant "
+"and flexible elastic mesh that provides support and compression in specific "
+"areas of the body."
+msgstr ""
+
+#: components/customerGuide/delivery.php:17
+msgid "Prior delivery:"
+msgstr ""
+
+#: components/customerGuide/payments.php:11
+msgid "Say goodbye to payment headaches!"
+msgstr ""
+
 #: components/colections.php:6
 msgid "See collection"
+msgstr ""
+
+#: components/customerGuide/shop-info.php:11
+msgid "Shipping"
 msgstr ""
 
 #. Author of the theme
 msgid "SkyRocket"
 msgstr ""
 
+#: components/customerGuide/delivery.php:18
+msgid "Standard delivery:"
+msgstr ""
+
+#: components/customerGuide/guide.php:39
+msgid ""
+"The opening between the legs of women's shapewear allows for greater comfort,"
+" ventilation, and better fit in the abdominal and hip areas, making the "
+"garment more comfortable and healthy."
+msgstr ""
+
 #. Description of the theme
 msgid "This is the theme created to goddess shape brand"
+msgstr ""
+
+#: components/faq.php:13
+msgid ""
+"To purchase a product on Goddess Shape, you must first browse the website "
+"and choose the product you wish to buy. You must make sure to select the "
+"correct size and color before adding it to the shopping cart. Then, you must "
+"follow the indicated steps to finalize the purchase, providing the necessary "
+"information for shipping and payment method. \n"
+" If you have any questions about the products or the online purchase, you "
+"can contact Goddess Shape's brand customer service through the green button "
+"(Whatsapp) found on the website, or through email or social networks. We "
+"will be happy to help you with whatever you need, answering your questions "
+"and guiding you through the buying process. \n"
+" If you prefer to buy the products in person, check through the green button "
+"what options you can be offered depending on the area where you are located."
+msgstr ""
+
+#: components/customerGuide/shop-info.php:14
+msgid "Track your order"
+msgstr ""
+
+#: components/customerGuide/shop-info.php:13
+msgid ""
+"Treat yourself to a little luxury and enjoy our hassle-free shipping, just "
+"for you!"
+msgstr ""
+
+#: components/customerGuide/shop-info.php:12
+msgid "We're delighted to offer"
 msgstr ""
