@@ -3,7 +3,7 @@
 Plugin Name: Media Library Folders
 Plugin URI: http://maxgalleria.com
 Description: Gives you the ability to adds folders and move files in the WordPress Media Library.
-Version: 8.0.6
+Version: 8.0.7
 Author: Max Foundry
 Author URI: http://maxfoundry.com
 
@@ -59,7 +59,7 @@ class MGMediaLibraryFolders {
   
 	public function set_global_constants() {	
 		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_KEY', 'maxgalleria_media_library_version');
-		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_NUM', '8.0.6');
+		define('MAXGALLERIA_MEDIA_LIBRARY_VERSION_NUM', '8.0.7');
 		define('MAXGALLERIA_MEDIA_LIBRARY_IGNORE_NOTICE', 'maxgalleria_media_library_ignore_notice');
 		define('MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
     if(!defined('MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_DIR'))
@@ -3121,7 +3121,7 @@ and pm.meta_key = '_wp_attached_file'";
 		$uploads_url = $this->upload_dir['baseurl'];
 		$upload_path = $this->upload_dir['basedir'];
 
-		$folders_to_hide = explode("\n", file_get_contents( esc_url(MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_DIR .'/folders_to_hide.txt')));
+		$folders_to_hide = explode("\n", file_get_contents(MAXGALLERIA_MEDIA_LIBRARY_PLUGIN_DIR .'/folders_to_hide.txt'));
 		
     $sql = "select meta_value as attached_file
 from {$wpdb->prefix}postmeta

@@ -3,7 +3,7 @@ Contributors: facebook, automattic, woothemes
 Tags: facebook, shop, catalog, advertise, pixel, product
 Requires at least: 4.4
 Tested up to: 6.2
-Stable tag: 3.0.19
+Stable tag: 3.0.25
 Requires PHP: 5.6 or greater
 MySQL: 5.6 or greater
 License: GPLv2 or later
@@ -38,6 +38,28 @@ When opening a bug on GitHub, please give us as many details as possible.
 * Current version of Facebook-for-WooCommerce, WooCommerce, Wordpress, PHP
 
 == Changelog ==
+
+= 3.0.25 - 2023-06-13 =
+* Fix - Fatal error when Facebook.net returns an empty response.
+* Fix - PHP Warning caused by array_filter() call.
+* Fix - Remove assigned Google product category at individual product level.
+* Tweak - WC 7.8 compatibility.
+
+= 3.0.24 - 2023-06-06 =
+* Fix - Product variants weren't deleted correctly from the Facebook catalog in some instances.
+
+= 3.0.23 - 2023-05-09 =
+* Fix - Delete product in the Facebook catalog when products are deleted via WC Rest API.
+
+= 3.0.22 - 2023-05-03 =
+* Fix - Pixel code not activated on checkout.
+
+= 3.0.21 - 2023-05-02 =
+* Fix - Issue in admin product search.
+
+= 3.0.20 - 2023-05-02 =
+* Fix - Adds escaping to outputs and sanitizing to inputs.
+* Tweak - WC 7.7 compatibility.
 
 = 3.0.19 - 2023-04-18 =
 * Tweak - Bump Marketing API version from v16.0.

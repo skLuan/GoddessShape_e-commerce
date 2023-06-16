@@ -3,9 +3,9 @@ Contributors: cozmoslabs, razvan.mo, madalin.ungureanu, sareiodata, cristophor
 Donate link: https://www.translatepress.com/
 Tags: translate, translation, multilingual, automatic translation, bilingual, front-end translation, google translate, language
 Requires at least: 3.1.0
-Tested up to: 6.2
+Tested up to: 6.2.2
 Requires PHP: 5.6.20
-Stable tag: 2.5.1
+Stable tag: 2.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,28 @@ For more information please check out our [documentation](https://translatepress
 
 
 == Changelog ==
+= 2.5.5 =
+* Redesigned TranslatePress Settings Advanced tab UI using subtabs
+* Improved the translation status icons for the case when multiple strings are shown at once in Translation Editor
+* Fixed deprecated notice on php 8
+
+= 2.5.4 =
+* Updated look of language switchers for shortcode generated and floating options
+* Added notice in TranslatePress settings to avoid adding duplicate languages with different formalities
+* Fixed deprecated warning triggered by date_create function
+* Fixed bug with some strings not being editable in Translation Editor
+
+= 2.5.3 =
+* Improved security by escaping form actions
+* Fixed filtering by gettext domain in String Translation
+* Fixed title positioning in String Translation UI
+* Added more information in our opt-in non-sensitive diagnostic tracking
+
+= 2.5.2 =
+* Redesigned Translation Editor UI to match the latest WordPress style
+* Fixed hreflang language code attribute for languages with formal/informal in their default code
+* Added missing Aragonese language flag
+
 = 2.5.1 =
 * Added Language Switcher block in Gutenberg Editor
 * Fixed edge case error regarding __return_true function
